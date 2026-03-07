@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OZONE Shield — AI Scam Detector</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --white:      #ffffff;
+      --off-white:  #f7f7f5;
+      --stone-100:  #f0ede8;
+      --stone-200:  #e3dfd8;
+      --stone-400:  #a09a91;
+      --stone-600:  #6b6560;
+      --stone-900:  #1c1a18;
+      --ink:        #111010;
+      --safe:       #1a7f4b;
+      --safe-bg:    #edf7f1;
+      --safe-border:#b8e0c8;
+      --warn:       #92600a;
+      --warn-bg:    #fef8ed;
+      --warn-border:#f0d08a;
+      --danger:     #9b1c1c;
+      --danger-bg:  #fef2f2;
+      --danger-border:#fca5a5;
+      --radius:     10px;
+      --font-serif: 'Instrument Serif', Georgia, serif;
+      --font-sans:  'Geist', system-ui, sans-serif;
+      --shadow-sm:  0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md:  0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+    }
+
+    html { font-size: 16px; }
+
+    body {
+      background: var(--off-white);
+      color: var(--ink);
+      font-family: var(--font-sans);
+      font-weight: 400;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    nav {
+      width: 100%;
+      border-bottom: 1px solid var(--stone-200);
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-inner {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+    }
+
+    .logo-mark {
+      width: 28px;
+      height: 28px;
+      background: var(--ink);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-mark svg {
+      width: 14px;
+      height: 14px;
+      stroke: white;
+      fill: none;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .logo-text {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--ink);
+      letter-spacing: -0.01em;
+    }
+
+    .logo-text span { color: var(--stone-400); font-weight: 400; }
+
+    .nav-tag {
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--stone-600);
+      background: var(--stone-100);
+      border: 1px solid var(--stone-200);
+      padding: 0.2rem 0.6rem;
+      border-radius: 100px;
+    }
+
+    main {
+      width: 100%;
+      max-width: 680px;
+      padding: 3rem 1.5rem 5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.75rem;
+      animation: fadeIn 0.5s ease both;
+    }
+
+    .hero { display: flex; flex-direction: column; gap: 0.6rem; }
+
+    .hero-eyebrow {
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--stone-400);
+    }
+
+    h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(1.9rem, 5vw, 2.7rem);
+      font-weight: 400;
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+    }
+
+    h1 em { font-style: italic; color: var(--stone-600); }
+
+    .hero-desc {
+      font-size: 0.93rem;
+      color: var(--stone-600);
+      line-height: 1.65;
+      max-width: 460px;
+      font-weight: 300;
+    }
+
+    .card {
+      background: var(--white);
+      border: 1px solid var(--stone-200);
+      border-radius: 14px;
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+
+    .card-section { padding: 1.25rem 1.5rem; }
+    .card-section + .card-section { border-top: 1px solid var(--stone-100); }
+
+    .field-label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--stone-600);
+      margin-bottom: 0.55rem;
+    }
+
+    .input-wrap { position: relative; }
+
+    .input-wrap svg {
+      position: absolute;
+      left: 0.85rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 14px;
+      height: 14px;
+      stroke: var(--stone-400);
+      fill: none;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      pointer-events: none;
+    }
+
+    input[type="password"] {
+      width: 100%;
+      background: var(--off-white);
+      border: 1px solid var(--stone-200);
+      border-radius: var(--radius);
+      padding: 0.65rem 0.9rem 0.65rem 2.4rem;
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      color: var(--ink);
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    input:focus {
+      border-color: var(--stone-400);
+      box-shadow: 0 0 0 3px rgba(28,26,24,0.06);
+      background: var(--white);
+    }
+
+    input::placeholder { color: var(--stone-400); }
+
+    .api-hint {
+      font-size: 0.73rem;
+      color: var(--stone-400);
+      margin-top: 0.45rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .status-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--stone-400);
+      flex-shrink: 0;
+      transition: background 0.2s;
+    }
+
+    .api-hint.ready { color: var(--safe); }
+    .api-hint.ready .status-dot { background: var(--safe); }
+
+    textarea {
+      width: 100%;
+      background: var(--off-white);
+      border: 1px solid var(--stone-200);
+      border-radius: var(--radius);
+      padding: 0.9rem 1rem;
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      color: var(--ink);
+      line-height: 1.65;
+      resize: vertical;
+      min-height: 148px;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    textarea:focus {
+      border-color: var(--stone-400);
+      box-shadow: 0 0 0 3px rgba(28,26,24,0.06);
+      background: var(--white);
+    }
+
+    textarea::placeholder { color: var(--stone-400); font-size: 0.87rem; }
+
+    .textarea-footer {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.45rem;
+      font-size: 0.72rem;
+      color: var(--stone-400);
+    }
+
+    .btn {
+      width: 100%;
+      background: var(--ink);
+      color: var(--white);
+      border: none;
+      border-radius: var(--radius);
+      padding: 0.85rem 1.5rem;
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.12s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .btn:hover:not(:disabled) { opacity: 0.85; transform: translateY(-1px); }
+    .btn:active:not(:disabled) { transform: translateY(0); opacity: 1; }
+    .btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    .btn-spinner {
+      width: 14px;
+      height: 14px;
+      border: 1.5px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      display: none;
+    }
+
+    .btn.loading .btn-spinner { display: block; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .cooldown-track {
+      height: 2px;
+      background: var(--stone-100);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-top: 0.75rem;
+      display: none;
+    }
+
+    .cooldown-track.active { display: block; }
+
+    .cooldown-fill {
+      height: 100%;
+      background: var(--stone-400);
+      border-radius: 2px;
+      width: 100%;
+    }
+
+    .error-box {
+      background: var(--danger-bg);
+      border: 1px solid var(--danger-border);
+      border-radius: var(--radius);
+      padding: 0.85rem 1rem;
+      font-size: 0.84rem;
+      color: var(--danger);
+      display: none;
+      align-items: flex-start;
+      gap: 0.6rem;
+      line-height: 1.5;
+    }
+
+    .error-box.visible { display: flex; }
+
+    .error-box svg {
+      width: 15px;
+      height: 15px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex-shrink: 0;
+      margin-top: 0.05rem;
+    }
+
+    .result-card {
+      background: var(--white);
+      border: 1px solid var(--stone-200);
+      border-radius: 14px;
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+      display: none;
+      animation: fadeIn 0.4s ease both;
+    }
+
+    .result-card.visible { display: block; }
+
+    .result-banner {
+      padding: 1.5rem;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .result-card.safe       .result-banner { background: var(--safe-bg);   border-bottom: 1px solid var(--safe-border); }
+    .result-card.suspicious .result-banner { background: var(--warn-bg);   border-bottom: 1px solid var(--warn-border); }
+    .result-card.scam       .result-banner { background: var(--danger-bg); border-bottom: 1px solid var(--danger-border); }
+
+    .verdict-left { display: flex; flex-direction: column; gap: 0.45rem; }
+
+    .verdict-row { display: flex; align-items: center; gap: 0.55rem; }
+
+    .verdict-icon { font-size: 1.25rem; line-height: 1; }
+
+    .verdict-title {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+    }
+
+    .result-card.safe       .verdict-title { color: var(--safe);   }
+    .result-card.suspicious .verdict-title { color: var(--warn);   }
+    .result-card.scam       .verdict-title { color: var(--danger); }
+
+    .verdict-sub { font-size: 0.8rem; color: var(--stone-600); }
+
+    .severity-pill {
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.55rem;
+      border-radius: 100px;
+      width: fit-content;
+    }
+
+    .severity-pill.low      { background: rgba(26,127,75,0.1);  color: var(--safe);   }
+    .severity-pill.medium   { background: rgba(146,96,10,0.1);  color: var(--warn);   }
+    .severity-pill.critical { background: rgba(155,28,28,0.1);  color: var(--danger); }
+
+    .confidence-right { text-align: right; flex-shrink: 0; }
+
+    .confidence-pct {
+      font-family: var(--font-serif);
+      font-size: 2.2rem;
+      font-weight: 400;
+      line-height: 1;
+    }
+
+    .result-card.safe       .confidence-pct { color: var(--safe);   }
+    .result-card.suspicious .confidence-pct { color: var(--warn);   }
+    .result-card.scam       .confidence-pct { color: var(--danger); }
+
+    .confidence-lbl {
+      font-size: 0.68rem;
+      color: var(--stone-400);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-top: 0.15rem;
+    }
+
+    .result-section {
+      padding: 1.2rem 1.5rem;
+      border-top: 1px solid var(--stone-100);
+    }
+
+    .section-title {
+      font-size: 0.72rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--stone-400);
+      margin-bottom: 0.85rem;
+    }
+
+    .reasons-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .reasons-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.7rem;
+      font-size: 0.875rem;
+      line-height: 1.6;
+      color: var(--stone-900);
+    }
+
+    .reason-index {
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      border-radius: 5px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 0.15rem;
+    }
+
+    .result-card.safe       .reason-index { background: rgba(26,127,75,0.1);  color: var(--safe);   }
+    .result-card.suspicious .reason-index { background: rgba(146,96,10,0.1);  color: var(--warn);   }
+    .result-card.scam       .reason-index { background: rgba(155,28,28,0.1);  color: var(--danger); }
+
+    .action-box {
+      background: var(--off-white);
+      border: 1px solid var(--stone-200);
+      border-radius: var(--radius);
+      padding: 1rem 1.1rem;
+      font-size: 0.875rem;
+      line-height: 1.65;
+      color: var(--stone-900);
+    }
+
+    footer {
+      width: 100%;
+      max-width: 680px;
+      padding: 0 1.5rem 3rem;
+    }
+
+    .footer-divider { height: 1px; background: var(--stone-200); margin-bottom: 1rem; }
+
+    .footer-text {
+      font-size: 0.75rem;
+      color: var(--stone-400);
+      line-height: 1.7;
+    }
+
+    .footer-text + .footer-text { margin-top: 0.2rem; }
+
+    .footer-text a {
+      color: var(--stone-600);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .footer-text a:hover { color: var(--ink); }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 500px) {
+      main { padding: 2rem 1.25rem 4rem; }
+      .result-banner { flex-direction: column-reverse; }
+      .confidence-right { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-inner">
+      <a class="logo" href="#">
+        <div class="logo-mark">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+            <path d="M2 17l10 5 10-5"/>
+            <path d="M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <span class="logo-text">OZONE <span>Shield</span></span>
+      </a>
+      <span class="nav-tag">Beta</span>
+    </div>
+  </nav>
+
+  <main>
+
+    <div class="hero">
+      <p class="hero-eyebrow">AI Scam Detection</p>
+      <h1>Is this message<br><em>a scam?</em></h1>
+      <p class="hero-desc">
+        Paste any suspicious text, email, or message. Our AI analyses it for scam patterns and tells you exactly what to do — in plain English.
+      </p>
+    </div>
+
+    <div class="card">
+
+      <div class="card-section">
+        <label class="field-label" for="apiKey">Claude API Key</label>
+        <div class="input-wrap">
+          <svg viewBox="0 0 24 24">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+          <input
+            type="password"
+            id="apiKey"
+            placeholder="sk-ant-api03-..."
+            autocomplete="off"
+            spellcheck="false"
+          >
+        </div>
+        <p class="api-hint" id="apiHint">
+          <span class="status-dot"></span>
+          Get your key at console.anthropic.com
+        </p>
+      </div>
+
+      <div class="card-section">
+        <label class="field-label" for="messageInput">Message to analyse</label>
+        <textarea
+          id="messageInput"
+          placeholder="Paste the suspicious message here — SMS, email, WhatsApp, anything..."
+          maxlength="4000"
+          spellcheck="false"
+        ></textarea>
+        <div class="textarea-footer">
+          <span><span id="charCount">0</span> / 4000</span>
+          <span>⌘ + Return to analyse</span>
+        </div>
+      </div>
+
+      <div class="card-section">
+        <button class="btn" id="analyseBtn" onclick="analyse()">
+          <div class="btn-spinner"></div>
+          <span id="btnText">Analyse Message</span>
+        </button>
+        <div class="cooldown-track" id="cooldownTrack">
+          <div class="cooldown-fill" id="cooldownFill"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="error-box" id="errorBox">
+      <svg viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" y1="8" x2="12" y2="12"/>
+        <line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      <span id="errorText"></span>
+    </div>
+
+    <div class="result-card" id="resultCard">
+      <div class="result-banner">
+        <div class="verdict-left">
+          <div class="verdict-row">
+            <span class="verdict-icon" id="verdictIcon"></span>
+            <span class="verdict-title" id="verdictTitle"></span>
+          </div>
+          <p class="verdict-sub" id="verdictSub"></p>
+          <span class="severity-pill" id="severityPill"></span>
+        </div>
+        <div class="confidence-right">
+          <div class="confidence-pct" id="confidencePct"></div>
+          <div class="confidence-lbl">Confidence</div>
+        </div>
+      </div>
+
+      <div class="result-section">
+        <p class="section-title">What we found</p>
+        <ul class="reasons-list" id="reasonsList"></ul>
+      </div>
+
+      <div class="result-section">
+        <p class="section-title">What to do right now</p>
+        <div class="action-box" id="actionBox"></div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <div class="footer-divider"></div>
+    <p class="footer-text">OZONE Shield uses Claude AI to analyse messages for scam patterns. This tool provides guidance only — always verify through official channels.</p>
+    <p class="footer-text">
+      Report UK scams to <a href="https://www.actionfraud.police.uk" target="_blank" rel="noopener">Action Fraud</a> — 0300 123 2040 &nbsp;·&nbsp;
+      <a href="https://www.ncsc.gov.uk/collection/phishing-scams" target="_blank" rel="noopener">NCSC Phishing Guidance</a>
+    </p>
+  </footer>
+
+  <script>
+    const SYSTEM_PROMPT = `You are OZONE Shield, the world's most precise AI scam detection engine, built to protect everyday people from AI-generated and human-crafted scams.
+
+Your only job is to analyse the message provided and return a structured verdict. You do not chat. You do not explain yourself outside the JSON. You do not offer opinions. You analyse and verdict. Nothing else.
+
+WHAT YOU ANALYSE:
+
+1. PAYMENT RED FLAGS
+   - Requests for gift cards, cryptocurrency, wire transfers, or any untraceable payment method
+   - Any financial request framed as urgent, secret, or time-limited
+
+2. PSYCHOLOGICAL MANIPULATION
+   - Urgency: artificial deadlines, "act now or lose access"
+   - Fear: account suspension, legal threats, arrest warnings
+   - Greed: prize winnings, unclaimed refunds, investment opportunities
+   - Authority: impersonation of banks, HMRC, NHS, police, Royal Mail, Amazon, Apple, Microsoft, or any government body
+   - Curiosity: vague hooks designed to make you click or respond
+
+3. URL AND IDENTITY ANOMALIES
+   - Typosquatting: Amaz0n.com, Faceb00k.com, HMRC-refund.co.uk
+   - Character substitution: replacing letters with numbers or symbols
+   - Mismatched sender identity vs claimed organisation
+   - Shortened URLs used to hide destination
+
+4. LANGUAGE AND OBFUSCATION SIGNALS
+   - Deliberate misspellings to bypass spam filters
+   - Inconsistent grammar from an organisation that should be professional
+   - Generic greetings from organisations that should know your name
+   - Unusual sentence structures consistent with AI generation or non-native translation
+
+5. STRUCTURAL SCAM PATTERNS
+   - Requests to act outside official channels
+   - Requests for personal information, passwords, or OTP codes
+   - Unsolicited contact claiming you've won, owe, or are at risk
+   - Too-good-to-be-true offers with pressure to decide immediately
+
+HOW YOU VERDICT:
+SAFE — No meaningful scam signals detected.
+SUSPICIOUS — 1-3 signals present. Could be legitimate but warrants caution.
+SCAM — Multiple high-confidence signals present. Treat as malicious.
+
+CONFIDENCE CALIBRATION:
+- 95-100%: Multiple unmistakable signals. Textbook scam pattern.
+- 80-94%: Strong signals but one or two elements are ambiguous.
+- 60-79%: Suspicious patterns present but insufficient for certainty.
+- Below 60%: Flag as SUSPICIOUS, not SCAM.
+When uncertain, always protect the user with a SUSPICIOUS verdict rather than forcing a SAFE or SCAM call you cannot justify.
+
+SEVERITY LEVELS:
+Critical — Immediate financial or identity theft risk.
+Medium — Real risk present but not immediately catastrophic.
+Low — Mild signals. User should be cautious but is not in immediate danger.
+
+REASONS — STRICT RULES:
+- Maximum 3 reasons
+- Each reason must be specific to THIS message — never generic
+- Write for a non-technical person aged 18-80
+- Bad: "This message contains urgency tactics"
+- Good: "This message tells you your account will be closed in 24 hours — a pressure tactic designed to stop you thinking clearly"
+
+WHAT_TO_DO — STRICT RULES:
+- One clear instruction written for a non-technical person
+- SAFE: Reassure but remind them to verify through official channels
+- SUSPICIOUS: Tell them exactly what to check before responding
+- SCAM: Tell them exactly what to do right now — do not click, do not call back, report to Action Fraud (UK): 0300 123 2040
+
+OUTPUT FORMAT — NON-NEGOTIABLE:
+Return ONLY this JSON. No preamble. No explanation. No markdown. No text before or after. Raw JSON only.
+
+{
+  "VERDICT": "SAFE" | "SUSPICIOUS" | "SCAM",
+  "CONFIDENCE_PERCENT": 0-100,
+  "SEVERITY": "Low" | "Medium" | "Critical",
+  "REASONS": ["specific reason 1", "specific reason 2", "specific reason 3"],
+  "WHAT_TO_DO": "plain English instruction"
+}
+
+If the input is not a message (gibberish, empty, or a test string), return:
+{
+  "VERDICT": "INVALID",
+  "CONFIDENCE_PERCENT": 0,
+  "SEVERITY": "Low",
+  "REASONS": ["No valid message was provided to analyse"],
+  "WHAT_TO_DO": "Please paste a real message you want us to check."
+}`;
+
+    let cooldownActive = false;
+    const COOLDOWN_MS = 10000;
+
+    document.getElementById('messageInput').addEventListener('input', function () {
+      document.getElementById('charCount').textContent = this.value.length;
+    });
+
+    document.getElementById('apiKey').addEventListener('input', function () {
+      const hint = document.getElementById('apiHint');
+      if (this.value.startsWith('sk-ant-')) {
+        hint.className = 'api-hint ready';
+        hint.innerHTML = '<span class="status-dot"></span> Key detected — ready to analyse';
+      } else {
+        hint.className = 'api-hint';
+        hint.innerHTML = '<span class="status-dot"></span> Get your key at console.anthropic.com';
+      }
+    });
+
+    async function analyse() {
+      const apiKey  = document.getElementById('apiKey').value.trim();
+      const message = document.getElementById('messageInput').value.trim();
+      const btn     = document.getElementById('analyseBtn');
+      const errBox  = document.getElementById('errorBox');
+      const result  = document.getElementById('resultCard');
+
+      errBox.className = 'error-box';
+      result.className = 'result-card';
+
+      if (!apiKey)        return showError('Please enter your Claude API key.');
+      if (!message)       return showError('Please paste a message to analyse.');
+      if (cooldownActive) return showError('Please wait a moment before scanning again.');
+
+      btn.disabled = true;
+      btn.classList.add('loading');
+      document.getElementById('btnText').textContent = 'Analysing…';
+
+      try {
+        const res = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': apiKey,
+            'anthropic-version': '2023-06-01',
+            'anthropic-dangerous-direct-browser-access': 'true'
+          },
+          body: JSON.stringify({
+            model: 'claude-sonnet-4-5',
+            max_tokens: 1024,
+            system: SYSTEM_PROMPT,
+            messages: [{ role: 'user', content: message }]
+          })
+        });
+
+        if (!res.ok) {
+          const e = await res.json();
+          throw new Error(e.error?.message || `API error ${res.status}`);
+        }
+
+        const data   = await res.json();
+        const raw    = data.content[0].text.trim();
+        const clean  = raw.replace(/```json|```/g, '').trim();
+        const parsed = JSON.parse(clean);
+        render(parsed);
+        startCooldown();
+
+      } catch (err) {
+        showError(err.message || 'Something went wrong. Check your API key and try again.');
+      } finally {
+        btn.classList.remove('loading');
+        document.getElementById('btnText').textContent = 'Analyse Message';
+        btn.disabled = false;
+      }
+    }
+
+    function render(r) {
+      const card = document.getElementById('resultCard');
+      const map = {
+        SAFE:       { cls: 'safe',       icon: '🟢', sub: 'No significant scam signals detected.' },
+        SUSPICIOUS: { cls: 'suspicious', icon: '🟡', sub: 'Proceed with caution — signals detected.' },
+        SCAM:       { cls: 'scam',       icon: '🔴', sub: 'High-confidence scam indicators found.' },
+        INVALID:    { cls: 'suspicious', icon: '⚠️', sub: 'No valid message detected.' }
+      };
+      const c = map[r.VERDICT] || map.SUSPICIOUS;
+      card.className = `result-card visible ${c.cls}`;
+
+      document.getElementById('verdictIcon').textContent   = c.icon;
+      document.getElementById('verdictTitle').textContent  = r.VERDICT;
+      document.getElementById('verdictSub').textContent    = c.sub;
+      document.getElementById('confidencePct').textContent = r.CONFIDENCE_PERCENT + '%';
+      document.getElementById('actionBox').textContent     = r.WHAT_TO_DO;
+
+      const pill = document.getElementById('severityPill');
+      const sev  = (r.SEVERITY || 'Low').toLowerCase();
+      pill.textContent = r.SEVERITY + ' Severity';
+      pill.className   = `severity-pill ${sev}`;
+
+      const list = document.getElementById('reasonsList');
+      list.innerHTML = '';
+      (r.REASONS || []).forEach((reason, i) => {
+        const li = document.createElement('li');
+        li.innerHTML = `<span class="reason-index">${i + 1}</span><span>${reason}</span>`;
+        list.appendChild(li);
+      });
+
+      card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function showError(msg) {
+      document.getElementById('errorText').textContent = msg;
+      document.getElementById('errorBox').className = 'error-box visible';
+    }
+
+    function startCooldown() {
+      cooldownActive = true;
+      const track = document.getElementById('cooldownTrack');
+      const fill  = document.getElementById('cooldownFill');
+      track.className = 'cooldown-track active';
+      fill.style.transition = 'none';
+      fill.style.width = '100%';
+      requestAnimationFrame(() => {
+        fill.style.transition = `width ${COOLDOWN_MS}ms linear`;
+        fill.style.width = '0%';
+      });
+      setTimeout(() => {
+        cooldownActive = false;
+        track.className = 'cooldown-track';
+      }, COOLDOWN_MS);
+    }
+
+    document.getElementById('messageInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter' && e.metaKey) analyse();
+    });
+  </script>
+</body>
+</html>
