@@ -196,63 +196,7 @@
       margin-bottom: 0.65rem;
     }
 
-    /* API key input */
-    .input-row {
-      position: relative;
-    }
 
-    .input-row svg {
-      position: absolute;
-      left: 0.85rem;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 14px;
-      height: 14px;
-      stroke: var(--dim);
-      fill: none;
-      stroke-width: 1.5;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      pointer-events: none;
-    }
-
-    input[type="password"] {
-      width: 100%;
-      background: var(--surface-2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 0.7rem 0.85rem 0.7rem 2.3rem;
-      font-family: 'Outfit', sans-serif;
-      font-size: 1rem;
-      color: #ffffff;
-      outline: none;
-      transition: border-color 0.15s, box-shadow 0.15s;
-    }
-
-    input[type="password"]:focus {
-      border-color: var(--blue);
-      box-shadow: 0 0 0 3px var(--blue-glow);
-    }
-
-    input::placeholder { color: var(--dim); }
-
-    .api-hint {
-      margin-top: 0.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-size: 0.875rem;
-      color: rgba(255,255,255,0.75);
-      transition: color 0.2s;
-    }
-    .api-hint.ready { color: var(--safe); }
-    .dot {
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      background: currentColor;
-      flex-shrink: 0;
-    }
 
     /* Textarea — white */
     textarea {
@@ -587,7 +531,7 @@
     <div class="definition">
       <div class="definition-label">Phishing</div>
       <p class="definition-body">
-        Phishing is when someone <strong>pretends to be someone you trust</strong> like a bank, a delivery service, a government body to trick you into handing over your <strong>password, money, or personal details</strong>. It usually arrives as an email, text, or message designed to make you act fast before you stop to think.
+        Phishing is when someone <strong>pretends to be someone you trust</strong> — a bank, a delivery service, a government body — to trick you into handing over your <strong>password, money, or personal details</strong>. It usually arrives as an email, text, or message designed to make you act fast before you stop to think.
       </p>
     </div>
 
@@ -600,20 +544,7 @@
     <!-- INPUT CARD -->
     <div class="card">
 
-      <!-- API KEY -->
-      <div class="section">
-        <label class="field-label" for="apiKey">Claude API Key</label>
-        <div class="input-row">
-          <svg viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z"/>
-          </svg>
-          <input type="password" id="apiKey" placeholder="sk-ant-api03-…" autocomplete="off" spellcheck="false" />
-        </div>
-        <div class="api-hint" id="apiHint">
-          <span class="dot"></span>
-          <span>Get your key at console.anthropic.com</span>
-        </div>
-      </div>
+
 
       <!-- MESSAGE -->
       <div class="section">
@@ -693,91 +624,6 @@
   </footer>
 
   <script>
-    const SYSTEM_PROMPT = `You are OZONE Shield, the world's most precise AI scam detection engine, built to protect everyday people from AI-generated and human-crafted scams.
-
-Your only job is to analyse the message provided and return a structured verdict. You do not chat. You do not explain yourself outside the JSON. You do not offer opinions. You analyse and verdict. Nothing else.
-
-WHAT YOU ANALYSE:
-
-1. PAYMENT RED FLAGS
-   - Requests for gift cards, cryptocurrency, wire transfers, or any untraceable payment method
-   - Any financial request framed as urgent, secret, or time-limited
-
-2. PSYCHOLOGICAL MANIPULATION
-   - Urgency: artificial deadlines, "act now or lose access"
-   - Fear: account suspension, legal threats, arrest warnings
-   - Greed: prize winnings, unclaimed refunds, investment opportunities
-   - Authority: impersonation of banks, HMRC, NHS, police, Royal Mail, Amazon, Apple, Microsoft, or any government body
-   - Curiosity: vague hooks designed to make you click or respond
-
-3. URL AND IDENTITY ANOMALIES
-   - Typosquatting: Amaz0n.com, Faceb00k.com, HMRC-refund.co.uk
-   - Character substitution: replacing letters with numbers or symbols
-   - Mismatched sender identity vs claimed organisation
-   - Shortened URLs used to hide destination
-
-4. LANGUAGE AND OBFUSCATION SIGNALS
-   - Deliberate misspellings to bypass spam filters
-   - Inconsistent grammar from an organisation that should be professional
-   - Generic greetings from organisations that should know your name
-   - Unusual sentence structures consistent with AI generation or non-native translation
-
-5. STRUCTURAL SCAM PATTERNS
-   - Requests to act outside official channels
-   - Requests for personal information, passwords, or OTP codes
-   - Unsolicited contact claiming you've won, owe, or are at risk
-   - Too-good-to-be-true offers with pressure to decide immediately
-
-HOW YOU VERDICT:
-SAFE — No meaningful scam signals detected.
-SUSPICIOUS — 1-3 signals present. Could be legitimate but warrants caution.
-SCAM — Multiple high-confidence signals present. Treat as malicious.
-
-CONFIDENCE CALIBRATION:
-- 95-100%: Multiple unmistakable signals. Textbook scam pattern.
-- 80-94%: Strong signals but one or two elements are ambiguous.
-- 60-79%: Suspicious patterns present but insufficient for certainty.
-- Below 60%: Flag as SUSPICIOUS, not SCAM.
-When uncertain, always protect the user with a SUSPICIOUS verdict rather than forcing a SAFE or SCAM call you cannot justify.
-
-SEVERITY LEVELS:
-Critical — Immediate financial or identity theft risk.
-Medium — Real risk present but not immediately catastrophic.
-Low — Mild signals. User should be cautious but is not in immediate danger.
-
-REASONS — STRICT RULES:
-- Maximum 3 reasons
-- Each reason must be specific to THIS message — never generic
-- Write for a non-technical person aged 18-80
-- Bad: "This message contains urgency tactics"
-- Good: "This message tells you your account will be closed in 24 hours — a pressure tactic designed to stop you thinking clearly"
-
-WHAT_TO_DO — STRICT RULES:
-- One clear instruction written for a non-technical person
-- SAFE: Reassure but remind them to verify through official channels
-- SUSPICIOUS: Tell them exactly what to check before responding
-- SCAM: Tell them exactly what to do right now — do not click, do not call back, report to Action Fraud (UK): 0300 123 2040
-
-OUTPUT FORMAT — NON-NEGOTIABLE:
-Return ONLY this JSON. No preamble. No explanation. No markdown. No text before or after. Raw JSON only.
-
-{
-  "VERDICT": "SAFE" | "SUSPICIOUS" | "SCAM",
-  "CONFIDENCE_PERCENT": 0-100,
-  "SEVERITY": "Low" | "Medium" | "Critical",
-  "REASONS": ["specific reason 1", "specific reason 2", "specific reason 3"],
-  "WHAT_TO_DO": "plain English instruction"
-}
-
-If the input is not a message (gibberish, empty, or a test string), return:
-{
-  "VERDICT": "INVALID",
-  "CONFIDENCE_PERCENT": 0,
-  "SEVERITY": "Low",
-  "REASONS": ["No valid message was provided to analyse"],
-  "WHAT_TO_DO": "Please paste a real message you want us to check."
-}`;
-
     let cooldownActive = false;
     const COOLDOWN_MS = 10000;
 
@@ -785,19 +631,7 @@ If the input is not a message (gibberish, empty, or a test string), return:
       document.getElementById('charCount').textContent = this.value.length;
     });
 
-    document.getElementById('apiKey').addEventListener('input', function () {
-      const hint = document.getElementById('apiHint');
-      if (this.value.startsWith('sk-ant-')) {
-        hint.className = 'api-hint ready';
-        hint.innerHTML = '<span class="dot"></span><span>Key detected — ready to analyse</span>';
-      } else {
-        hint.className = 'api-hint';
-        hint.innerHTML = '<span class="dot"></span><span>Get your key at console.anthropic.com</span>';
-      }
-    });
-
     async function analyse() {
-      const apiKey  = document.getElementById('apiKey').value.trim();
       const message = document.getElementById('messageInput').value.trim();
       const btn     = document.getElementById('analyseBtn');
       const errBox  = document.getElementById('errorBox');
@@ -806,7 +640,6 @@ If the input is not a message (gibberish, empty, or a test string), return:
       errBox.className = 'error-box';
       result.className = 'result';
 
-      if (!apiKey)        return showError('Please enter your Claude API key.');
       if (!message)       return showError('Please paste a message to analyse.');
       if (cooldownActive) return showError('Please wait a moment before scanning again.');
 
@@ -815,36 +648,25 @@ If the input is not a message (gibberish, empty, or a test string), return:
       document.getElementById('btnText').textContent = 'Analysing';
 
       try {
-        const res = await fetch('https://api.anthropic.com/v1/messages', {
+        const res = await fetch('/.netlify/functions/analyse', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-api-key': apiKey,
-            'anthropic-version': '2023-06-01',
-            'anthropic-dangerous-direct-browser-access': 'true'
-          },
-          body: JSON.stringify({
-            model: 'claude-sonnet-4-5',
-            max_tokens: 1024,
-            system: SYSTEM_PROMPT,
-            messages: [{ role: 'user', content: message }]
-          })
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message })
         });
 
         if (!res.ok) {
           const e = await res.json();
-          throw new Error(e.error?.message || `API error ${res.status}`);
+          throw new Error(e.error || `Error ${res.status}`);
         }
 
-        const data   = await res.json();
-        const raw    = data.content[0].text.trim();
+        const raw    = await res.text();
         const clean  = raw.replace(/```json|```/g, '').trim();
         const parsed = JSON.parse(clean);
         render(parsed);
         startCooldown();
 
       } catch (err) {
-        showError(err.message || 'Something went wrong. Check your API key and try again.');
+        showError(err.message || 'Something went wrong. Please try again.');
       } finally {
         btn.classList.remove('loading');
         document.getElementById('btnText').textContent = 'Analyse Message';
