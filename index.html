@@ -473,8 +473,96 @@
       line-height: 1.65;
     }
 
-    /* Footer */
-    footer {
+    /* ─── EMAIL SIGNUP ─── */
+    .signup-wrap {
+      width: 100%;
+      max-width: 660px;
+      padding: 0 2rem 2rem;
+      animation: rise 0.5s ease 0.2s both;
+    }
+
+    .signup-card {
+      background: var(--surface);
+      border: 1px solid var(--border-mid);
+      border-radius: 12px;
+      padding: 1.75rem;
+    }
+
+    .signup-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 0.35rem;
+    }
+
+    .signup-sub {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.7);
+      line-height: 1.6;
+      margin-bottom: 1.1rem;
+    }
+
+    .signup-row {
+      display: flex;
+      gap: 0.65rem;
+    }
+
+    .signup-row input[type="email"] {
+      flex: 1;
+      background: #ffffff;
+      border: 1px solid #e4e4e7;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 1rem;
+      color: #18181b;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .signup-row input[type="email"]:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px var(--blue-glow);
+    }
+
+    .signup-row input::placeholder { color: #9ca3af; }
+
+    .signup-row button {
+      background: var(--blue);
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.75rem 1.25rem;
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.15s, transform 0.1s;
+    }
+
+    .signup-row button:hover {
+      background: var(--blue-hover);
+      transform: translateY(-1px);
+    }
+
+    .signup-note {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.4);
+      margin-top: 0.6rem;
+    }
+
+    .signup-success {
+      display: none;
+      font-size: 0.95rem;
+      color: var(--safe);
+      font-weight: 600;
+      padding: 0.5rem 0;
+    }
+
+    .signup-success.visible { display: block; }
+
+    /* ─── FOOTER ─── */
       width: 100%;
       max-width: 660px;
       padding: 0 2rem 3rem;
@@ -531,7 +619,7 @@
     <div class="definition">
       <div class="definition-label">Phishing</div>
       <p class="definition-body">
-        Phishing is when someone <strong>pretends to be someone you trust</strong> like a bank, a delivery service, a government body to trick you into handing over your <strong>password, money, or personal details</strong>. It usually arrives as an email, text, or message designed to make you act fast before you stop to think.
+        Phishing is when someone <strong>pretends to be someone you trust</strong> — a bank, a delivery service, a government body — to trick you into handing over your <strong>password, money, or personal details</strong>. It usually arrives as an email, text, or message designed to make you act fast before you stop to think.
       </p>
     </div>
 
@@ -613,6 +701,28 @@
 
     </div>
 
+  </div>
+
+  <!-- EMAIL SIGNUP -->
+  <div class="signup-wrap">
+    <div class="signup-card">
+      <div class="signup-text">
+        <p class="signup-title">Weekly Scam Report</p>
+        <p class="signup-sub">The 3 most dangerous messages circulating in the UK right now — delivered free every week.</p>
+      </div>
+      <form name="waitlist" netlify netlify-honeypot="bot-field" class="signup-form" id="signupForm">
+        <input type="hidden" name="form-name" value="waitlist" />
+        <p style="display:none"><input name="bot-field" /></p>
+        <div class="signup-row">
+          <input type="email" name="email" id="emailInput" placeholder="your@email.com" required autocomplete="email" />
+          <button type="submit" id="signupBtn">Subscribe</button>
+        </div>
+        <p class="signup-note">No spam. No selling your data. Unsubscribe any time.</p>
+      </form>
+      <div class="signup-success" id="signupSuccess">
+        <span>✓</span> You're on the list. First report lands this week.
+      </div>
+    </div>
   </div>
 
   <!-- FOOTER -->
@@ -731,6 +841,24 @@
 
     document.getElementById('messageInput').addEventListener('keydown', e => {
       if (e.key === 'Enter' && e.metaKey) analyse();
+    });
+
+    // Email signup — show success state without page reload
+    document.getElementById('signupForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const btn   = document.getElementById('signupBtn');
+      const email = document.getElementById('emailInput').value.trim();
+      btn.disabled = true;
+      btn.textContent = 'Subscribing…';
+      try {
+        await fetch('/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams({ 'form-name': 'waitlist', email }).toString()
+        });
+      } catch {}
+      document.getElementById('signupForm').style.display = 'none';
+      document.getElementById('signupSuccess').className = 'signup-success visible';
     });
   </script>
 </body>
