@@ -3,9 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OZONE Shield — Scam Detector</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <title>OZONE Shield — AI Scam Detector</title>
+  <meta name="description" content="Paste any suspicious email, text, or message. OZONE Shield uses AI to analyse it for scam patterns and returns a clear verdict in seconds. Free for UK users.">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon-precomposed.png">
   
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -75,11 +78,7 @@
       text-decoration: none;
     }
 
-    .shield-icon {
-      width: 28px;
-      height: 28px;
-      flex-shrink: 0;
-    }
+    .shield-icon { width: 28px; height: 28px; flex-shrink: 0; }
 
     .brand-name {
       font-family: 'Times New Roman', Times, serif;
@@ -89,10 +88,7 @@
       letter-spacing: 0.01em;
     }
 
-    .brand-name span {
-      color: rgba(255,255,255,0.75);
-      font-weight: 400;
-    }
+    .brand-name span { color: rgba(255,255,255,0.75); font-weight: 400; }
 
     .nav-tag {
       font-size: 0.875rem;
@@ -135,16 +131,10 @@
       line-height: 1.75;
     }
 
-    .definition-body strong {
-      font-style: normal;
-      font-weight: 700;
-      color: #ffffff;
-    }
+    .definition-body strong { font-style: normal; font-weight: 700; color: #ffffff; }
 
     /* ─── HERO ─── */
-    .hero {
-      animation: rise 0.5s ease 0.07s both;
-    }
+    .hero { animation: rise 0.5s ease 0.07s both; }
 
     h1 {
       font-family: 'Times New Roman', Times, serif;
@@ -156,10 +146,7 @@
       margin-bottom: 1rem;
     }
 
-    h1 em {
-      font-style: italic;
-      color: rgba(255,255,255,0.65);
-    }
+    h1 em { font-style: italic; color: rgba(255,255,255,0.65); }
 
     .hero-sub {
       font-size: 1rem;
@@ -167,6 +154,29 @@
       color: #ffffff;
       line-height: 1.75;
       max-width: 460px;
+      margin-bottom: 0.85rem;
+    }
+
+    /* ─── AI TRANSPARENCY BADGE ─── */
+    /* Required: UK Data (Use and Access) Act 2025 + UK AI Regulatory Framework */
+    .ai-notice {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.45);
+      border: 1px solid var(--border-mid);
+      border-radius: 6px;
+      padding: 0.35rem 0.75rem;
+      width: fit-content;
+    }
+
+    .ai-notice-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--blue);
+      flex-shrink: 0;
     }
 
     /* ─── CARD ─── */
@@ -178,13 +188,8 @@
       animation: rise 0.5s ease 0.14s both;
     }
 
-    .section {
-      padding: 1.5rem 1.75rem;
-    }
-
-    .section + .section {
-      border-top: 1px solid var(--border);
-    }
+    .section { padding: 1.5rem 1.75rem; }
+    .section + .section { border-top: 1px solid var(--border); }
 
     label.field-label {
       display: block;
@@ -196,9 +201,6 @@
       margin-bottom: 0.65rem;
     }
 
-
-
-    /* Textarea — white */
     textarea {
       width: 100%;
       min-height: 170px;
@@ -206,7 +208,7 @@
       border: 1px solid #e4e4e7;
       border-radius: 8px;
       padding: 0.9rem 1rem;
-      font-family: 'Outfit', sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
       font-size: 1rem;
       color: #18181b;
       line-height: 1.65;
@@ -215,11 +217,7 @@
       transition: border-color 0.15s, box-shadow 0.15s;
     }
 
-    textarea:focus {
-      border-color: var(--blue);
-      box-shadow: 0 0 0 3px var(--blue-glow);
-    }
-
+    textarea:focus { border-color: var(--blue); box-shadow: 0 0 0 3px var(--blue-glow); }
     textarea::placeholder { color: #6b7280; }
 
     .meta-row {
@@ -229,24 +227,10 @@
       margin-top: 0.5rem;
     }
 
-    .textarea-note {
-      font-size: 0.875rem;
-      color: rgba(255,255,255,0.7);
-    }
+    .textarea-note { font-size: 0.875rem; color: rgba(255,255,255,0.7); }
+    .char-count { font-size: 0.875rem; color: rgba(255,255,255,0.7); font-variant-numeric: tabular-nums; }
 
-    .char-count {
-      font-size: 0.875rem;
-      color: rgba(255,255,255,0.7);
-      font-variant-numeric: tabular-nums;
-    }
-
-    /* Button */
-    .btn-wrap {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-    }
+    .btn-wrap { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
 
     button#analyseBtn {
       flex: 1;
@@ -270,12 +254,7 @@
     }
 
     button#analyseBtn:active { transform: translateY(0); }
-
-    button#analyseBtn:disabled {
-      opacity: 0.45;
-      cursor: not-allowed;
-      transform: none;
-    }
+    button#analyseBtn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
 
     button#analyseBtn.loading #btnText::after {
       content: '';
@@ -290,11 +269,7 @@
       vertical-align: -1px;
     }
 
-    .shortcut {
-      font-size: 0.875rem;
-      color: rgba(255,255,255,0.6);
-      white-space: nowrap;
-    }
+    .shortcut { font-size: 0.875rem; color: rgba(255,255,255,0.6); white-space: nowrap; }
 
     kbd {
       background: var(--surface-2);
@@ -306,22 +281,10 @@
       color: var(--muted);
     }
 
-    /* Cooldown */
-    .cooldown-bar {
-      height: 2px;
-      background: var(--border);
-      overflow: hidden;
-      opacity: 0;
-      transition: opacity 0.2s;
-    }
+    .cooldown-bar { height: 2px; background: var(--border); overflow: hidden; opacity: 0; transition: opacity 0.2s; }
     .cooldown-bar.active { opacity: 1; }
-    .cooldown-fill {
-      height: 100%;
-      width: 0;
-      background: var(--blue);
-    }
+    .cooldown-fill { height: 100%; width: 0; background: var(--blue); }
 
-    /* Error */
     .error-box {
       display: none;
       gap: 0.6rem;
@@ -336,7 +299,6 @@
     }
     .error-box.visible { display: flex; }
 
-    /* Result */
     .result {
       display: none;
       flex-direction: column;
@@ -357,95 +319,31 @@
       border-bottom: 1px solid var(--border);
     }
 
-    .result.safe   .result-head { background: var(--safe-bg); }
+    .result.safe       .result-head { background: var(--safe-bg); }
     .result.suspicious .result-head { background: var(--warn-bg); }
-    .result.scam   .result-head { background: var(--danger-bg); }
+    .result.scam       .result-head { background: var(--danger-bg); }
 
     .verdict-emoji { font-size: 1.85rem; line-height: 1; }
+    .verdict-label { font-size: 1.35rem; font-weight: 700; color: #ffffff; letter-spacing: -0.01em; display: block; }
+    .verdict-desc  { font-size: 0.9rem; color: rgba(255,255,255,0.85); margin-top: 0.15rem; display: block; }
 
-    .verdict-label {
-      font-size: 1.35rem;
-      font-weight: 700;
-      color: #ffffff;
-      letter-spacing: -0.01em;
-      display: block;
-    }
-    .verdict-desc {
-      font-size: 0.9rem;
-      color: rgba(255,255,255,0.85);
-      margin-top: 0.15rem;
-      display: block;
-    }
+    .verdict-right { text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 0.45rem; }
 
-    .verdict-right {
-      text-align: right;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 0.45rem;
-    }
+    .confidence-pct { font-size: 1.65rem; font-weight: 700; color: #ffffff; line-height: 1; font-variant-numeric: tabular-nums; }
+    .conf-label { font-size: 0.8rem; color: rgba(255,255,255,0.75); letter-spacing: 0.05em; text-transform: uppercase; display: block; margin-top: 0.1rem; }
 
-    .confidence-pct {
-      font-size: 1.65rem;
-      font-weight: 700;
-      color: #ffffff;
-      line-height: 1;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .conf-label {
-      font-size: 0.8rem;
-      color: rgba(255,255,255,0.75);
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      display: block;
-      margin-top: 0.1rem;
-    }
-
-    .severity-pill {
-      display: inline-block;
-      font-size: 0.63rem;
-      font-weight: 600;
-      letter-spacing: 0.07em;
-      text-transform: uppercase;
-      padding: 0.18rem 0.55rem;
-      border-radius: 100px;
-    }
-    .severity-pill.low      { color: var(--safe); background: var(--safe-bg); border: 1px solid var(--safe-border); }
-    .severity-pill.medium   { color: var(--warn); background: var(--warn-bg); border: 1px solid var(--warn-border); }
+    .severity-pill { display: inline-block; font-size: 0.63rem; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; padding: 0.18rem 0.55rem; border-radius: 100px; }
+    .severity-pill.low      { color: var(--safe);   background: var(--safe-bg);   border: 1px solid var(--safe-border); }
+    .severity-pill.medium   { color: var(--warn);   background: var(--warn-bg);   border: 1px solid var(--warn-border); }
     .severity-pill.critical { color: var(--danger); background: var(--danger-bg); border: 1px solid var(--danger-border); }
 
-    .result-body {
-      padding: 1.5rem 1.75rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
+    .result-body { padding: 1.5rem 1.75rem; display: flex; flex-direction: column; gap: 1.5rem; }
 
-    .result-section-title {
-      font-size: 0.85rem;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.75);
-      margin-bottom: 0.75rem;
-    }
+    .result-section-title { font-size: 0.85rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: rgba(255,255,255,0.75); margin-bottom: 0.75rem; }
 
-    .reasons {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 0.65rem;
-    }
+    .reasons { list-style: none; display: flex; flex-direction: column; gap: 0.65rem; }
 
-    .reasons li {
-      display: flex;
-      gap: 0.8rem;
-      font-size: 1rem;
-      color: #ffffff;
-      line-height: 1.6;
-      align-items: flex-start;
-    }
+    .reasons li { display: flex; gap: 0.8rem; font-size: 1rem; color: #ffffff; line-height: 1.6; align-items: flex-start; }
 
     .reason-num {
       min-width: 18px;
@@ -473,96 +371,50 @@
       line-height: 1.65;
     }
 
-    /* ─── EMAIL SIGNUP ─── */
-    .signup-wrap {
+    /* ─── PRIVACY POLICY SECTION ─── */
+    /* Required under UK GDPR / DPA 2018 / DUAA 2025 / Consumer Rights Act 2015 */
+    .privacy-section {
       width: 100%;
       max-width: 660px;
       padding: 0 2rem 2rem;
-      animation: rise 0.5s ease 0.2s both;
     }
 
-    .signup-card {
+    .privacy-card {
       background: var(--surface);
       border: 1px solid var(--border-mid);
       border-radius: 12px;
       padding: 1.75rem;
     }
 
-    .signup-title {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: #ffffff;
-      margin-bottom: 0.35rem;
-    }
-
-    .signup-sub {
-      font-size: 0.9rem;
-      color: rgba(255,255,255,0.7);
-      line-height: 1.6;
-      margin-bottom: 1.1rem;
-    }
-
-    .signup-row {
-      display: flex;
-      gap: 0.65rem;
-    }
-
-    .signup-row input[type="email"] {
-      flex: 1;
-      background: #ffffff;
-      border: 1px solid #e4e4e7;
-      border-radius: 8px;
-      padding: 0.75rem 1rem;
-      font-family: 'Times New Roman', Times, serif;
+    .privacy-card h2 {
       font-size: 1rem;
-      color: #18181b;
-      outline: none;
-      transition: border-color 0.15s, box-shadow 0.15s;
-    }
-
-    .signup-row input[type="email"]:focus {
-      border-color: var(--blue);
-      box-shadow: 0 0 0 3px var(--blue-glow);
-    }
-
-    .signup-row input::placeholder { color: #9ca3af; }
-
-    .signup-row button {
-      background: var(--blue);
-      color: #ffffff;
-      border: none;
-      border-radius: 8px;
-      padding: 0.75rem 1.25rem;
-      font-family: 'Times New Roman', Times, serif;
-      font-size: 0.95rem;
       font-weight: 700;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: background 0.15s, transform 0.1s;
+      color: #ffffff;
+      letter-spacing: 0.02em;
+      margin-bottom: 1.1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
     }
 
-    .signup-row button:hover {
-      background: var(--blue-hover);
-      transform: translateY(-1px);
-    }
-
-    .signup-note {
+    .privacy-card h3 {
       font-size: 0.78rem;
-      color: rgba(255,255,255,0.4);
-      margin-top: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      margin-top: 1.25rem;
+      margin-bottom: 0.45rem;
     }
 
-    .signup-success {
-      display: none;
-      font-size: 0.95rem;
-      color: var(--safe);
-      font-weight: 600;
-      padding: 0.5rem 0;
-    }
-
-    .signup-success.visible { display: block; }
+    .privacy-card p { font-size: 0.875rem; color: rgba(255,255,255,0.6); line-height: 1.75; }
+    .privacy-card ul { padding-left: 1.1rem; display: flex; flex-direction: column; gap: 0.3rem; }
+    .privacy-card li { font-size: 0.875rem; color: rgba(255,255,255,0.6); line-height: 1.7; }
+    .privacy-card a { color: rgba(37,99,235,0.8); text-decoration: none; }
+    .privacy-card a:hover { color: var(--blue); }
 
     /* ─── FOOTER ─── */
+    /* BUG FIX: original file was missing "footer {" — properties were floating loose in CSS */
+    footer {
       width: 100%;
       max-width: 660px;
       padding: 0 2rem 3rem;
@@ -579,14 +431,19 @@
     .footer-inner a { color: rgba(37,99,235,0.7); text-decoration: none; }
     .footer-inner a:hover { color: var(--blue); }
 
-    /* Animations */
+    .footer-legal {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.3);
+    }
+
     @keyframes rise {
       from { opacity: 0; transform: translateY(14px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
     @media (max-width: 480px) {
       .page { padding: 2.5rem 1.25rem 5rem; }
@@ -601,7 +458,6 @@
   <nav>
     <div class="nav-inner">
       <a class="brand" href="#">
-        <!-- Clean geometric shield SVG -->
         <svg class="shield-icon" viewBox="0 0 28 32" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M14 1L2 6.5V15C2 21.627 7.373 27.5 14 31C20.627 27.5 26 21.627 26 15V6.5L14 1Z" fill="none" stroke="white" stroke-width="1.6" stroke-linejoin="round"/>
           <path d="M9 16l3.5 3.5L19 12" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
@@ -619,7 +475,7 @@
     <div class="definition">
       <div class="definition-label">Phishing</div>
       <p class="definition-body">
-        Phishing is when someone <strong>pretends to be someone you trust</strong> like a bank, a delivery service, a government body to trick you into handing over your <strong>password, money, or personal details</strong>. It usually arrives as an email, text, or message designed to make you act fast before you stop to think.
+        Phishing is when someone <strong>pretends to be someone you trust</strong> — like a bank, a delivery service, a government body — to trick you into handing over your <strong>password, money, or personal details</strong>. It usually arrives as an email, text, or message designed to make you act fast before you stop to think.
       </p>
     </div>
 
@@ -627,12 +483,20 @@
     <div class="hero">
       <h1>Is this message<br><em>a scam?</em></h1>
       <p class="hero-sub">Paste any suspicious email, text, or message. OZONE Shield analyses it against known scam patterns and returns a clear verdict in seconds.</p>
+      <!--
+        AI TRANSPARENCY NOTICE — legally required under:
+        · UK Data (Use and Access) Act 2025 — automated decision-making disclosure
+        · ICO Guidance on Explaining Decisions Made with AI
+        · UK AI Regulatory Framework (DSIT, 2024)
+      -->
+      <div class="ai-notice">
+        <div class="ai-notice-dot"></div>
+        This verdict is produced by artificial intelligence. Results are advisory — always verify through official channels.
+      </div>
     </div>
 
     <!-- INPUT CARD -->
     <div class="card">
-
-
 
       <!-- MESSAGE -->
       <div class="section">
@@ -674,7 +538,6 @@
 
     <!-- RESULT -->
     <div class="result" id="resultCard">
-
       <div class="result-head">
         <div class="verdict-emoji" id="verdictIcon"></div>
         <div>
@@ -687,7 +550,6 @@
           <span class="severity-pill" id="severityPill"></span>
         </div>
       </div>
-
       <div class="result-body">
         <div>
           <p class="result-section-title">Why we flagged this</p>
@@ -698,12 +560,34 @@
           <div class="action-block" id="actionBox"></div>
         </div>
       </div>
-
     </div>
 
   </div>
 
-  <!-- EMAIL SIGNUP -->
+  <!--
+  ════════════════════════════════════════════════════════════════════════
+  EMAIL SIGNUP — TEMPORARILY DISABLED
+  ════════════════════════════════════════════════════════════════════════
+  LEGAL REASON: Collecting email addresses = processing personal data
+  under UK GDPR / Data Protection Act 2018. Cannot collect personal data
+  electronically without first registering with the ICO.
+
+  ACTION REQUIRED: Register at ico.org.uk → "Pay your data protection fee"
+  Cost: £52/year (Tier 1 — sole trader / micro-organisation)
+  Time: ~10 minutes online
+
+  TO RESTORE THIS FORM: Once you have your ICO registration number,
+  uncomment the block below AND add this consent statement above the
+  submit button:
+
+    "By signing up you agree to receive the Weekly Scam Report by email.
+     We will store your email address for this purpose only and will
+     never sell it. You can unsubscribe at any time.
+     See our Privacy Policy below."
+
+  Also update the Privacy Policy section below with your ICO number.
+  ════════════════════════════════════════════════════════════════════════
+
   <div class="signup-wrap">
     <div class="signup-card">
       <div class="signup-text">
@@ -713,15 +597,74 @@
       <form name="waitlist" netlify netlify-honeypot="bot-field" class="signup-form" id="signupForm">
         <input type="hidden" name="form-name" value="waitlist" />
         <p style="display:none"><input name="bot-field" /></p>
+        [ADD CONSENT STATEMENT HERE BEFORE UNCOMMENTING]
         <div class="signup-row">
           <input type="email" name="email" id="emailInput" placeholder="your@email.com" required autocomplete="email" />
           <button type="submit" id="signupBtn">Subscribe</button>
         </div>
-        <p class="signup-note">No spam. No selling your data. Unsubscribe any time.</p>
       </form>
       <div class="signup-success" id="signupSuccess">
         <span>✓</span> You're on the list. First report lands this week.
       </div>
+    </div>
+  </div>
+  -->
+
+  <!-- ════════════════════════════════════════════════════════════════════
+       PRIVACY POLICY & TERMS OF USE
+       Legally required under:
+       · UK GDPR Article 13 — transparency when collecting/processing data
+       · Data Protection Act 2018
+       · Data (Use and Access) Act 2025 — automated decision-making rights
+       · Consumer Rights Act 2015 — terms for digital content/services
+       · UK AI Regulatory Framework — AI transparency obligations
+  ═══════════════════════════════════════════════════════════════════════ -->
+  <div class="privacy-section" id="privacy-policy">
+    <div class="privacy-card">
+      <h2>Privacy Policy &amp; Terms of Use</h2>
+      <p>Last updated: March 2026 &nbsp;·&nbsp; Operated by OZONE Security (sole trader, England &amp; Wales)</p>
+
+      <h3>What this service does</h3>
+      <p>OZONE Shield analyses text messages you paste into the tool for scam indicators using the Claude AI API (Anthropic, PBC). Analysis is performed automatically with no human reviewing your submitted messages. Results are advisory only — they are not a substitute for professional advice and should not be your sole basis for any financial or legal decision.</p>
+
+      <h3>Automated decision-making</h3>
+      <p>All scam verdicts are generated entirely by artificial intelligence. This is disclosed on every result. Under the UK Data (Use and Access) Act 2025 you have the right to query any automated verdict that affects you. Contact us at the address below and we will respond within 30 days.</p>
+
+      <h3>Data we collect and why</h3>
+      <ul>
+        <li><strong>Message content you paste:</strong> Transmitted to the Claude AI API (Anthropic, PBC) for analysis. OZONE Shield does not store your message content after the result is returned.</li>
+        <li><strong>Server logs:</strong> Netlify (our hosting provider) automatically logs IP addresses and request metadata for security and uptime. Governed by <a href="https://www.netlify.com/privacy/" target="_blank" rel="noopener">Netlify's Privacy Policy</a>.</li>
+        <li><strong>No tracking:</strong> We use no analytics cookies, advertising pixels, or third-party tracking scripts.</li>
+      </ul>
+
+      <h3>Lawful basis</h3>
+      <p>Message content is processed under <strong>legitimate interests</strong> (UK GDPR Article 6(1)(f)) for the purpose of fraud detection and scam prevention — a recognised legitimate interest under the Data (Use and Access) Act 2025. We do not retain your message content after analysis, and the processing directly serves your safety interest.</p>
+
+      <h3>Third-party processors</h3>
+      <ul>
+        <li><strong>Anthropic PBC</strong> — Claude AI API, message analysis. US-based; UK data transfers governed by Standard Contractual Clauses. See <a href="https://www.anthropic.com/legal/privacy" target="_blank" rel="noopener">Anthropic Privacy Policy</a>.</li>
+        <li><strong>Netlify, Inc.</strong> — hosting and serverless functions. US-based. See <a href="https://www.netlify.com/privacy/" target="_blank" rel="noopener">Netlify Privacy Policy</a>.</li>
+      </ul>
+
+      <h3>Your rights under UK GDPR</h3>
+      <p>Because OZONE Shield does not store your message content, most data subject rights (access, correction, deletion) apply to Netlify's server logs rather than to OZONE Shield directly. You may contact us with any data query and we will respond within 30 days. You also have the right to complain to the UK Information Commissioner's Office at <a href="https://ico.org.uk" target="_blank" rel="noopener">ico.org.uk</a>.</p>
+
+      <h3>Accuracy &amp; limitations</h3>
+      <p>AI scam detection is probabilistic. OZONE Shield will sometimes flag legitimate messages (false positives) or miss actual scams (false negatives). Always verify suspicious messages through official channels before taking action. We accept no liability for decisions made based solely on OZONE Shield verdicts.</p>
+
+      <h3>Terms of use</h3>
+      <p>This service is provided free of charge for personal, non-commercial use. You must not use OZONE Shield for unlawful purposes, to reverse-engineer the underlying AI, or to submit content designed to manipulate or probe the system. Your statutory rights under the Consumer Rights Act 2015 are not affected by these terms. This service is governed by the laws of England and Wales.</p>
+
+      <h3>Changes to this policy</h3>
+      <p>We may update this policy as the service evolves. The date at the top of this section shows when it was last revised. Continued use of the service constitutes acceptance of any revised terms.</p>
+
+      <h3>Contact</h3>
+      <p>Privacy queries, data disputes, or concerns about an AI verdict:</p>
+      <p style="margin-top:0.4rem;">
+        <a href="/cdn-cgi/l/email-protection#7416161506151a1015444141341319151d185a171b19"><span class="__cf_email__" data-cfemail="3456565546555a5055040101745359555d581a575b59">[email&#160;protected]</span></a>
+        &nbsp;·&nbsp;
+        <span style="color:rgba(255,255,255,0.4);font-size:0.8rem;">We aim to respond within 30 days as required under UK GDPR.</span>
+      </p>
     </div>
   </div>
 
@@ -729,11 +672,15 @@
   <footer>
     <div class="footer-inner">
       <p>OZONE Shield uses Claude AI to analyse messages for scam patterns. Guidance only — always verify through official channels.</p>
-      <p>Report UK scams: <a href="https://www.actionfraud.police.uk" target="_blank" rel="noopener">Action Fraud</a> 0300 123 2040 · <a href="https://www.ncsc.gov.uk/collection/phishing-scams" target="_blank" rel="noopener">NCSC Guidance</a></p>
+      <p>Report UK scams: <a href="https://www.actionfraud.police.uk" target="_blank" rel="noopener">Action Fraud</a> 0300 123 2040 &nbsp;·&nbsp; <a href="https://www.ncsc.gov.uk/collection/phishing-scams" target="_blank" rel="noopener">NCSC Guidance</a></p>
+      <div class="footer-legal">
+        OZONE Security &nbsp;·&nbsp; England &amp; Wales &nbsp;·&nbsp;
+        <a href="#privacy-policy" onclick="document.getElementById('privacy-policy').scrollIntoView({behavior:'smooth'}); return false;">Privacy Policy &amp; Terms</a>
+      </div>
     </div>
   </footer>
 
-  <script>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     let cooldownActive = false;
     const COOLDOWN_MS = 10000;
 
@@ -827,39 +774,4 @@
       const track = document.getElementById('cooldownTrack');
       const fill  = document.getElementById('cooldownFill');
       track.className = 'cooldown-bar active';
-      fill.style.transition = 'none';
-      fill.style.width = '100%';
-      requestAnimationFrame(() => {
-        fill.style.transition = `width ${COOLDOWN_MS}ms linear`;
-        fill.style.width = '0%';
-      });
-      setTimeout(() => {
-        cooldownActive = false;
-        track.className = 'cooldown-bar';
-      }, COOLDOWN_MS);
-    }
-
-    document.getElementById('messageInput').addEventListener('keydown', e => {
-      if (e.key === 'Enter' && e.metaKey) analyse();
-    });
-
-    // Email signup — show success state without page reload
-    document.getElementById('signupForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const btn   = document.getElementById('signupBtn');
-      const email = document.getElementById('emailInput').value.trim();
-      btn.disabled = true;
-      btn.textContent = 'Subscribing…';
-      try {
-        await fetch('/', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: new URLSearchParams({ 'form-name': 'waitlist', email }).toString()
-        });
-      } catch {}
-      document.getElementById('signupForm').style.display = 'none';
-      document.getElementById('signupSuccess').className = 'signup-success visible';
-    });
-  </script>
-</body>
-</html>
+      fill.sty
