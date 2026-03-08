@@ -1,0 +1,36 @@
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # Prevent clickjacking — stops your page being embedded in iframes on other sites
+    X-Frame-Options = "DENY"
+
+    # Stops browsers guessing file types — prevents MIME-type attacks
+    X-Content-Type-Options = "nosniff"
+
+    # Forces HTTPS for 1 year — no one can downgrade to HTTP
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+
+    # Controls what info is sent when users click links off your site
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+    # Disables browser features you don't need — reduces attack surface
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=(), usb=(), bluetooth=()"
+
+    # Content Security Policy — only allow resources from trusted sources
+    Content-Security-Policy = """
+      default-src 'self';
+      script-src 'self' 'unsafe-inline';
+      style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+      font-src https://fonts.gstatic.com;
+      connect-src 'self' https://api.anthropic.com;
+      img-src 'self' data:;
+      frame-ancestors 'none';
+      base-uri 'self';
+      form-action 'self'
+    """
+
+    # XSS protection for older browsers
+    X-XSS-Protection = "1; mode=block"
+
+[[functions]]
+  directory = "netlify/functions"
