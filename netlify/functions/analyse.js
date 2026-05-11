@@ -85,7 +85,9 @@ const MIN_MESSAGE_CHARS = 10;
 const ALLOWED_ORIGINS   = [
   'https://ozone-shield.netlify.app',
   'http://localhost:5500',
-  'http://127.0.0.1:5500'
+  'http://127.0.0.1:5500',
+  'http://localhost:8888',
+  'http://127.0.0.1:8888'
 ];
 
 // RATE LIMITER — 10 requests per IP per minute
@@ -122,18 +124,35 @@ const SECURITY_HEADERS = {
 
 exports.handler = async (event) => {
 
-  // 1. Method check
+  const origin = event.headers['origin'] || event.headers['Origin'] || '';
+
+  // 1. CORS preflight
+  if (event.httpMethod === 'OPTIONS') {
+    const allowedOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : '';
+    return {
+      statusCode: 204,
+      headers: {
+        'Access-Control-Allow-Origin':  allowedOrigin,
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Max-Age':       '86400',
+        'Vary': 'Origin'
+      },
+      body: ''
+    };
+  }
+
+  // 2. Method check
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, headers: SECURITY_HEADERS, body: JSON.stringify({ error: 'Method not allowed' }) };
   }
 
-  // 2. CORS origin check
-  const origin = event.headers['origin'] || event.headers['Origin'] || '';
+  // 3. CORS origin check
   if (!ALLOWED_ORIGINS.includes(origin)) {
     return { statusCode: 403, headers: SECURITY_HEADERS, body: JSON.stringify({ error: 'Forbidden' }) };
   }
 
-  // 3. Content-Type check
+  // 4. Content-Type check
   const contentType = event.headers['content-type'] || '';
   if (!contentType.includes('application/json')) {
     return { statusCode: 415, headers: SECURITY_HEADERS, body: JSON.stringify({ error: 'Unsupported media type' }) };
@@ -194,12 +213,19 @@ exports.handler = async (event) => {
       headers: {
         'Content-Type': 'application/json',
         'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01'
+        'anthropic-version': '2023-06-01',
+        'anthropic-beta': 'prompt-caching-2024-07-31'
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-5',
-        max_tokens: 1024,
-        system: SYSTEM_PROMPT,
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 400,
+        system: [
+          {
+            type: 'text',
+            text: SYSTEM_PROMPT,
+            cache_control: { type: 'ephemeral' }
+          }
+        ],
         messages: [{ role: 'user', content: message }]
       })
     });
