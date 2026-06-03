@@ -764,7 +764,7 @@
       document.getElementById('btnText').textContent = 'Analysing';
 
       try {
-        const res = await fetch('/.netlify/functions/analyse', {
+        const res = await fetch('https://ozone-analyse.bbaranda055.workers.dev', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ message })
