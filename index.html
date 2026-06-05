@@ -5,45 +5,37 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>OZONE Shield — AI Scam Detector</title>
   <meta name="description" content="Paste any suspicious email, text, or message. OZONE Shield uses AI to analyse it for scam patterns and returns a clear verdict in seconds. Free for UK users.">
-  <!-- Canonical -->
-  <link rel="canonical" href="https://ozone-shield.netlify.app/">
+  <link rel="canonical" href="https://ozone-shield.bbaranda055.workers.dev/">
 
-  <!-- Favicon & touch icons -->
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon-precomposed.png">
 
-  <!-- Theme colour — browser chrome on mobile -->
   <meta name="theme-color" content="#0b0b0d">
-
-  <!-- Robots -->
   <meta name="robots" content="index, follow">
 
-  <!-- Open Graph — controls how page looks when shared on LinkedIn, WhatsApp, Facebook -->
   <meta property="og:type"        content="website">
-  <meta property="og:url"         content="https://ozone-shield.netlify.app/">
+  <meta property="og:url"         content="https://ozone-shield.bbaranda055.workers.dev/">
   <meta property="og:site_name"   content="OZONE Shield">
   <meta property="og:title"       content="OZONE Shield — Free AI Scam Detector for UK Users">
   <meta property="og:description" content="Paste any suspicious email, text, or message. OZONE Shield uses AI to detect scam patterns and returns a clear verdict in seconds. Free, no sign-up required.">
-  <meta property="og:image"       content="https://ozone-shield.netlify.app/apple-touch-icon.png">
+  <meta property="og:image"       content="https://ozone-shield.bbaranda055.workers.dev/apple-touch-icon.png">
   <meta property="og:image:width"  content="180">
   <meta property="og:image:height" content="180">
   <meta property="og:locale"      content="en_GB">
 
-  <!-- Twitter / X Card -->
   <meta name="twitter:card"        content="summary">
   <meta name="twitter:title"       content="OZONE Shield — Free AI Scam Detector">
   <meta name="twitter:description" content="Paste any suspicious message. AI analyses it for scam patterns instantly. Free for UK users.">
-  <meta name="twitter:image"       content="https://ozone-shield.netlify.app/apple-touch-icon.png">
+  <meta name="twitter:image"       content="https://ozone-shield.bbaranda055.workers.dev/apple-touch-icon.png">
 
-  <!-- JSON-LD Structured Data — Google rich results / knowledge panel -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     "name": "OZONE Shield",
-    "url": "https://ozone-shield.netlify.app/",
+    "url": "https://ozone-shield.bbaranda055.workers.dev/",
     "description": "Free AI-powered scam detector for UK users. Paste any suspicious email, text, or message to get an instant verdict.",
     "applicationCategory": "SecurityApplication",
     "operatingSystem": "Any",
@@ -67,7 +59,7 @@
     }
   }
   </script>
-  
+
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -108,7 +100,7 @@
       align-items: center;
     }
 
-    /* ─── NAV ─── */
+    /* NAV */
     nav {
       width: 100%;
       position: sticky;
@@ -148,14 +140,28 @@
 
     .brand-name span { color: rgba(255,255,255,0.75); font-weight: 400; }
 
+    .nav-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.1rem;
+    }
+
     .nav-tag {
-      font-size: 0.875rem;
+      font-size: 0.75rem;
       font-weight: 400;
       color: rgba(255,255,255,0.65);
       letter-spacing: 0.04em;
     }
 
-    /* ─── PAGE ─── */
+    .nav-company {
+      font-size: 0.65rem;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    /* PAGE */
     .page {
       width: 100%;
       max-width: 660px;
@@ -165,7 +171,7 @@
       gap: 2.5rem;
     }
 
-    /* ─── DEFINITION ─── */
+    /* DEFINITION */
     .definition {
       border-left: 2px solid var(--border-mid);
       padding-left: 1.25rem;
@@ -191,7 +197,7 @@
 
     .definition-body strong { font-style: normal; font-weight: 700; color: #ffffff; }
 
-    /* ─── HERO ─── */
+    /* HERO */
     .hero { animation: rise 0.5s ease 0.07s both; }
 
     h1 {
@@ -215,8 +221,6 @@
       margin-bottom: 0.85rem;
     }
 
-    /* ─── AI TRANSPARENCY BADGE ─── */
-    /* Required: UK Data (Use and Access) Act 2025 + UK AI Regulatory Framework */
     .ai-notice {
       display: inline-flex;
       align-items: center;
@@ -237,7 +241,7 @@
       flex-shrink: 0;
     }
 
-    /* ─── CARD ─── */
+    /* CARD */
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -429,8 +433,7 @@
       line-height: 1.65;
     }
 
-    /* ─── PRIVACY POLICY SECTION ─── */
-    /* Required under UK GDPR / DPA 2018 / DUAA 2025 / Consumer Rights Act 2015 */
+    /* PRIVACY SECTION */
     .privacy-section {
       width: 100%;
       max-width: 660px;
@@ -470,8 +473,7 @@
     .privacy-card a { color: rgba(37,99,235,0.8); text-decoration: none; }
     .privacy-card a:hover { color: var(--blue); }
 
-    /* ─── FOOTER ─── */
-    /* BUG FIX: original file was missing "footer {" — properties were floating loose in CSS */
+    /* FOOTER */
     footer {
       width: 100%;
       max-width: 660px;
@@ -522,7 +524,10 @@
         </svg>
         <span class="brand-name">OZONE <span>Shield</span></span>
       </a>
-      <span class="nav-tag">Powered by Claude AI</span>
+      <div class="nav-right">
+        <span class="nav-tag">Powered by Claude AI</span>
+        <span class="nav-company">by OZONE Security</span>
+      </div>
     </div>
   </nav>
 
@@ -541,12 +546,6 @@
     <div class="hero">
       <h1>Is this message<br><em>a scam?</em></h1>
       <p class="hero-sub">Paste any suspicious email, text, or message. OZONE Shield analyses it against known scam patterns and returns a clear verdict in seconds.</p>
-      <!--
-        AI TRANSPARENCY NOTICE — legally required under:
-        · UK Data (Use and Access) Act 2025 — automated decision-making disclosure
-        · ICO Guidance on Explaining Decisions Made with AI
-        · UK AI Regulatory Framework (DSIT, 2024)
-      -->
       <div class="ai-notice">
         <div class="ai-notice-dot"></div>
         This verdict is produced by artificial intelligence. Results are advisory — always verify through official channels.
@@ -571,10 +570,10 @@
         </div>
       </div>
 
-      <!-- BUTTON -->
+      <!-- BUTTON — onclick removed, listener attached via JS -->
       <div class="section">
         <div class="btn-wrap">
-          <button id="analyseBtn" onclick="analyse()">
+          <button id="analyseBtn">
             <span id="btnText">Analyse Message</span>
           </button>
           <span class="shortcut"><kbd>⌘</kbd> <kbd>↵</kbd></span>
@@ -622,65 +621,11 @@
 
   </div>
 
-  <!--
-  ════════════════════════════════════════════════════════════════════════
-  EMAIL SIGNUP — TEMPORARILY DISABLED
-  ════════════════════════════════════════════════════════════════════════
-  LEGAL REASON: Collecting email addresses = processing personal data
-  under UK GDPR / Data Protection Act 2018. Cannot collect personal data
-  electronically without first registering with the ICO.
-
-  ACTION REQUIRED: Register at ico.org.uk → "Pay your data protection fee"
-  Cost: £52/year (Tier 1 — sole trader / micro-organisation)
-  Time: ~10 minutes online
-
-  TO RESTORE THIS FORM: Once you have your ICO registration number,
-  uncomment the block below AND add this consent statement above the
-  submit button:
-
-    "By signing up you agree to receive the Weekly Scam Report by email.
-     We will store your email address for this purpose only and will
-     never sell it. You can unsubscribe at any time.
-     See our Privacy Policy below."
-
-  Also update the Privacy Policy section below with your ICO number.
-  ════════════════════════════════════════════════════════════════════════
-
-  <div class="signup-wrap">
-    <div class="signup-card">
-      <div class="signup-text">
-        <p class="signup-title">Weekly Scam Report</p>
-        <p class="signup-sub">The 3 most dangerous messages circulating in the UK right now — delivered free every week.</p>
-      </div>
-      <form name="waitlist" netlify netlify-honeypot="bot-field" class="signup-form" id="signupForm">
-        <input type="hidden" name="form-name" value="waitlist" />
-        <p style="display:none"><input name="bot-field" /></p>
-        [ADD CONSENT STATEMENT HERE BEFORE UNCOMMENTING]
-        <div class="signup-row">
-          <input type="email" name="email" id="emailInput" placeholder="your@email.com" required autocomplete="email" />
-          <button type="submit" id="signupBtn">Subscribe</button>
-        </div>
-      </form>
-      <div class="signup-success" id="signupSuccess">
-        <span>✓</span> You're on the list. First report lands this week.
-      </div>
-    </div>
-  </div>
-  -->
-
-  <!-- ════════════════════════════════════════════════════════════════════
-       PRIVACY POLICY & TERMS OF USE
-       Legally required under:
-       · UK GDPR Article 13 — transparency when collecting/processing data
-       · Data Protection Act 2018
-       · Data (Use and Access) Act 2025 — automated decision-making rights
-       · Consumer Rights Act 2015 — terms for digital content/services
-       · UK AI Regulatory Framework — AI transparency obligations
-  ═══════════════════════════════════════════════════════════════════════ -->
+  <!-- PRIVACY POLICY -->
   <div class="privacy-section" id="privacy-policy">
     <div class="privacy-card">
       <h2>Privacy Policy &amp; Terms of Use</h2>
-      <p>Last updated: March 2026 &nbsp;·&nbsp; Operated by OZONE Security (sole trader, England &amp; Wales)</p>
+      <p>Last updated: June 2026 &nbsp;·&nbsp; Operated by OZONE Security (sole trader, England &amp; Wales)</p>
 
       <h3>What this service does</h3>
       <p>OZONE Shield analyses text messages you paste into the tool for scam indicators using the Claude AI API (Anthropic, PBC). Analysis is performed automatically with no human reviewing your submitted messages. Results are advisory only — they are not a substitute for professional advice and should not be your sole basis for any financial or legal decision.</p>
@@ -691,7 +636,7 @@
       <h3>Data we collect and why</h3>
       <ul>
         <li><strong>Message content you paste:</strong> Transmitted to the Claude AI API (Anthropic, PBC) for analysis. OZONE Shield does not store your message content after the result is returned.</li>
-        <li><strong>Server logs:</strong> Netlify (our hosting provider) automatically logs IP addresses and request metadata for security and uptime. Governed by <a href="https://www.netlify.com/privacy/" target="_blank" rel="noopener">Netlify's Privacy Policy</a>.</li>
+        <li><strong>Server logs:</strong> Cloudflare, Inc. (our infrastructure provider) automatically logs IP addresses and request metadata for security and uptime. Governed by <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener">Cloudflare's Privacy Policy</a>.</li>
         <li><strong>No tracking:</strong> We use no analytics cookies, advertising pixels, or third-party tracking scripts.</li>
       </ul>
 
@@ -701,11 +646,11 @@
       <h3>Third-party processors</h3>
       <ul>
         <li><strong>Anthropic PBC</strong> — Claude AI API, message analysis. US-based; UK data transfers governed by Standard Contractual Clauses. See <a href="https://www.anthropic.com/legal/privacy" target="_blank" rel="noopener">Anthropic Privacy Policy</a>.</li>
-        <li><strong>Netlify, Inc.</strong> — hosting and serverless functions. US-based. See <a href="https://www.netlify.com/privacy/" target="_blank" rel="noopener">Netlify Privacy Policy</a>.</li>
+        <li><strong>Cloudflare, Inc.</strong> — hosting, edge compute, and serverless infrastructure. US-based. See <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener">Cloudflare Privacy Policy</a>.</li>
       </ul>
 
       <h3>Your rights under UK GDPR</h3>
-      <p>Because OZONE Shield does not store your message content, most data subject rights (access, correction, deletion) apply to Netlify's server logs rather than to OZONE Shield directly. You may contact us with any data query and we will respond within 30 days. You also have the right to complain to the UK Information Commissioner's Office at <a href="https://ico.org.uk" target="_blank" rel="noopener">ico.org.uk</a>.</p>
+      <p>Because OZONE Shield does not store your message content, most data subject rights (access, correction, deletion) apply to Cloudflare's server logs rather than to OZONE Shield directly. You may contact us with any data query and we will respond within 30 days. You also have the right to complain to the UK Information Commissioner's Office at <a href="https://ico.org.uk" target="_blank" rel="noopener">ico.org.uk</a>.</p>
 
       <h3>Accuracy &amp; limitations</h3>
       <p>AI scam detection is probabilistic. OZONE Shield will sometimes flag legitimate messages (false positives) or miss actual scams (false negatives). Always verify suspicious messages through official channels before taking action. We accept no liability for decisions made based solely on OZONE Shield verdicts.</p>
@@ -720,7 +665,6 @@
       <p>Privacy queries, data disputes, or concerns about an AI verdict:</p>
       <p style="margin-top:0.4rem;">
         <strong style="color:#ffffff;" id="contact-email"></strong>
-        <script>document.getElementById('contact-email').textContent='bbaranda055'+'@'+'gmail.com';</script>
         &nbsp;·&nbsp;
         <span style="color:rgba(255,255,255,0.4);font-size:0.8rem;">We aim to respond within 30 days as required under UK GDPR.</span>
       </p>
@@ -739,16 +683,28 @@
     </div>
   </footer>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  <script>
+    // ─── COOLDOWN ──────────────────────────────────────────────────────────────
     let cooldownActive = false;
-    const COOLDOWN_MS = 10000;
+    const COOLDOWN_MS  = 10000;
 
-    document.getElementById('messageInput').addEventListener('input', function () {
-      document.getElementById('charCount').textContent = this.value.length;
-    });
+    // ─── CHARACTER COUNTER — handles both typing and paste ────────────────────
+    const msgInput = document.getElementById('messageInput');
+    const charCount = document.getElementById('charCount');
 
+    function updateCharCount() {
+      charCount.textContent = msgInput.value.length;
+    }
+
+    msgInput.addEventListener('input', updateCharCount);
+    msgInput.addEventListener('paste', () => setTimeout(updateCharCount, 0));
+
+    // ─── CONTACT EMAIL — obfuscated ───────────────────────────────────────────
+    document.getElementById('contact-email').textContent = 'bbaranda055' + '@' + 'gmail.com';
+
+    // ─── ANALYSE FUNCTION ─────────────────────────────────────────────────────
     async function analyse() {
-      const message = document.getElementById('messageInput').value.trim();
+      const message = msgInput.value.trim();
       const btn     = document.getElementById('analyseBtn');
       const errBox  = document.getElementById('errorBox');
       const result  = document.getElementById('resultCard');
@@ -765,13 +721,13 @@
 
       try {
         const res = await fetch('https://ozone-analyse.bbaranda055.workers.dev', {
-          method: 'POST',
+          method:  'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message })
+          body:    JSON.stringify({ message })
         });
 
         if (!res.ok) {
-          const e = await res.json();
+          const e = await res.json().catch(() => ({}));
           throw new Error(e.error || `Error ${res.status}`);
         }
 
@@ -790,9 +746,10 @@
       }
     }
 
+    // ─── RENDER RESULT ────────────────────────────────────────────────────────
     function render(r) {
       const card = document.getElementById('resultCard');
-      const map = {
+      const map  = {
         SAFE:       { cls: 'safe',       icon: '🟢', sub: 'No significant scam signals detected.' },
         SUSPICIOUS: { cls: 'suspicious', icon: '🟡', sub: 'Proceed with caution — signals detected.' },
         SCAM:       { cls: 'scam',       icon: '🔴', sub: 'High-confidence scam indicators found.' },
@@ -813,7 +770,7 @@
       pill.className   = `severity-pill ${sev}`;
 
       const list = document.getElementById('reasonsList');
-      list.innerHTML = '';
+      list.innerHTML   = '';
       (r.REASONS || []).forEach((reason, i) => {
         const li = document.createElement('li');
         li.innerHTML = `<span class="reason-num">${i + 1}</span><span>${reason}</span>`;
@@ -823,14 +780,40 @@
       card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
+    // ─── ERROR ────────────────────────────────────────────────────────────────
     function showError(msg) {
       document.getElementById('errorText').textContent = msg;
-      document.getElementById('errorBox').className = 'error-box visible';
+      document.getElementById('errorBox').className   = 'error-box visible';
     }
 
+    // ─── COOLDOWN BAR ─────────────────────────────────────────────────────────
     function startCooldown() {
       cooldownActive = true;
       const track = document.getElementById('cooldownTrack');
       const fill  = document.getElementById('cooldownFill');
-      track.className = 'cooldown-bar active';
-      fill.sty}
+      track.className        = 'cooldown-bar active';
+      fill.style.transition  = `width ${COOLDOWN_MS}ms linear`;
+      fill.style.width       = '100%';
+      setTimeout(() => {
+        cooldownActive        = false;
+        track.className       = 'cooldown-bar';
+        fill.style.transition = 'none';
+        fill.style.width      = '0';
+      }, COOLDOWN_MS);
+    }
+
+    // ─── EVENT LISTENERS ──────────────────────────────────────────────────────
+    // Button click — no onclick attribute, attached here to work in all runtimes
+    document.getElementById('analyseBtn').addEventListener('click', analyse);
+
+    // Keyboard shortcut: Cmd+Enter (Mac) or Ctrl+Enter (Windows/Linux)
+    document.addEventListener('keydown', function (e) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+        e.preventDefault();
+        analyse();
+      }
+    });
+  </script>
+
+</body>
+</html>
