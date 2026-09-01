@@ -133,9 +133,9 @@ ozone-shield/
 
 ## The Problem It Solves
 
-Over 3.4 billion phishing messages are sent every day. Most people lack the tools or knowledge to quickly assess whether a message is genuine. Existing solutions are either too technical, buried in government websites, or require checking multiple sources.
+Over 3.4 billion phishing emails are sent every day — and SMS-based phishing (smishing) now accounts for 35% of all phishing attacks on top of that. Most people lack the tools or knowledge to quickly assess whether a message, on any channel, is genuine. Existing solutions are either too technical, buried in government websites, or require checking multiple sources.
 
-OZONE Shield reduces the assessment to one action: paste the message, get the verdict.
+OZONE Shield reduces the assessment to one action: paste the message, get the verdict — across email, SMS, WhatsApp, or letter, not just one channel.
 
 ---
 
@@ -154,7 +154,9 @@ OZONE Shield reduces the assessment to one action: paste the message, get the ve
 ## Built By
 
 **Bhargav Baranda** — OZONE Security
-[linkedin.com/in/bhargav-baranda](https://linkedin.com/in/bhargav-baranda) · [youtube.com/@Granger-Security](https://youtube.com/@Granger-Security)
+MSc Information Security (Royal Holloway, University of London) · CompTIA Security+ certified · ISC² Certified in Cybersecurity (CC)
+
+[linkedin.com/in/bhargav-baranda](https://linkedin.com/in/bhargav-baranda) · [youtube.com/@Granger-Security](https://youtube.com/@Granger-Security) · [github.com/Granger0007](https://github.com/Granger0007) · [SOC Lab Portfolio](https://github.com/Granger0007/Bhargav-Baranda-Portfolio)
 
 <div align="center">
 
