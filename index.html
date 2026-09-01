@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -270,7 +270,7 @@
       border: 1px solid #e4e4e7;
       border-radius: 8px;
       padding: 0.9rem 1rem;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: 'Times New Roman', Times, serif;
       font-size: 1rem;
       color: #18181b;
       line-height: 1.65;
@@ -588,13 +588,13 @@
     </div>
 
     <!-- ERROR -->
-    <div class="error-box" id="errorBox">
+    <div class="error-box" id="errorBox" role="alert">
       <span>⚠</span>
       <span id="errorText"></span>
     </div>
 
     <!-- RESULT -->
-    <div class="result" id="resultCard">
+    <div class="result" id="resultCard" aria-live="polite" aria-atomic="true">
       <div class="result-head">
         <div class="verdict-emoji" id="verdictIcon"></div>
         <div>
@@ -625,13 +625,13 @@
   <div class="privacy-section" id="privacy-policy">
     <div class="privacy-card">
       <h2>Privacy Policy &amp; Terms of Use</h2>
-      <p>Last updated: June 2026 &nbsp;·&nbsp; Operated by OZONE Security (sole trader, England &amp; Wales)</p>
+      <p>Last updated: September 2026 &nbsp;·&nbsp; Operated by OZONE Security (sole trader, England &amp; Wales)</p>
 
       <h3>What this service does</h3>
       <p>OZONE Shield analyses text messages you paste into the tool for scam indicators using the Claude AI API (Anthropic, PBC). Analysis is performed automatically with no human reviewing your submitted messages. Results are advisory only — they are not a substitute for professional advice and should not be your sole basis for any financial or legal decision.</p>
 
       <h3>Automated decision-making</h3>
-      <p>All scam verdicts are generated entirely by artificial intelligence. This is disclosed on every result. Under the UK Data (Use and Access) Act 2025 you have the right to query any automated verdict that affects you. Contact us at the address below and we will respond within 30 days.</p>
+      <p>All scam verdicts are generated entirely by artificial intelligence. This is disclosed on every result. You have the right to query any automated verdict that affects you. Contact us at the address below and we will respond within 30 days.</p>
 
       <h3>Data we collect and why</h3>
       <ul>
@@ -641,7 +641,7 @@
       </ul>
 
       <h3>Lawful basis</h3>
-      <p>Message content is processed under <strong>legitimate interests</strong> (UK GDPR Article 6(1)(f)) for the purpose of fraud detection and scam prevention — a recognised legitimate interest under the Data (Use and Access) Act 2025. We do not retain your message content after analysis, and the processing directly serves your safety interest.</p>
+      <p>Message content is processed under <strong>legitimate interests</strong> (UK GDPR Article 6(1)(f)) for the purpose of fraud detection and scam prevention. We do not retain your message content after analysis, and the processing directly serves your own safety interest — the core factors a legitimate interests assessment weighs.</p>
 
       <h3>Third-party processors</h3>
       <ul>
@@ -773,7 +773,13 @@
       list.innerHTML   = '';
       (r.REASONS || []).forEach((reason, i) => {
         const li = document.createElement('li');
-        li.innerHTML = `<span class="reason-num">${i + 1}</span><span>${reason}</span>`;
+        const num = document.createElement('span');
+        num.className = 'reason-num';
+        num.textContent = i + 1;
+        const text = document.createElement('span');
+        text.textContent = reason;
+        li.appendChild(num);
+        li.appendChild(text);
         list.appendChild(li);
       });
 
