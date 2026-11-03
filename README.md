@@ -10,7 +10,7 @@
 
 </div>
 
----
+
 
 ## What It Does
 
@@ -20,7 +20,7 @@ No account. No download. No technical knowledge required.
 
 > **What this tool is, and isn't.** OZONE Shield is **guidance, not a guarantee.** It reads the text of a message and tells you what the warning signs look like. It cannot verify who really sent something, check whether a link is live, or know your circumstances. A **SAFE** verdict means *no obvious scam signals in the words* — it does not mean the message is genuine. **Never treat it as the final word on anything involving your money, your accounts or your identity.** If something feels wrong, contact the organisation directly using a number you already have, not one from the message.
 
----
+
 
 ## Verdict System
 
@@ -48,7 +48,7 @@ Each result includes:
 
 If you have lost money or think your bank account is at risk, contact your bank immediately — most UK banks can be reached by dialling **159**.
 
----
+
 
 ## Architecture
 
@@ -81,7 +81,7 @@ Browser renders result
 - Hosting — Cloudflare Workers (Git-connected auto-deploy on `main`)
 - Version control — GitHub
 
----
+
 
 ## Security
 
@@ -99,7 +99,7 @@ Browser renders result
 | AI Gateway | All model calls routed and logged through Cloudflare AI Gateway for observability |
 | Error sanitisation | Internal error details never exposed to the browser |
 
----
+
 
 ## Privacy and Data Protection
 
@@ -133,7 +133,7 @@ Honest disclosure, because a security tool that hides its own limitations isn't 
 - **Retention periods for AI Gateway logs and KV rate-limit entries are being documented** rather than assumed.
 - **A user-facing privacy notice** will be added to the interface itself, not only to this README.
 
----
+
 
 ## Detection Signal Categories
 
@@ -146,7 +146,7 @@ The system prompt analyses messages across six signal categories:
 5. **Structural scam patterns** — credential/OTP requests, off-channel instructions, too-good-to-be-true offers, remote access requests
 6. **UK-specific scam patterns** *(high priority — weighted heavily)* — "Hi Mum/Dad" WhatsApp fraud, safe account fraud, courier fraud, HMRC impersonation, DVLA vehicle tax scams, Royal Mail/Parcel Force delivery scams, NHS impersonation, investment/crypto scams, romance scams, energy rebate scams
 
----
+
 
 ## Repository Structure
 
@@ -161,7 +161,7 @@ ozone-shield/
     └── netlify/                      ← Retired Netlify implementation, kept for history
 ```
 
----
+
 
 ## Build Summary
 
@@ -177,7 +177,7 @@ ozone-shield/
 | 8 | Bot protection — Cloudflare Turnstile configured | 🔄 server-side enforcement being verified |
 | 9 | Data protection — DPIA, retention documentation, in-app privacy notice | 🔄 in progress |
 
----
+
 
 ## The Problem It Solves
 
@@ -187,7 +187,7 @@ Most people don't lack judgement. They lack a fast, free second opinion at the m
 
 OZONE Shield reduces that to a single action: paste the message, get a verdict and a reason — across any channel, not just one.
 
----
+
 
 ## Roadmap
 
@@ -200,7 +200,7 @@ OZONE Shield reduces that to a single action: paste the message, get a verdict a
 - [ ] Mobile app — React Native (iOS and Android)
 - [ ] API endpoint — allow third-party integration of OZONE Shield verdicts
 
----
+
 
 ## Built By
 
