@@ -1,0 +1,15 @@
+{
+  // Cloudflare Worker for the OZONE Shield analysis API (ozone-analyse).
+  //
+  // Secrets live in Cloudflare (dashboard, or `wrangler secret put NAME`),
+  // never in this file or anywhere else in the repository:
+  //   ANTHROPIC_API_KEY     Claude API key
+  //   AI_GATEWAY_TOKEN      token for the authenticated AI Gateway
+  //   TURNSTILE_SECRET_KEY  Cloudflare Turnstile secret (set, not yet used)
+  "name": "ozone-analyse",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-07-09",
+  "kv_namespaces": [
+    { "binding": "RATE_LIMIT_KV", "id": "54da4c247fe54dab8bfa04ccbe94e833" }
+  ]
+}

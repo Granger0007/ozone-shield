@@ -1,0 +1,26 @@
+# ozone-analyse
+
+The backend for OZONE Shield. It receives a message from the website, checks it, sends it to Claude through Cloudflare AI Gateway, and returns a verdict as JSON.
+
+## How a request is handled
+
+1. CORS preflight and an allow-list of origins
+2. Method, content type and request size checks (16 KB maximum)
+3. Rate limiting per IP address, stored in Workers KV (`RATE_LIMIT_KV`)
+4. Input clean-up and length checks (10 to 4,000 characters)
+5. Call to the Claude API through AI Gateway, with a 25-second timeout
+6. JSON verdict returned to the website
+
+## Configuration
+
+- `wrangler.jsonc`: Worker name, entry point and the KV binding
+- Secrets, set in Cloudflare and never committed:
+  - `ANTHROPIC_API_KEY`
+  - `AI_GATEWAY_TOKEN`
+  - `TURNSTILE_SECRET_KEY` (present but not used yet)
+
+For local development, put test values in `api/.dev.vars`. It's listed in `.gitignore`, so it can't be committed.
+
+## Status
+
+This is the code as it runs today, added to the repository as a baseline. Known issues are being fixed one pull request at a time, so each change can be reviewed on its own.
