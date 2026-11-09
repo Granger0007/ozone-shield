@@ -21,8 +21,14 @@
 
   "cache": { "enabled": false },
 
-  "kv_namespaces": [
-    { "binding": "RATE_LIMIT_KV", "id": "54da4c247fe54dab8bfa04ccbe94e833" }
+  // 10 requests per 60 seconds per client. namespace_id is any account-unique
+  // number; Workers that share it would share counters.
+  "ratelimits": [
+    {
+      "name": "RATE_LIMITER",
+      "namespace_id": "1001",
+      "simple": { "limit": 10, "period": 60 }
+    }
   ],
 
   "observability": {
