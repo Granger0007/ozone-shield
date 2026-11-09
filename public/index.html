@@ -346,6 +346,7 @@
     .cooldown-bar { height: 2px; background: var(--border); overflow: hidden; opacity: 0; transition: opacity 0.2s; }
     .cooldown-bar.active { opacity: 1; }
     .cooldown-fill { height: 100%; width: 0; background: var(--blue); }
+    .turnstile-wrap:not(:empty) { margin-top: 0.9rem; }
 
     .error-box {
       display: none;
@@ -578,6 +579,8 @@
           </button>
           <span class="shortcut"><kbd>⌘</kbd> <kbd>↵</kbd></span>
         </div>
+        <!-- Cloudflare Turnstile: only shows itself if a check needs the user -->
+        <div class="turnstile-wrap" id="turnstileBox"></div>
       </div>
 
       <!-- COOLDOWN -->
@@ -625,7 +628,7 @@
   <div class="privacy-section" id="privacy-policy">
     <div class="privacy-card">
       <h2>Privacy Policy &amp; Terms of Use</h2>
-      <p>Last updated: September 2026 &nbsp;·&nbsp; Operated by OZONE Security (sole trader, England &amp; Wales)</p>
+      <p>Last updated: November 2026 &nbsp;·&nbsp; Operated by OZONE Security (sole trader, England &amp; Wales)</p>
 
       <h3>What this service does</h3>
       <p>OZONE Shield analyses text messages you paste into the tool for scam indicators using the Claude AI API (Anthropic, PBC). Analysis is performed automatically with no human reviewing your submitted messages. Results are advisory only — they are not a substitute for professional advice and should not be your sole basis for any financial or legal decision.</p>
@@ -637,6 +640,7 @@
       <ul>
         <li><strong>Message content you paste:</strong> Transmitted to the Claude AI API (Anthropic, PBC) for analysis. OZONE Shield does not store your message content after the result is returned.</li>
         <li><strong>Server logs:</strong> Cloudflare, Inc. (our infrastructure provider) automatically logs IP addresses and request metadata for security and uptime. Governed by <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener">Cloudflare's Privacy Policy</a>.</li>
+        <li><strong>Bot check:</strong> Cloudflare Turnstile checks that a real person is using the page, to stop automated abuse of the service. It runs in your browser and is provided by Cloudflare, Inc.</li>
         <li><strong>No tracking:</strong> We use no analytics cookies, advertising pixels, or third-party tracking scripts.</li>
       </ul>
 
@@ -688,6 +692,29 @@
     let cooldownActive = false;
     const COOLDOWN_MS  = 10000;
 
+    // ─── TURNSTILE (bot check) ────────────────────────────────────────────────
+    // The site key is public by design. The secret key lives only on the backend.
+    const TURNSTILE_SITE_KEY = '0x4AAAAAADfi29voJT_jNWHf';
+    let turnstileWidgetId = null;
+    let turnstileToken    = '';
+
+    window.onTurnstileLoad = function () {
+      turnstileWidgetId = turnstile.render('#turnstileBox', {
+        sitekey:            TURNSTILE_SITE_KEY,
+        theme:              'dark',
+        appearance:         'interaction-only',
+        callback:           (token) => { turnstileToken = token; },
+        'expired-callback': () => { turnstileToken = ''; turnstile.reset(turnstileWidgetId); },
+        'error-callback':   () => { turnstileToken = ''; }
+      });
+    };
+
+    // Each token can be used once, so get a fresh one after every request.
+    function refreshTurnstile() {
+      turnstileToken = '';
+      if (window.turnstile && turnstileWidgetId !== null) turnstile.reset(turnstileWidgetId);
+    }
+
     // ─── CHARACTER COUNTER — handles both typing and paste ────────────────────
     const msgInput = document.getElementById('messageInput');
     const charCount = document.getElementById('charCount');
@@ -723,7 +750,7 @@
         const res = await fetch('https://ozone-analyse.bbaranda055.workers.dev', {
           method:  'POST',
           headers: { 'Content-Type': 'application/json' },
-          body:    JSON.stringify({ message })
+          body:    JSON.stringify({ message, turnstileToken })
         });
 
         if (!res.ok) {
@@ -740,6 +767,7 @@
       } catch (err) {
         showError(err.message || 'Something went wrong. Please try again.');
       } finally {
+        refreshTurnstile();
         btn.classList.remove('loading');
         document.getElementById('btnText').textContent = 'Analyse Message';
         btn.disabled = false;
@@ -820,6 +848,8 @@
       }
     });
   </script>
+
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onTurnstileLoad" async defer></script>
 
 </body>
 </html>
