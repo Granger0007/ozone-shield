@@ -709,6 +709,15 @@
       });
     };
 
+    // If someone clicks before the invisible check finishes, wait briefly for it.
+    async function waitForTurnstileToken(maxMs = 5000) {
+      const start = Date.now();
+      while (!turnstileToken && window.turnstile && Date.now() - start < maxMs) {
+        await new Promise((r) => setTimeout(r, 100));
+      }
+      return turnstileToken;
+    }
+
     // Each token can be used once, so get a fresh one after every request.
     function refreshTurnstile() {
       turnstileToken = '';
@@ -747,6 +756,7 @@
       document.getElementById('btnText').textContent = 'Analysing';
 
       try {
+        await waitForTurnstileToken();
         const res = await fetch('https://ozone-analyse.bbaranda055.workers.dev', {
           method:  'POST',
           headers: { 'Content-Type': 'application/json' },
