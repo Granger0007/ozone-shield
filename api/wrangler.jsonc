@@ -6,10 +6,34 @@
   //   ANTHROPIC_API_KEY     Claude API key
   //   AI_GATEWAY_TOKEN      token for the authenticated AI Gateway
   //   TURNSTILE_SECRET_KEY  Cloudflare Turnstile secret (set, not yet used)
+  //
+  // Runtime and observability settings below match the dashboard as of
+  // 9 November 2026, so deploying from Git doesn't silently change them.
   "name": "ozone-analyse",
   "main": "src/worker.js",
-  "compatibility_date": "2026-07-09",
+  "compatibility_date": "2026-06-03",
+
+  // Served at ozone-analyse.<subdomain>.workers.dev, which the website calls.
+  "workers_dev": true,
+  // No per-version preview URLs: each one would be another public endpoint
+  // running with the real API key.
+  "preview_urls": false,
+
+  "cache": { "enabled": false },
+
   "kv_namespaces": [
     { "binding": "RATE_LIMIT_KV", "id": "54da4c247fe54dab8bfa04ccbe94e833" }
-  ]
+  ],
+
+  "observability": {
+    "enabled": true,
+    "logs": {
+      "enabled": true,
+      "head_sampling_rate": 1,
+      "invocation_logs": true,
+      "persist": true
+    },
+    "traces": { "enabled": false },
+    "issues": { "enabled": false }
+  }
 }
