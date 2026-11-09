@@ -1,0 +1,13 @@
+{
+  // Cloudflare Worker for the OZONE Shield website.
+  // Only the files in ./public are served. Everything else in the
+  // repository (README, config, tests, source) stays private to the repo.
+  "name": "ozone-shield",
+  "compatibility_date": "2026-07-09",
+  "assets": {
+    "directory": "./public"
+  },
+  "observability": {
+    "enabled": true
+  }
+}

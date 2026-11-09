@@ -1,0 +1,14 @@
+# Local secrets: never commit these
+.dev.vars
+.dev.vars.*
+.env
+.env.*
+
+# Tooling and build output
+node_modules/
+.wrangler/
+dist/
+
+# OS clutter
+.DS_Store
+Thumbs.db
