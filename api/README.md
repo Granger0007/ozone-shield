@@ -24,3 +24,13 @@ For local development, put test values in `api/.dev.vars`. It's listed in `.giti
 ## Status
 
 This is the code as it runs today, added to the repository as a baseline. Known issues are being fixed one pull request at a time, so each change can be reviewed on its own.
+
+## Deployment
+
+Cloudflare Workers Builds deploys this Worker from the `main` branch:
+
+- Root directory: `/api`
+- Deploy command: `npx wrangler deploy`
+- Settings come from `wrangler.jsonc`, which matches the dashboard
+
+Pull requests don't create backend previews: `preview_urls` is `false` and preview builds are switched off, so no extra public copy of the API runs with the real secrets. To undo a bad deploy, roll back in Cloudflare under ozone-analyse → Deployments.
