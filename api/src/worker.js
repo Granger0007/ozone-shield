@@ -320,7 +320,10 @@ export default {
           'Content-Type'         : 'application/json',
           'x-api-key'            : apiKey,
           'anthropic-version'    : '2023-06-01',
-          'cf-aig-authorization' : 'Bearer ' + gatewayToken
+          'cf-aig-authorization' : 'Bearer ' + gatewayToken,
+          // Keep usage metrics in AI Gateway logs but never store the
+          // message or the model's reply (the privacy policy promises this).
+          'cf-aig-collect-log-payload' : 'false'
         },
         body: JSON.stringify({
           model      : 'claude-sonnet-4-6',
