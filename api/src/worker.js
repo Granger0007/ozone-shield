@@ -146,9 +146,7 @@ const MAX_BODY_BYTES    = 16 * 1024;
 const MAX_MESSAGE_CHARS = 4000;
 const MIN_MESSAGE_CHARS = 10;
 const ALLOWED_ORIGINS   = [
-  'https://ozone-shield.bbaranda055.workers.dev',
-  'http://localhost:5500',
-  'http://127.0.0.1:5500'
+  'https://ozone-shield.bbaranda055.workers.dev'
 ];
 
 // ─── RATE LIMITER — KV persistent, 10 requests per IP per minute ──────────────
@@ -217,6 +215,7 @@ function corsHeaders(origin) {
     'Access-Control-Allow-Origin'  : origin,
     'Access-Control-Allow-Methods' : 'POST, OPTIONS',
     'Access-Control-Allow-Headers' : 'Content-Type',
+    'Vary'                         : 'Origin',
   };
 }
 
@@ -248,17 +247,21 @@ export default {
       return errResponse(403, 'Forbidden');
     }
 
+    // From here on the origin is allowed, so errors include CORS headers and
+    // the website can show the real message to the user.
+    const cors = corsHeaders(origin);
+
     // 3. Content-Type check
     const contentType = request.headers.get('Content-Type') || '';
     if (!contentType.includes('application/json')) {
-      return errResponse(415, 'Unsupported media type');
+      return errResponse(415, 'Unsupported media type', cors);
     }
 
     // 4. Request size check
     const bodyText = await request.text();
     const bodySize = new TextEncoder().encode(bodyText).length;
     if (bodySize > MAX_BODY_BYTES) {
-      return errResponse(413, 'Request too large');
+      return errResponse(413, 'Request too large', cors);
     }
 
     // 5. KV persistent rate limiting by IP
@@ -267,7 +270,7 @@ export default {
                   || 'unknown';
 
     if (await isRateLimited(clientIp, env.RATE_LIMIT_KV)) {
-      return errResponse(429, 'Too many requests. Please wait a minute.');
+      return errResponse(429, 'Too many requests. Please wait a minute.', cors);
     }
 
     // 6. Parse body
@@ -276,11 +279,11 @@ export default {
       const body = JSON.parse(bodyText);
       message = body.message;
     } catch {
-      return errResponse(400, 'Invalid request format');
+      return errResponse(400, 'Invalid request format', cors);
     }
 
     if (typeof message !== 'string') {
-      return errResponse(400, 'Invalid message type');
+      return errResponse(400, 'Invalid message type', cors);
     }
 
     // 7. Sanitise
@@ -288,22 +291,22 @@ export default {
 
     // 8. Length validation
     if (message.length < MIN_MESSAGE_CHARS) {
-      return errResponse(400, 'Message too short to analyse');
+      return errResponse(400, 'Message too short to analyse', cors);
     }
     if (message.length > MAX_MESSAGE_CHARS) {
-      return errResponse(400, 'Message exceeds maximum length');
+      return errResponse(400, 'Message exceeds maximum length', cors);
     }
 
     // 9. API key check
     const apiKey = env.ANTHROPIC_API_KEY;
     if (!apiKey || !apiKey.startsWith('sk-ant-')) {
-      return errResponse(500, 'Service configuration error');
+      return errResponse(500, 'Service configuration error', cors);
     }
 
     // 10. AI Gateway token check
     const gatewayToken = env.AI_GATEWAY_TOKEN;
     if (!gatewayToken) {
-      return errResponse(500, 'Service configuration error');
+      return errResponse(500, 'Service configuration error', cors);
     }
 
     // 11. Call Anthropic via AI Gateway with 25s timeout
@@ -336,7 +339,7 @@ export default {
       clearTimeout(timeout);
 
       if (!response.ok) {
-        return errResponse(502, 'Analysis service unavailable. Please try again.', corsHeaders(origin));
+        return errResponse(502, 'Analysis service unavailable. Please try again.', cors);
       }
 
       const data  = await response.json();
@@ -350,9 +353,9 @@ export default {
     } catch (err) {
       clearTimeout(timeout);
       if (err.name === 'AbortError') {
-        return errResponse(504, 'Request timed out. Please try again.', corsHeaders(origin));
+        return errResponse(504, 'Request timed out. Please try again.', cors);
       }
-      return errResponse(500, 'An unexpected error occurred. Please try again.', corsHeaders(origin));
+      return errResponse(500, 'An unexpected error occurred. Please try again.', cors);
     }
   }
 };
