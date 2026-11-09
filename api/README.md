@@ -6,14 +6,14 @@ The backend for OZONE Shield. It receives a message from the website, checks it,
 
 1. CORS preflight and an allow-list of origins
 2. Method, content type and request size checks (16 KB maximum)
-3. Rate limiting per IP address, stored in Workers KV (`RATE_LIMIT_KV`)
+3. Rate limiting: 10 requests per minute per client (IPv4 address or IPv6 /64), using the Workers Rate Limiting binding (`RATE_LIMITER`). If the limiter fails, requests are refused with 503 rather than let through.
 4. Input clean-up and length checks (10 to 4,000 characters)
 5. Call to the Claude API through AI Gateway, with a 25-second timeout
 6. JSON verdict returned to the website
 
 ## Configuration
 
-- `wrangler.jsonc`: Worker name, entry point and the KV binding
+- `wrangler.jsonc`: Worker name, entry point and the rate-limit binding
 - Secrets, set in Cloudflare and never committed:
   - `ANTHROPIC_API_KEY`
   - `AI_GATEWAY_TOKEN`
@@ -24,6 +24,12 @@ For local development, put test values in `api/.dev.vars`. It's listed in `.giti
 ## Status
 
 This is the code as it runs today, added to the repository as a baseline. Known issues are being fixed one pull request at a time, so each change can be reviewed on its own.
+
+## Tests
+
+```bash
+node --test api/test/
+```
 
 ## Deployment
 

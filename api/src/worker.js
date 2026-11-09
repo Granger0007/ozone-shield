@@ -1,3 +1,5 @@
+import { rateLimitKey } from './ratelimit-key.js';
+
 const SYSTEM_PROMPT = `You are OZONE Shield, the world's most precise AI scam detection engine, built to protect everyday people in the UK from AI-generated and human-crafted scams.
 
 Your only job is to analyse the message provided and return a structured verdict. You do not chat. You do not explain yourself outside the JSON. You do not offer opinions. You analyse and verdict. Nothing else.
@@ -149,46 +151,18 @@ const ALLOWED_ORIGINS   = [
   'https://ozone-shield.bbaranda055.workers.dev'
 ];
 
-// ─── RATE LIMITER — KV persistent, 10 requests per IP per minute ──────────────
-// Replaces the previous in-memory Map which reset on Worker cold start.
-// KV persists across all Worker instances globally.
-const RATE_LIMIT     = 10;
-const RATE_WINDOW_MS = 60 * 1000;
-
-async function isRateLimited(ip, kv) {
-  const key = `rl:${ip}`;
-  const now = Date.now();
-
+// ─── RATE LIMITER — Workers Rate Limiting binding ─────────────────────────────
+// 10 requests per minute per client (IPv4 address or IPv6 /64), configured as
+// RATE_LIMITER in wrangler.jsonc. Replaces the KV counter, which wrote to KV on
+// every request and silently stopped limiting once the free plan's 1,000 daily
+// KV writes ran out. Counters are approximate and kept per Cloudflare location.
+// Returns 'ok', 'limited' or 'error'.
+async function checkRateLimit(ip, limiter) {
   try {
-    const stored = await kv.get(key, { type: 'json' });
-
-    if (!stored || (now - stored.windowStart) > RATE_WINDOW_MS) {
-      // New window — first request in this minute
-      await kv.put(
-        key,
-        JSON.stringify({ count: 1, windowStart: now }),
-        { expirationTtl: 120 }
-      );
-      return false;
-    }
-
-    if (stored.count >= RATE_LIMIT) {
-      // Window active, limit reached — block
-      return true;
-    }
-
-    // Window active, under limit — increment and allow
-    await kv.put(
-      key,
-      JSON.stringify({ count: stored.count + 1, windowStart: stored.windowStart }),
-      { expirationTtl: 120 }
-    );
-    return false;
-
+    const { success } = await limiter.limit({ key: rateLimitKey(ip) });
+    return success ? 'ok' : 'limited';
   } catch {
-    // KV unavailable — fail open to avoid blocking legitimate users
-    // Rate limit bypassed but service remains available
-    return false;
+    return 'error';
   }
 }
 
@@ -264,13 +238,16 @@ export default {
       return errResponse(413, 'Request too large', cors);
     }
 
-    // 5. KV persistent rate limiting by IP
-    const clientIp = request.headers.get('CF-Connecting-IP')
-                  || request.headers.get('x-forwarded-for')?.split(',')[0].trim()
-                  || 'unknown';
-
-    if (await isRateLimited(clientIp, env.RATE_LIMIT_KV)) {
+    // 5. Rate limiting per client. CF-Connecting-IP is set by Cloudflare;
+    //    X-Forwarded-For is not used because the client controls it.
+    const clientIp = request.headers.get('CF-Connecting-IP') || '';
+    const limit    = await checkRateLimit(clientIp, env.RATE_LIMITER);
+    if (limit === 'limited') {
       return errResponse(429, 'Too many requests. Please wait a minute.', cors);
+    }
+    if (limit === 'error') {
+      // Fail closed: without a working limiter, every request could spend API credit.
+      return errResponse(503, 'The service is busy. Please try again shortly.', cors);
     }
 
     // 6. Parse body
