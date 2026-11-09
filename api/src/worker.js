@@ -1,4 +1,5 @@
 import { rateLimitKey } from './ratelimit-key.js';
+import { verifyTurnstile } from './turnstile.js';
 
 const SYSTEM_PROMPT = `You are OZONE Shield, the world's most precise AI scam detection engine, built to protect everyday people in the UK from AI-generated and human-crafted scams.
 
@@ -252,9 +253,11 @@ export default {
 
     // 6. Parse body
     let message;
+    let turnstileToken;
     try {
       const body = JSON.parse(bodyText);
       message = body.message;
+      turnstileToken = body.turnstileToken;
     } catch {
       return errResponse(400, 'Invalid request format', cors);
     }
@@ -274,19 +277,37 @@ export default {
       return errResponse(400, 'Message exceeds maximum length', cors);
     }
 
-    // 9. API key check
+    // 9. Turnstile: proof that a real browser on our own site sent this request.
+    //    Per-IP rate limits can be dodged with a pool of addresses; this can't.
+    const human = await verifyTurnstile(turnstileToken, clientIp, env.TURNSTILE_SECRET_KEY);
+    if (human.result !== 'ok') {
+      // Log only the outcome and Cloudflare's error codes, never the token or message.
+      console.log(JSON.stringify({ event: 'turnstile_rejected', result: human.result, codes: human.codes }));
+    }
+    if (human.result === 'missing-secret') {
+      return errResponse(500, 'Service configuration error', cors);
+    }
+    if (human.result === 'error') {
+      // Fail closed, as with the rate limiter.
+      return errResponse(503, 'The service is busy. Please try again shortly.', cors);
+    }
+    if (human.result === 'invalid') {
+      return errResponse(403, "We couldn't confirm you're a person. If you use an ad or script blocker, allow challenges.cloudflare.com, then refresh the page and try again.", cors);
+    }
+
+    // 10. API key check
     const apiKey = env.ANTHROPIC_API_KEY;
     if (!apiKey || !apiKey.startsWith('sk-ant-')) {
       return errResponse(500, 'Service configuration error', cors);
     }
 
-    // 10. AI Gateway token check
+    // 11. AI Gateway token check
     const gatewayToken = env.AI_GATEWAY_TOKEN;
     if (!gatewayToken) {
       return errResponse(500, 'Service configuration error', cors);
     }
 
-    // 11. Call Anthropic via AI Gateway with 25s timeout
+    // 12. Call Anthropic via AI Gateway with 25s timeout
     const AI_GATEWAY_URL = 'https://gateway.ai.cloudflare.com/v1/e39a6185686a64959dade1b7c6a37692/ozone-shield/anthropic/v1/messages';
 
     const controller = new AbortController();

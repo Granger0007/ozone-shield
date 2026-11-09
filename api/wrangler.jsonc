@@ -5,7 +5,7 @@
   // never in this file or anywhere else in the repository:
   //   ANTHROPIC_API_KEY     Claude API key
   //   AI_GATEWAY_TOKEN      token for the authenticated AI Gateway
-  //   TURNSTILE_SECRET_KEY  Cloudflare Turnstile secret (set, not yet used)
+  //   TURNSTILE_SECRET_KEY  Cloudflare Turnstile secret for server-side validation
   //
   // Runtime and observability settings below match the dashboard as of
   // 9 November 2026, so deploying from Git doesn't silently change them.
