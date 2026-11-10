@@ -289,3 +289,140 @@ kbd {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
   .checker[data-state="checking"] .scan-line { opacity: 0.6; transform: translateY(60px); }
 }
+
+/* ===================================================================
+   Motion & art. Everything below animates transform/opacity only
+   (compositor-friendly, so it stays smooth on cheap phones) and is
+   switched off by prefers-reduced-motion further down.
+   =================================================================== */
+:root { --ease-out: cubic-bezier(.16, 1, .3, 1); --mono-size: 0.78rem; }
+
+/* Header: game link, live status strip, scroll progress ticks */
+.header-actions { display: flex; align-items: center; gap: 16px; }
+.game-link {
+  font-weight: 700; font-size: 0.95rem; text-decoration: none; white-space: nowrap;
+  padding: 7px 14px; border-radius: 999px; border: 1.5px solid var(--brand); color: var(--brand);
+  transition: background-color .2s, color .2s;
+}
+.game-link:hover { background: var(--brand); color: var(--brand-ink); }
+.status-strip {
+  display: flex; flex-wrap: wrap; gap: 4px 20px; padding-bottom: 8px;
+  font-family: var(--mono); font-size: var(--mono-size); letter-spacing: .04em; text-transform: uppercase; color: var(--muted);
+}
+.status-strip b { color: var(--ink); font-weight: 600; }
+.status-strip .dot {
+  display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 7px; vertical-align: 1px;
+  background: var(--safe); box-shadow: 0 0 0 0 color-mix(in srgb, var(--safe) 60%, transparent);
+  animation: live 2.4s var(--ease-out) infinite;
+}
+@keyframes live { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--safe) 55%, transparent); } 100% { box-shadow: 0 0 0 9px transparent; } }
+#botStatus.ok { color: var(--safe); }
+.progress-ticks {
+  height: 4px; position: relative; overflow: hidden;
+  background: repeating-linear-gradient(90deg, var(--line) 0 2px, transparent 2px 6px);
+}
+.progress-fill {
+  position: absolute; inset: 0; transform-origin: 0 50%; transform: scaleX(var(--progress, 0));
+  background: repeating-linear-gradient(90deg, var(--brand) 0 2px, transparent 2px 6px);
+  will-change: transform;
+}
+
+/* Hero radar art */
+.hero { position: relative; overflow-x: clip; } /* keep the radar art inside the screen */
+.hero > :not(.radar) { position: relative; z-index: 1; }
+.radar {
+  position: absolute; z-index: 0; pointer-events: none;
+  width: 190px; height: 190px; right: -56px; top: -14px; opacity: .45;
+}
+@media (max-width: 599px) { .radar .blip { display: none; } }
+.radar svg { width: 100%; height: 100%; }
+.radar .r-ring { stroke: var(--line); stroke-width: .8; }
+.radar .r-ticks { stroke: var(--line); stroke-width: 3; stroke-dasharray: 1 4.13; }
+.radar .r-cross { stroke: color-mix(in srgb, var(--brand) 55%, transparent); stroke-width: 1; }
+.radar-sweep {
+  position: absolute; inset: 4%; border-radius: 50%;
+  background: conic-gradient(from 0deg, color-mix(in srgb, var(--brand) 30%, transparent), transparent 70deg);
+  animation: sweep 6s linear infinite; will-change: transform;
+}
+@keyframes sweep { to { transform: rotate(360deg); } }
+.blip {
+  position: absolute; display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--mono); font-size: .62rem; letter-spacing: .08em; color: var(--muted);
+}
+.blip i { width: 8px; height: 8px; border-radius: 50%; background: var(--danger); animation: blip 6s var(--ease-out) infinite; }
+.b1 { left: 62%; top: 26%; } .b1 i { animation-delay: .9s; }
+.b2 { left: 22%; top: 60%; } .b2 i { animation-delay: 3.6s; }
+.b3 { left: 56%; top: 74%; } .b3 i { animation-delay: 4.8s; }
+@keyframes blip { 0%, 100% { opacity: .15; transform: scale(.6); } 6% { opacity: 1; transform: scale(1.35); } 30% { opacity: .5; transform: scale(1); } }
+@media (min-width: 600px) { .radar { width: 280px; height: 280px; right: -30px; top: 10px; opacity: .6; } }
+@media (min-width: 900px) { .radar { width: 360px; height: 360px; right: -40px; top: 30px; opacity: .8; } }
+
+/* Confidence dial */
+.dial-cell dd { display: flex; align-items: center; gap: 10px; }
+.dial { width: 44px; height: 44px; flex: none; }
+.dial svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.dial-ticks { stroke: var(--line); stroke-width: 3; stroke-dasharray: 1 2.64; }
+.dial-track { stroke: var(--line); stroke-width: 4; }
+.dial-arc {
+  stroke: var(--brand); stroke-width: 4; stroke-linecap: round;
+  stroke-dasharray: 150.8; stroke-dashoffset: 150.8;
+  transition: stroke-dashoffset 1.1s var(--ease-out) .15s;
+}
+.result.v-safe .dial-arc { stroke: var(--safe); }
+.result.v-caution .dial-arc { stroke: var(--caution); }
+.result.v-scam .dial-arc { stroke: var(--danger); }
+
+/* Threat briefing */
+.briefing h2 { font-size: clamp(1.6rem, 5vw, 2.2rem); margin: 6px 0 22px; }
+.chapters { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.chapter {
+  display: grid; grid-template-columns: 3.2rem 1fr; column-gap: 14px; align-items: baseline;
+  padding: 20px 0; border-top: 1px solid var(--line);
+}
+.ch-num { grid-row: span 2; font-family: var(--mono); font-size: var(--mono-size); color: var(--brand); letter-spacing: .08em; }
+.ch-figure { font-size: clamp(2.6rem, 11vw, 4.2rem); font-weight: 800; line-height: 1; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.ch-text { margin-top: 8px; color: var(--muted); max-width: 30em; }
+.ch-action .ch-figure { color: var(--brand); }
+.source { margin-top: 10px; font-family: var(--mono); font-size: var(--mono-size); color: var(--muted); letter-spacing: .03em; }
+
+/* Game teaser */
+.play-teaser { display: grid; gap: 22px; overflow: hidden; position: relative; }
+.play-teaser h2 { font-size: 1.5rem; margin: 6px 0 8px; }
+.play-teaser p { color: var(--muted); }
+.play-btn { margin-top: 16px; width: auto; text-decoration: none; }
+.play-btn:hover { color: var(--brand-ink); }
+.play-art { position: relative; min-height: 150px; }
+.pa-bubble {
+  position: absolute; max-width: 230px; padding: 10px 14px; border-radius: 16px 16px 16px 4px;
+  background: var(--bg); border: 1px solid var(--line); font-size: .92rem; box-shadow: var(--shadow);
+  animation: float 6s ease-in-out infinite;
+}
+.pa-1 { left: 0; top: 8px; }
+.pa-2 { left: 18%; top: 78px; animation-delay: -3s; }
+.pa-flag {
+  position: absolute; right: 6%; top: 40px; padding: 4px 10px; border-radius: 6px; transform: rotate(-8deg);
+  font-family: var(--mono); font-size: .75rem; font-weight: 700; letter-spacing: .1em;
+  color: var(--danger-bg); background: var(--danger); animation: stamp 3s var(--ease-out) infinite;
+}
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@keyframes stamp { 0%, 55% { transform: rotate(-8deg) scale(1); } 62% { transform: rotate(-8deg) scale(1.18); } 70%, 100% { transform: rotate(-8deg) scale(1); } }
+@media (min-width: 720px) { .play-teaser { grid-template-columns: 1.2fr 1fr; align-items: center; } }
+
+/* Scroll reveal: only elements that start below the fold are hidden, so the
+   page is complete without JavaScript and nothing above the fold flickers. */
+.reveal-pending { opacity: 0; transform: translateY(22px); }
+.reveal-in {
+  opacity: 1; transform: none;
+  transition: opacity .7s var(--ease-out), transform .9s var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 90ms);
+}
+
+@media (max-width: 480px) {
+  .game-link { padding: 6px 12px; font-size: .9rem; }
+  .status-strip span:nth-child(3) { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .radar-sweep, .blip i, .status-strip .dot, .pa-bubble, .pa-flag { animation: none !important; }
+  .reveal-pending { opacity: 1; transform: none; }
+  .dial-arc { transition: none; }
+}
