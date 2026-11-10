@@ -1,0 +1,5 @@
+# Security contact for OZONE Shield (RFC 9116)
+Contact: mailto:bbaranda055@gmail.com
+Expires: 2027-11-01T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://ozone-shield.bbaranda055.workers.dev/.well-known/security.txt
