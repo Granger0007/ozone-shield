@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Spot the Scam — OZONE Shield</title>
+  <meta name="description" content="A free game that trains you to spot scam texts, emails and WhatsApp messages. Ten realistic messages: decide scam or genuine, then find the red flags.">
+  <link rel="canonical" href="https://ozone-shield.bbaranda055.workers.dev/spot-the-scam/">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <meta name="theme-color" content="#f4f7f5" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0b1210" media="(prefers-color-scheme: dark)">
+  <meta name="color-scheme" content="light dark">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Spot the Scam — can you beat my score?">
+  <meta property="og:description" content="Ten realistic messages. Scam or genuine? A free training game from OZONE Shield.">
+  <meta property="og:url" content="https://ozone-shield.bbaranda055.workers.dev/spot-the-scam/">
+  <meta property="og:image" content="https://ozone-shield.bbaranda055.workers.dev/apple-touch-icon.png">
+  <link rel="preload" href="/fonts/atkinson-next-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/site.css">
+  <link rel="stylesheet" href="/css/game.css">
+</head>
+<body class="game-page">
+  <a class="skip-link" href="#game">Skip to the game</a>
+
+  <header class="site-header">
+    <div class="wrap header-row">
+      <a class="brand" href="/" aria-label="OZONE Shield home">
+        <svg class="brand-mark" viewBox="0 0 28 32" aria-hidden="true" focusable="false">
+          <path d="M14 1L2 6.5V15C2 21.6 7.4 27.5 14 31C20.6 27.5 26 21.6 26 15V6.5L14 1Z"/>
+          <path class="brand-tick" d="M9 16l3.5 3.5L19 12"/>
+        </svg>
+        <span class="brand-name">OZONE <span>Shield</span></span>
+      </a>
+      <div class="header-actions">
+        <a class="game-link" href="/">Check a real message</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="game" class="wrap game">
+    <!-- Player HUD: level, XP, streaks -->
+    <section class="hud card" aria-label="Your progress">
+      <div class="hud-level">
+        <span class="level-badge" id="levelNum" aria-hidden="true">1</span>
+        <div>
+          <p class="hud-label">Level <span id="levelNumText">1</span></p>
+          <p class="hud-title" id="levelName">Rookie</p>
+        </div>
+      </div>
+      <div class="xp">
+        <div class="xp-row"><span class="hud-label">XP</span><span class="xp-num"><span id="xpNow">0</span> / <span id="xpNext">300</span></span></div>
+        <div class="xp-bar" role="progressbar" aria-label="Progress to next level" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="xpBar"><div class="xp-fill" id="xpFill"></div></div>
+      </div>
+      <div class="hud-stats">
+        <div><span class="hud-label">Day streak</span><b id="dayStreak">0</b></div>
+        <div><span class="hud-label">Best</span><b id="bestScore">–</b></div>
+      </div>
+    </section>
+
+    <!-- Start screen -->
+    <section class="screen" id="startScreen" aria-labelledby="start-title">
+      <p class="eyebrow">Free training game</p>
+      <h1 id="start-title">Spot the Scam</h1>
+      <p class="lead">Ten realistic messages. For each one, decide: <strong>scam</strong> or <strong>genuine</strong>? Then tap the red flags to earn extra points.</p>
+      <ul class="rules">
+        <li><b>+100</b> for each right answer</li>
+        <li><b>+25</b> for each red flag you find</li>
+        <li><b>+50</b> streak bonus from 3 right in a row</li>
+      </ul>
+      <button type="button" class="btn btn-primary" id="startBtn">Start the game</button>
+      <p class="fine">All messages are made up for training. Links in them are not clickable. Your progress is saved only on this device.</p>
+    </section>
+
+    <!-- Round screen -->
+    <section class="screen" id="roundScreen" hidden aria-label="Current message">
+      <div class="round-top">
+        <p class="round-count"><span id="roundNum">1</span> / <span id="roundTotal">10</span></p>
+        <ol class="round-ticks" id="roundTicks" aria-hidden="true"></ol>
+        <p class="round-score">Score <b id="scoreNow">0</b></p>
+      </div>
+
+      <article class="phone" id="phone" tabindex="-1" aria-labelledby="msgSender">
+        <div class="phone-head">
+          <span class="channel" id="msgChannel">SMS</span>
+          <span class="sender" id="msgSender">Unknown</span>
+        </div>
+        <p class="bubble" id="msgBody"></p>
+      </article>
+
+      <div class="choices" id="choices">
+        <button type="button" class="btn choice choice-scam" id="ansScam">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2h8l6 6v8l-6 6H8l-6-6V8l6-6Z"/><path d="m9 9 6 6"/><path d="m15 9-6 6"/></svg>
+          It's a scam
+        </button>
+        <button type="button" class="btn choice choice-safe" id="ansSafe">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2 4 5v6c0 5 3.4 9.5 8 11 4.6-1.5 8-6 8-11V5l-8-3Z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg>
+          Looks genuine
+        </button>
+      </div>
+
+      <section class="feedback" id="feedback" hidden aria-live="polite">
+        <h2 class="fb-title" id="fbTitle" tabindex="-1"></h2>
+        <p class="fb-lesson" id="fbLesson"></p>
+        <div class="flags" id="flagsBox" hidden>
+          <p class="flags-head">Tap the red flags in the message: <b><span id="flagsFound">0</span> / <span id="flagsTotal">0</span></b> found</p>
+          <ul class="flag-notes" id="flagNotes"></ul>
+          <button type="button" class="link-btn" id="revealBtn">Show me the rest</button>
+        </div>
+        <button type="button" class="btn btn-primary" id="nextBtn">Next message</button>
+      </section>
+    </section>
+
+    <!-- End screen -->
+    <section class="screen" id="endScreen" hidden aria-labelledby="end-title">
+      <p class="eyebrow">Round complete</p>
+      <h1 id="end-title" tabindex="-1"><span id="endCorrect">0</span> / 10 right</h1>
+      <div class="end-stats">
+        <div><span class="hud-label">Score</span><b id="endScore">0</b></div>
+        <div><span class="hud-label">Red flags found</span><b id="endFlags">0</b></div>
+        <div><span class="hud-label">Best streak</span><b id="endStreak">0</b></div>
+      </div>
+      <p class="end-msg" id="endMsg"></p>
+      <div class="new-badges" id="newBadges" hidden>
+        <h2>New badges</h2>
+        <ul class="badge-list" id="newBadgeList"></ul>
+      </div>
+      <div class="end-actions">
+        <button type="button" class="btn btn-primary" id="againBtn">Play again</button>
+        <button type="button" class="btn btn-secondary" id="shareBtn">Share my score</button>
+      </div>
+      <p class="toast" id="toast" role="status" aria-live="polite"></p>
+    </section>
+
+    <!-- Badge shelf -->
+    <section class="shelf" aria-labelledby="shelf-title">
+      <h2 id="shelf-title">Badges</h2>
+      <ul class="badge-list" id="badgeShelf"></ul>
+      <button type="button" class="link-btn" id="resetBtn">Reset my progress</button>
+    </section>
+  </main>
+
+  <div class="levelup" id="levelUp" hidden role="status" aria-live="assertive">
+    <div class="levelup-card">
+      <p class="eyebrow">Level up</p>
+      <p class="levelup-num" id="levelUpNum">2</p>
+      <p class="levelup-name" id="levelUpName">Spotter</p>
+      <button type="button" class="btn btn-primary" id="levelUpOk">Keep going</button>
+    </div>
+  </div>
+  <div class="confetti" id="confetti" aria-hidden="true"></div>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>Got a real message you're unsure about? <a href="/">Check it with OZONE Shield</a>.</p>
+      <p>Report UK scams: <a href="https://www.reportfraud.police.uk" target="_blank" rel="noopener">Report Fraud</a> 0300 123 2040 · Lost money? Call your bank on 159.</p>
+    </div>
+  </footer>
+
+  <script src="/js/game-data.js"></script>
+  <script src="/js/game.js"></script>
+</body>
+</html>

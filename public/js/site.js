@@ -39,9 +39,9 @@
       sitekey: TURNSTILE_SITE_KEY,
       theme: 'auto',
       appearance: 'interaction-only',
-      callback: function (token) { turnstileToken = token; },
-      'expired-callback': function () { turnstileToken = ''; window.turnstile.reset(turnstileWidgetId); },
-      'error-callback': function () { turnstileToken = ''; }
+      callback: function (token) { turnstileToken = token; setBotStatus('passed', true); },
+      'expired-callback': function () { turnstileToken = ''; setBotStatus('refreshing', false); window.turnstile.reset(turnstileWidgetId); },
+      'error-callback': function () { turnstileToken = ''; setBotStatus('unavailable', false); }
     });
   };
 
@@ -59,6 +59,7 @@
   // Each token can be used once, so get a fresh one after every request.
   function refreshTurnstile() {
     turnstileToken = '';
+    setBotStatus('refreshing', false);
     if (window.turnstile && turnstileWidgetId !== null) window.turnstile.reset(turnstileWidgetId);
   }
 
@@ -138,7 +139,8 @@
     $('verdictSub').textContent = v.sub;
 
     var pct = Number(r.CONFIDENCE_PERCENT);
-    $('confidencePct').textContent = isFinite(pct) ? Math.max(0, Math.min(100, Math.round(pct))) + '%' : '—';
+    pct = isFinite(pct) ? Math.max(0, Math.min(100, Math.round(pct))) : null;
+    $('confidencePct').textContent = pct === null ? '—' : pct + '%';
     $('severityText').textContent = typeof r.SEVERITY === 'string' && r.SEVERITY ? r.SEVERITY : '—';
 
     var list = $('reasonsList');
@@ -154,6 +156,8 @@
     $('reportBox').hidden = !(r.VERDICT === 'SCAM' || r.VERDICT === 'SUSPICIOUS');
 
     card.hidden = false;
+    setDial(pct);
+    if (pct !== null && !reduceMotion) countUp($('confidencePct'), 0, pct, 0, '', '%', 900);
     if (!reduceMotion) {
       card.classList.remove('is-entering');
       void card.offsetWidth;
@@ -226,4 +230,102 @@
     input.focus();
     scrollBelowHeader($('checker'));
   });
+
+  /* ---------- live status strip: UK clock + real bot-check state ---------- */
+  function setBotStatus(text, ok) {
+    var el = $('botStatus');
+    if (!el) return;
+    el.textContent = text;
+    el.classList.toggle('ok', !!ok);
+  }
+  var clock = $('ukClock');
+  var clockFmt = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/London', hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  function tick() { if (clock) clock.textContent = clockFmt.format(new Date()); }
+  tick();
+  setInterval(tick, 1000);
+  setBotStatus(window.turnstile ? 'checking' : 'starting', false);
+
+  /* ---------- scroll progress ticks (one write per frame) ---------- */
+  var fill = $('progressFill');
+  var ticking = false;
+  var pendingReveals = [];
+  function reveal(el) {
+    el.classList.add('reveal-in');
+    el.classList.remove('reveal-pending');
+    Array.prototype.forEach.call(el.querySelectorAll('.count'), runCounter);
+  }
+  function updateProgress() {
+    ticking = false;
+    // Also reveal anything already scrolled past (e.g. after jumping to a link),
+    // so no section can stay invisible.
+    if (pendingReveals.length) {
+      var limit = window.innerHeight * 0.95;
+      pendingReveals = pendingReveals.filter(function (el) {
+        if (el.classList.contains('reveal-in')) return false;
+        if (el.getBoundingClientRect().top < limit) { reveal(el); return false; }
+        return true;
+      });
+    }
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    var p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+    if (fill) fill.style.setProperty('--progress', p.toFixed(4));
+  }
+  window.addEventListener('scroll', function () {
+    if (!ticking) { ticking = true; requestAnimationFrame(updateProgress); }
+  }, { passive: true });
+  updateProgress();
+
+  /* ---------- count-up numbers ---------- */
+  function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+  function formatNum(v, decimals) {
+    return v.toLocaleString('en-GB', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+  }
+  function countUp(el, from, to, decimals, prefix, suffix, ms) {
+    var start = null;
+    function frame(ts) {
+      if (start === null) start = ts;
+      var t = Math.min(1, (ts - start) / ms);
+      el.textContent = prefix + formatNum(from + (to - from) * easeOutCubic(t), decimals) + suffix;
+      if (t < 1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+  function runCounter(el) {
+    if (el.dataset.counted) return;
+    el.dataset.counted = '1';
+    if (reduceMotion) return; // the final value is already in the HTML
+    countUp(el, 0, parseFloat(el.dataset.to), parseInt(el.dataset.decimals || '0', 10),
+      el.dataset.prefix || '', el.dataset.suffix || '', 1300);
+  }
+
+  /* ---------- confidence dial ---------- */
+  var DIAL_C = 2 * Math.PI * 24;
+  function setDial(pct) {
+    var arc = $('dialArc');
+    if (!arc) return;
+    arc.style.strokeDashoffset = String(DIAL_C);
+    void arc.getBoundingClientRect(); // restart the sweep each time
+    arc.style.strokeDashoffset = String(pct === null ? DIAL_C : DIAL_C * (1 - pct / 100));
+  }
+
+  /* ---------- scroll reveals with a stagger ---------- */
+  var revealEls = Array.prototype.slice.call(document.querySelectorAll('[data-reveal]'));
+  if ('IntersectionObserver' in window && !reduceMotion) {
+    var vh = window.innerHeight;
+    revealEls.forEach(function (el) {
+      var sibs = Array.prototype.filter.call(el.parentNode.children, function (c) { return c.hasAttribute('data-reveal'); });
+      el.style.setProperty('--i', String(Math.min(sibs.indexOf(el), 6)));
+      // Only hide what starts below the fold: the page is complete without JS
+      // and nothing already on screen flickers.
+      if (el.getBoundingClientRect().top > vh * 0.9) { el.classList.add('reveal-pending'); pendingReveals.push(el); }
+    });
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        reveal(en.target);
+        io.unobserve(en.target);
+      });
+    }, { rootMargin: '0px 0px -12% 0px', threshold: 0.12 });
+    revealEls.forEach(function (el) { io.observe(el); });
+  }
 })();

@@ -77,12 +77,34 @@
         </svg>
         <span class="brand-name">OZONE <span>Shield</span></span>
       </a>
-      <span class="header-note">Free · No sign-up</span>
+      <div class="header-actions">
+        <span class="header-note">Free · No sign-up</span>
+        <a class="game-link" href="/spot-the-scam/">Play Spot the Scam</a>
+      </div>
     </div>
+    <div class="wrap status-strip" aria-label="Service status">
+      <span><span class="dot" aria-hidden="true"></span>UK <time id="ukClock">--:--:--</time></span>
+      <span>Bot check: <b id="botStatus">starting</b></span>
+      <span>Messages stored: <b>0</b></span>
+    </div>
+    <div class="progress-ticks" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div>
   </header>
 
   <main id="main">
     <section class="hero wrap" aria-labelledby="hero-title">
+      <div class="radar" aria-hidden="true">
+        <svg viewBox="0 0 200 200" focusable="false">
+          <circle class="r-ring" cx="100" cy="100" r="92"/>
+          <circle class="r-ring" cx="100" cy="100" r="64"/>
+          <circle class="r-ring" cx="100" cy="100" r="36"/>
+          <circle class="r-ticks" cx="100" cy="100" r="98"/>
+          <path class="r-cross" d="M100 4v24M100 172v24M4 100h24M172 100h24"/>
+        </svg>
+        <div class="radar-sweep"></div>
+        <span class="blip b1"><i></i>SMS</span>
+        <span class="blip b2"><i></i>EMAIL</span>
+        <span class="blip b3"><i></i>WHATSAPP</span>
+      </div>
       <p class="eyebrow">Scam checker for the UK</p>
       <h1 id="hero-title">Is this message a scam?</h1>
       <p class="hero-sub">Paste a text, email or WhatsApp message. You'll get a clear answer, the reasons, and what to do next in about six seconds.</p>
@@ -153,7 +175,19 @@
           </div>
         </div>
         <dl class="verdict-meta">
-          <div><dt>Confidence</dt><dd id="confidencePct"></dd></div>
+          <div class="dial-cell">
+            <dt>Confidence</dt>
+            <dd>
+              <span class="dial" aria-hidden="true">
+                <svg viewBox="0 0 64 64" focusable="false">
+                  <circle class="dial-ticks" cx="32" cy="32" r="29"/>
+                  <circle class="dial-track" cx="32" cy="32" r="24"/>
+                  <circle class="dial-arc" id="dialArc" cx="32" cy="32" r="24"/>
+                </svg>
+              </span>
+              <span id="confidencePct"></span>
+            </dd>
+          </div>
           <div><dt>Risk level</dt><dd id="severityText"></dd></div>
         </dl>
         <div class="result-body">
@@ -180,7 +214,7 @@
     </section>
 
     <section class="wrap" aria-labelledby="help-title">
-      <div class="card urgent">
+      <div class="card urgent" data-reveal>
         <h2 id="help-title">Already paid, or shared your details?</h2>
         <p>Act now. The sooner your bank knows, the better the chance of stopping the money.</p>
         <ol class="steps">
@@ -191,22 +225,71 @@
       </div>
     </section>
 
+    <section class="wrap briefing" aria-labelledby="briefing-title">
+      <p class="eyebrow" data-reveal>Threat briefing · UK, 2025</p>
+      <h2 id="briefing-title" data-reveal>Why checking first matters</h2>
+      <ol class="chapters">
+        <li class="chapter" data-reveal>
+          <span class="ch-num">01</span>
+          <p class="ch-figure"><span class="count" data-to="1.28" data-decimals="2" data-prefix="£" data-suffix="bn">£1.28bn</span></p>
+          <p class="ch-text">stolen through payment fraud in the UK in 2025.</p>
+        </li>
+        <li class="chapter" data-reveal>
+          <span class="ch-num">02</span>
+          <p class="ch-figure"><span class="count" data-to="576.4" data-decimals="1" data-prefix="£" data-suffix="m">£576.4m</span></p>
+          <p class="ch-text">lost by people tricked into sending money themselves. Up 19% in a year.</p>
+        </li>
+        <li class="chapter" data-reveal>
+          <span class="ch-num">03</span>
+          <p class="ch-figure"><span class="count" data-to="40" data-prefix="+" data-suffix="%">+40%</span></p>
+          <p class="ch-text">rise in investment scam losses, to £221.5m. The fastest-growing type.</p>
+        </li>
+        <li class="chapter" data-reveal>
+          <span class="ch-num">04</span>
+          <p class="ch-figure"><span class="count" data-to="66" data-suffix="%">66%</span></p>
+          <p class="ch-text">of these scams started online: messages, social media and fake websites.</p>
+        </li>
+        <li class="chapter ch-action" data-reveal>
+          <span class="ch-num">05</span>
+          <p class="ch-figure">159</p>
+          <p class="ch-text">The number to call if you think you've been scammed. It connects you to your bank.</p>
+        </li>
+      </ol>
+      <p class="source" data-reveal>Sources: UK Finance Annual Fraud Report 2026 (2025 data); Stop Scams UK.</p>
+    </section>
+
+    <section class="wrap" aria-labelledby="play-title">
+      <div class="card play-teaser" data-reveal>
+        <div class="play-copy">
+          <p class="eyebrow">Free training game</p>
+          <h2 id="play-title">Can you spot the scam?</h2>
+          <p>Ten realistic messages. Decide: scam or genuine. Then tap the red flags to earn points, level up and unlock badges.</p>
+          <a class="btn btn-primary play-btn" href="/spot-the-scam/">Play Spot the Scam</a>
+        </div>
+        <div class="play-art" aria-hidden="true">
+          <span class="pa-bubble pa-1">Your parcel is held. Pay £1.99…</span>
+          <span class="pa-bubble pa-2">Hi Mum, new number…</span>
+          <span class="pa-flag">RED FLAG</span>
+        </div>
+      </div>
+    </section>
+
     <section class="wrap how" aria-labelledby="how-title">
       <h2 id="how-title">How it works</h2>
       <ol class="how-steps">
-        <li><span class="how-num" aria-hidden="true">1</span><div><h3>You paste the message</h3><p>Nothing to install, and no account.</p></div></li>
-        <li><span class="how-num" aria-hidden="true">2</span><div><h3>AI checks it for scam patterns</h3><p>Claude AI looks for pressure tactics, fake links, impersonation and payment tricks common in the UK.</p></div></li>
-        <li><span class="how-num" aria-hidden="true">3</span><div><h3>You get a clear answer</h3><p>A verdict, the reasons, and what to do next. Your message isn't kept.</p></div></li>
+        <li data-reveal><span class="how-num" aria-hidden="true">1</span><div><h3>You paste the message</h3><p>Nothing to install, and no account.</p></div></li>
+        <li data-reveal><span class="how-num" aria-hidden="true">2</span><div><h3>AI checks it for scam patterns</h3><p>Claude AI looks for pressure tactics, fake links, impersonation and payment tricks common in the UK.</p></div></li>
+        <li data-reveal><span class="how-num" aria-hidden="true">3</span><div><h3>You get a clear answer</h3><p>A verdict, the reasons, and what to do next. Your message isn't kept.</p></div></li>
       </ol>
     </section>
 
     <section class="wrap tools" aria-labelledby="tools-title">
       <h2 id="tools-title">Other free checks</h2>
       <ul class="tool-list">
-        <li><a href="https://getsafeonline.org/checkawebsite" target="_blank" rel="noopener">Check a website</a><span>Get Safe Online</span></li>
-        <li><a href="https://www.fca.org.uk/scamsmart" target="_blank" rel="noopener">Check an investment offer</a><span>FCA ScamSmart</span></li>
-        <li><a href="https://www.citizensadvice.org.uk/scamsaction/" target="_blank" rel="noopener">Get help with a scam</a><span>Citizens Advice</span></li>
-        <li><a href="https://www.stopscamsuk.org.uk/159" target="_blank" rel="noopener">About the 159 service</a><span>Stop Scams UK</span></li>
+        <li data-reveal><a href="https://getsafeonline.org/checkawebsite" target="_blank" rel="noopener">Check a website</a><span>Get Safe Online</span></li>
+        <li data-reveal><a href="https://www.fca.org.uk/scamsmart" target="_blank" rel="noopener">Check an investment offer</a><span>FCA ScamSmart</span></li>
+        <li data-reveal><a href="https://www.citizensadvice.org.uk/scamsaction/" target="_blank" rel="noopener">Get help with a scam</a><span>Citizens Advice</span></li>
+        <li data-reveal><a href="https://www.stopscamsuk.org.uk/159" target="_blank" rel="noopener">About the 159 service</a><span>Stop Scams UK</span></li>
       </ul>
     </section>
 
@@ -227,6 +310,7 @@
           <li><strong>Message content you paste:</strong> Transmitted to the Claude AI API (Anthropic, PBC) for analysis. OZONE Shield does not store your message content after the result is returned.</li>
           <li><strong>Server logs:</strong> Cloudflare, Inc. (our infrastructure provider) automatically logs IP addresses and request metadata for security and uptime. Governed by <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener">Cloudflare's Privacy Policy</a>.</li>
           <li><strong>Bot check:</strong> Cloudflare Turnstile checks that a real person is using the page, to stop automated abuse of the service. It runs in your browser and is provided by Cloudflare, Inc.</li>
+          <li><strong>Game progress:</strong> Spot the Scam saves your points, level and badges only in your browser's storage on your device. It is never sent to us, and you can reset it in the game at any time.</li>
           <li><strong>No tracking:</strong> We use no analytics cookies, advertising pixels, or third-party tracking scripts.</li>
         </ul>
 
