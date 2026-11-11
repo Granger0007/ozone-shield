@@ -12,10 +12,10 @@ window.OzoneGameData = [
   },
   {
     id: 'tax-refund', scam: true, cat: 'tax', channel: 'SMS', sender: 'HMRC-UK',
-    parts: ['HMRC: ', { t: 'You are due a tax refund of £412.50.', why: 'An unexpected refund is bait to get you to click.' },
+    parts: ['HMRC: ', { t: 'You are due a tax refund of £412.50.', why: 'HMRC never tells you about a tax refund by text, email or WhatsApp.' },
       ' ', { t: 'Claim within 48 hours', why: 'Deadline pressure again.' }, ' at ',
       { t: 'hmrc-refund-claim.uk', why: "HMRC's website is on gov.uk. This address isn't." }],
-    lesson: "Refund bait, a deadline and an address that isn't gov.uk."
+    lesson: "HMRC never contacts you about a tax refund by text or email, and its website is on gov.uk."
   },
   {
     id: 'safe-account', scam: true, cat: 'bank', channel: 'WhatsApp', sender: 'Bank Fraud Team',
@@ -36,7 +36,7 @@ window.OzoneGameData = [
     parts: ['Welcome to our VIP trading group. ', { t: 'Guaranteed 30% returns every week.', why: 'No real investment can guarantee returns, let alone 30% a week.' },
       ' ', { t: 'Only 5 places left today.', why: 'False scarcity, to rush you.' }, ' Our mentor will help you ',
       { t: 'open an account on our trading app.', why: 'Scam groups use fake trading apps that show made-up profits.' }],
-    lesson: "Check any investment firm on the FCA's ScamSmart before sending money."
+    lesson: 'Check the firm on the FCA Firm Checker before you send any money.'
   },
   {
     id: 'task-job', scam: true, cat: 'job', channel: 'WhatsApp', sender: 'Recruiter Sarah',
@@ -62,7 +62,7 @@ window.OzoneGameData = [
     id: 'energy-rebate', scam: true, cat: 'gov', channel: 'Email', sender: 'UK Energy Support <rebate@energy-support-uk.org>',
     parts: ['Good news! ', { t: "You're eligible for a £400 energy rebate.", why: 'Unexpected free money is bait.' },
       ' ', { t: 'Enter your bank details at the link below', why: "Don't give bank details through a link in an unexpected email." }, ' to receive it.'],
-    lesson: 'Free money that needs your bank details is a scam.'
+    lesson: 'An unexpected offer of free money that asks for your bank details is a scam.'
   },
   {
     id: 'prize', scam: true, cat: 'prize', channel: 'SMS', sender: 'PrizeDesk',
@@ -79,7 +79,7 @@ window.OzoneGameData = [
   {
     id: 'romance', scam: true, cat: 'romance', channel: 'WhatsApp', sender: 'Daniel',
     parts: ["I've loved talking these past weeks. ", { t: "I'm stuck abroad and my bank card was blocked.", why: 'A sudden emergency far away is a classic romance scam turn.' },
-      ' ', { t: 'Could you send £600 in gift cards?', why: 'Gift cards are hard to trace. Genuine people never ask for payment in gift cards.' },
+      ' ', { t: 'Could you send £600 in gift cards?', why: 'Gift cards are hard to trace. Asking to be paid in gift cards is a classic scam sign.' },
       " I'll pay you back as soon as I'm home."],
     lesson: "Never send money to someone you haven't met in person."
   },
@@ -90,7 +90,7 @@ window.OzoneGameData = [
   },
   {
     id: 'gp-reminder', scam: false, cat: 'genuine', channel: 'SMS', sender: 'ElmRoadGP',
-    parts: ["Reminder: your appointment at Elm Road Surgery is on Tuesday 14 January at 09:40. If you can't attend, please call the surgery."],
+    parts: ["Reminder: your appointment at Elm Road Surgery is on Thursday 14 January at 09:40. If you can't attend, please call the surgery."],
     lesson: 'No link, no payment, and it asks you to call the surgery on the number you already have.'
   },
   {
