@@ -8,8 +8,7 @@
   <link rel="canonical" href="https://ozone-shield.bbaranda055.workers.dev/spot-the-scam/">
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-  <meta name="theme-color" content="#f4f7f5" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#0b1210" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#070d1c">
   <meta name="color-scheme" content="light dark">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Spot the Scam — can you beat my score?">
@@ -24,7 +23,7 @@
   <a class="skip-link" href="#game">Skip to the game</a>
 
   <header class="site-header">
-    <div class="wrap header-row">
+    <div class="container header-row">
       <a class="brand" href="/" aria-label="OZONE Shield home">
         <svg class="brand-mark" viewBox="0 0 28 32" aria-hidden="true" focusable="false">
           <path d="M14 1L2 6.5V15C2 21.6 7.4 27.5 14 31C20.6 27.5 26 21.6 26 15V6.5L14 1Z"/>
@@ -32,13 +31,14 @@
         </svg>
         <span class="brand-name">OZONE <span>Shield</span></span>
       </a>
-      <div class="header-actions">
-        <a class="game-link" href="/">Check a real message</a>
-      </div>
+      <a class="btn btn-sm btn-ghost-light header-cta" href="/#checker">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2 4 5v6c0 5 3.4 9.5 8 11 4.6-1.5 8-6 8-11V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg>
+        <span>Check <span class="cta-long">a real message</span></span>
+      </a>
     </div>
   </header>
 
-  <main id="game" class="wrap game">
+  <main id="game" class="container game">
     <!-- Player HUD: level, XP, streaks -->
     <section class="hud card" aria-label="Your progress">
       <div class="hud-level">
@@ -59,21 +59,27 @@
     </section>
 
     <!-- Start screen -->
-    <section class="screen" id="startScreen" aria-labelledby="start-title">
-      <p class="eyebrow">Free training game</p>
-      <h1 id="start-title">Spot the Scam</h1>
-      <p class="lead">Ten realistic messages. For each one, decide: <strong>scam</strong> or <strong>genuine</strong>? Then tap the red flags to earn extra points.</p>
-      <ul class="rules">
-        <li><b>+100</b> for each right answer</li>
-        <li><b>+25</b> for each red flag you find</li>
-        <li><b>+50</b> streak bonus from 3 right in a row</li>
+    <section class="screen start" id="startScreen" aria-labelledby="start-title">
+      <div class="start-copy">
+        <p class="eyebrow">Free training game</p>
+        <h1 id="start-title">Spot the Scam</h1>
+        <p class="lead">Ten realistic messages. For each one, decide: <strong>scam</strong> or <strong>genuine</strong>? Then tap the red flags to earn extra points.</p>
+        <button type="button" class="btn btn-primary" id="startBtn">
+          Start the game
+          <svg class="btn-arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+        </button>
+        <p class="fine">All messages are made up for training. Links in them are not clickable. Your progress is saved only on this device.</p>
+      </div>
+      <ul class="rules" aria-label="How points work">
+        <li><b>+100</b><span>for each right answer</span></li>
+        <li><b>+25</b><span>for each red flag you find</span></li>
+        <li><b>+50</b><span>streak bonus from 3 right in a row</span></li>
       </ul>
-      <button type="button" class="btn btn-primary" id="startBtn">Start the game</button>
-      <p class="fine">All messages are made up for training. Links in them are not clickable. Your progress is saved only on this device.</p>
     </section>
 
     <!-- Round screen -->
     <section class="screen" id="roundScreen" hidden aria-label="Current message">
+      <h1 class="visually-hidden">Spot the Scam</h1>
       <div class="round-top">
         <p class="round-count"><span id="roundNum">1</span> / <span id="roundTotal">10</span></p>
         <ol class="round-ticks" id="roundTicks" aria-hidden="true"></ol>
@@ -112,7 +118,7 @@
     </section>
 
     <!-- End screen -->
-    <section class="screen" id="endScreen" hidden aria-labelledby="end-title">
+    <section class="screen end" id="endScreen" hidden aria-labelledby="end-title">
       <p class="eyebrow">Round complete</p>
       <h1 id="end-title" tabindex="-1"><span id="endCorrect">0</span> / 10 right</h1>
       <div class="end-stats">
@@ -150,10 +156,10 @@
   </div>
   <div class="confetti" id="confetti" aria-hidden="true"></div>
 
-  <footer class="site-footer">
-    <div class="wrap">
-      <p>Got a real message you're unsure about? <a href="/">Check it with OZONE Shield</a>.</p>
-      <p>Report UK scams: <a href="https://www.reportfraud.police.uk" target="_blank" rel="noopener">Report Fraud</a> 0300 123 2040 · Lost money? Call your bank on 159.</p>
+  <footer class="site-footer site-footer-slim">
+    <div class="container footer-slim">
+      <p>Got a real message you're unsure about? <a href="/#checker">Check it with OZONE Shield</a>.</p>
+      <p>Lost money? Call your bank on <b>159</b>, then report it to <a href="https://www.reportfraud.police.uk" target="_blank" rel="noopener">Report Fraud</a> on <b>0300 123 2040</b> (England, Wales and Northern Ireland) or to Police Scotland on <b>101</b>.</p>
     </div>
   </footer>
 

@@ -39,9 +39,9 @@
       sitekey: TURNSTILE_SITE_KEY,
       theme: 'auto',
       appearance: 'interaction-only',
-      callback: function (token) { turnstileToken = token; setBotStatus('passed', true); },
-      'expired-callback': function () { turnstileToken = ''; setBotStatus('refreshing', false); window.turnstile.reset(turnstileWidgetId); },
-      'error-callback': function () { turnstileToken = ''; setBotStatus('unavailable', false); }
+      callback: function (token) { turnstileToken = token; },
+      'expired-callback': function () { turnstileToken = ''; window.turnstile.reset(turnstileWidgetId); },
+      'error-callback': function () { turnstileToken = ''; }
     });
   };
 
@@ -59,7 +59,6 @@
   // Each token can be used once, so get a fresh one after every request.
   function refreshTurnstile() {
     turnstileToken = '';
-    setBotStatus('refreshing', false);
     if (window.turnstile && turnstileWidgetId !== null) window.turnstile.reset(turnstileWidgetId);
   }
 
@@ -75,7 +74,7 @@
     checker.setAttribute('data-state', on ? 'checking' : 'idle');
     btn.disabled = on;
     btnText.textContent = on ? 'Checking…' : 'Check this message';
-    statusText.textContent = on ? 'Checking your message. This usually takes about 6 seconds.' : '';
+    statusText.textContent = on ? 'Checking your message for scam signs…' : '';
   }
 
   function startCooldown() {
@@ -231,22 +230,9 @@
     scrollBelowHeader($('checker'));
   });
 
-  /* ---------- live status strip: UK clock + real bot-check state ---------- */
-  function setBotStatus(text, ok) {
-    var el = $('botStatus');
-    if (!el) return;
-    el.textContent = text;
-    el.classList.toggle('ok', !!ok);
-  }
-  var clock = $('ukClock');
-  var clockFmt = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/London', hour: '2-digit', minute: '2-digit', second: '2-digit' });
-  function tick() { if (clock) clock.textContent = clockFmt.format(new Date()); }
-  tick();
-  setInterval(tick, 1000);
-  setBotStatus(window.turnstile ? 'checking' : 'starting', false);
-
-  /* ---------- scroll progress ticks (one write per frame) ---------- */
+  /* ---------- scroll progress + header state (one write per frame) ---------- */
   var fill = $('progressFill');
+  var header = $('siteHeader');
   var ticking = false;
   var pendingReveals = [];
   function reveal(el) {
@@ -269,6 +255,7 @@
     var max = document.documentElement.scrollHeight - window.innerHeight;
     var p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
     if (fill) fill.style.setProperty('--progress', p.toFixed(4));
+    if (header) header.classList.toggle('is-scrolled', window.scrollY > 8);
   }
   window.addEventListener('scroll', function () {
     if (!ticking) { ticking = true; requestAnimationFrame(updateProgress); }
@@ -306,6 +293,17 @@
     arc.style.strokeDashoffset = String(DIAL_C);
     void arc.getBoundingClientRect(); // restart the sweep each time
     arc.style.strokeDashoffset = String(pct === null ? DIAL_C : DIAL_C * (1 - pct / 100));
+  }
+
+  /* ---------- cursor spotlight on cards ---------- */
+  if (!reduceMotion && window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    Array.prototype.forEach.call(document.querySelectorAll('.spot'), function (el) {
+      el.addEventListener('pointermove', function (e) {
+        var r = el.getBoundingClientRect();
+        el.style.setProperty('--mx', (e.clientX - r.left).toFixed(0) + 'px');
+        el.style.setProperty('--my', (e.clientY - r.top).toFixed(0) + 'px');
+      }, { passive: true });
+    });
   }
 
   /* ---------- scroll reveals with a stagger ---------- */
