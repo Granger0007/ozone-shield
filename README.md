@@ -219,7 +219,7 @@ OZONE Shield reduces that to a single action: paste the message, get a verdict a
 ## Built By
 
 **Bhargav Baranda**
-MSc Information Security (Royal Holloway, University of London) · ISC² Certified in Cybersecurity (CC) · CompTIA Security+ (in progress)
+MSc Information Security (Royal Holloway, University of London) · CompTIA Security+ certified · ISC² Certified in Cybersecurity (CC)
 
 OZONE Shield is a personal project, built and run solo. It is free to use and always will be.
 
