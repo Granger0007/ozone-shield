@@ -13,7 +13,7 @@
   <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon-precomposed.png">
 
   <meta name="theme-color" content="#070d1c">
-  <meta name="color-scheme" content="light dark">
+  <meta name="color-scheme" content="dark">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type"        content="website">
@@ -78,7 +78,7 @@
         <a href="#checker">Check a message</a>
         <a href="#help">Already paid?</a>
         <a href="#briefing">Fraud in numbers</a>
-        <a href="#how">How it works</a>
+        <a href="#decoder">Spot the signs</a>
       </nav>
       <a class="btn btn-sm btn-ghost-light header-cta" href="/spot-the-scam/">
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="2" y="6" width="20" height="12" rx="6"/><path d="M7 10v4M5 12h4"/><path d="M15.5 11h.01M18 13h.01"/></svg>
@@ -114,8 +114,8 @@
       <div class="container hero-layout">
         <div class="hero-copy">
           <p class="eyebrow"><span class="live-dot" aria-hidden="true"></span>Free scam checker for the UK</p>
-          <h1 id="hero-title">Is this message <span class="h1-accent">a&nbsp;scam?</span></h1>
-          <p class="hero-sub">Paste a text, email or WhatsApp message. You'll get a clear verdict, the reasons behind it, and what to do next.</p>
+          <h1 id="hero-title"><span class="w"><span>Is</span></span> <span class="w"><span>this</span></span> <span class="w"><span>message</span></span> <span class="w h1-accent"><span>a&nbsp;scam?</span></span></h1>
+          <p class="hero-sub">Scammers hide in plain sight. Paste a text, email or WhatsApp message and we'll read between the lines: a clear verdict, the reasons, and what to do next.</p>
           <ul class="trust" aria-label="About this service">
             <li>
               <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2 4 5v6c0 5 3.4 9.5 8 11 4.6-1.5 8-6 8-11V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg>
@@ -232,6 +232,33 @@
       </div>
     </section>
 
+    <!-- DECODER: scroll story -->
+    <section class="decoder" id="decoder" aria-labelledby="decoder-title">
+      <div class="container dc-sticky">
+        <div class="dc-head">
+          <p class="eyebrow">How scams hide</p>
+          <h2 id="decoder-title">Every scam leaves fingerprints.</h2>
+          <p>Scroll, and watch a typical parcel scam come apart, one red flag at a time.</p>
+        </div>
+        <div class="dc-grid">
+          <div class="dc-phone" aria-label="Example scam text message">
+            <div class="dc-from"><span class="dc-chan">SMS</span>Unknown number</div>
+            <p class="dc-msg">Royal Mail: <span class="dc-flag">Your parcel is on hold</span> due to an <span class="dc-flag">unpaid fee of £1.99</span>. <span class="dc-flag">Pay within 24 hours</span> or it will be returned: <span class="dc-flag">royalmail-redelivery-fee.com</span></p>
+            <span class="dc-stamp">Scam</span>
+          </div>
+          <div>
+            <ol class="dc-notes">
+              <li class="dc-note"><i aria-hidden="true">01</i><p><b>Something you want, held back</b><span>A parcel on hold makes you want to act before you think.</span></p></li>
+              <li class="dc-note"><i aria-hidden="true">02</i><p><b>A tiny fee</b><span>£1.99 feels harmless. The real target is your card details.</span></p></li>
+              <li class="dc-note"><i aria-hidden="true">03</i><p><b>A deadline</b><span>24 hours is there to rush you past the moment you'd check.</span></p></li>
+              <li class="dc-note"><i aria-hidden="true">04</i><p><b>A look-alike address</b><span>It mentions Royal Mail, but it isn't royalmail.com.</span></p></li>
+            </ol>
+            <p class="dc-count" aria-hidden="true"><b id="dcCount">4</b> / 4 red flags</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- ALREADY PAID -->
     <section class="section section-tight" id="help" aria-labelledby="help-title">
       <div class="container">
@@ -277,7 +304,7 @@
       <div class="container">
         <div class="section-head" data-reveal>
           <p class="eyebrow">Fraud in the UK · 2025</p>
-          <h2 id="briefing-title">Why checking first matters</h2>
+          <h2 id="briefing-title">£1.28bn reasons to check first.</h2>
           <p class="section-sub">What UK banks and payment firms reported to UK Finance for 2025.</p>
         </div>
         <ol class="stats">
@@ -355,7 +382,7 @@
       <div class="container">
         <div class="section-head" data-reveal>
           <p class="eyebrow">How it works</p>
-          <h2 id="how-title">A clear answer in three steps</h2>
+          <h2 id="how-title">Paste. Check. Know.</h2>
         </div>
         <ol class="how-steps" data-reveal>
           <li>

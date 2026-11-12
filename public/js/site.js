@@ -233,6 +233,30 @@
   /* ---------- scroll progress + header state (one write per frame) ---------- */
   var fill = $('progressFill');
   var header = $('siteHeader');
+
+  /* ---------- decoder: scroll dissects a scam, one red flag at a time ---------- */
+  var decoder = $('decoder');
+  var dcFlags = decoder ? decoder.querySelectorAll('.dc-flag') : [];
+  var dcNotes = decoder ? decoder.querySelectorAll('.dc-note') : [];
+  var dcStamp = decoder ? decoder.querySelector('.dc-stamp') : null;
+  var dcStep = -1;
+  if (decoder && !reduceMotion) document.documentElement.classList.add('dc-live');
+  function updateDecoder() {
+    if (!decoder || reduceMotion) return;
+    var r = decoder.getBoundingClientRect();
+    var span = r.height - window.innerHeight;
+    var p = span > 0 ? Math.min(1, Math.max(0, -r.top / span)) : 1;
+    var step = Math.min(5, Math.floor(p * 6));          // 0 = clean, 1-4 = flags, 5 = verdict
+    if (step === dcStep) return;
+    dcStep = step;
+    Array.prototype.forEach.call(dcFlags, function (el, i) { el.classList.toggle('on', i < step); });
+    Array.prototype.forEach.call(dcNotes, function (el, i) {
+      el.classList.toggle('on', i < step);
+      el.classList.toggle('current', i === Math.min(step, 4) - 1);
+    });
+    if (dcStamp) dcStamp.classList.toggle('on', step >= 5);
+    var count = $('dcCount'); if (count) count.textContent = String(Math.min(step, 4));
+  }
   var ticking = false;
   var pendingReveals = [];
   function reveal(el) {
@@ -256,6 +280,7 @@
     var p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
     if (fill) fill.style.setProperty('--progress', p.toFixed(4));
     if (header) header.classList.toggle('is-scrolled', window.scrollY > 8);
+    updateDecoder();
   }
   window.addEventListener('scroll', function () {
     if (!ticking) { ticking = true; requestAnimationFrame(updateProgress); }
@@ -293,6 +318,24 @@
     arc.style.strokeDashoffset = String(DIAL_C);
     void arc.getBoundingClientRect(); // restart the sweep each time
     arc.style.strokeDashoffset = String(pct === null ? DIAL_C : DIAL_C * (1 - pct / 100));
+  }
+
+  /* ---------- soft glow that follows the pointer in the hero ---------- */
+  var heroArt = document.querySelector('.hero-art');
+  var heroEl = document.querySelector('.hero');
+  if (heroArt && heroEl && !reduceMotion && window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    var glowQueued = false, gx = 0, gy = 0;
+    heroEl.addEventListener('pointermove', function (e) {
+      var r = heroEl.getBoundingClientRect(); gx = e.clientX - r.left; gy = e.clientY - r.top;
+      if (glowQueued) return; glowQueued = true;
+      requestAnimationFrame(function () {
+        glowQueued = false;
+        heroArt.style.setProperty('--gx', gx.toFixed(0) + 'px');
+        heroArt.style.setProperty('--gy', gy.toFixed(0) + 'px');
+        heroArt.style.setProperty('--glow', '1');
+      });
+    }, { passive: true });
+    heroEl.addEventListener('pointerleave', function () { heroArt.style.setProperty('--glow', '0'); });
   }
 
   /* ---------- cursor spotlight on cards ---------- */
