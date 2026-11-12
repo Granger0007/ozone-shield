@@ -199,7 +199,9 @@
     var body = $('msgBody'); body.textContent = '';
     m.parts.forEach(function (part, k) {
       var text = typeof part === 'string' ? part : part.t;
-      if (typeof part === 'string' && isPunct(text)) { body.appendChild(document.createTextNode(text)); return; }
+      // Punctuation and tiny joining words (like " at ") stay plain text: as tap
+      // targets they would be smaller than the 24px minimum in WCAG 2.2.
+      if (typeof part === 'string' && (isPunct(text) || text.trim().length < 4)) { body.appendChild(document.createTextNode(text)); return; }
       // Inline spans (not <button>) so highlights flow inside the sentence;
       // they become keyboard-operable buttons during the red-flag hunt.
       var seg = document.createElement('span');
