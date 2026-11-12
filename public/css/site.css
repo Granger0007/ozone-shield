@@ -133,7 +133,7 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round
 }
 
 /* Dark brand areas: light focus ring, light links */
-.site-header, .hero-copy, .callout-159, .play-art, .site-footer { --focus: #8ab4ff; }
+.site-header, .hero-copy, .notfound-inner, .callout-159, .play-art, .site-footer { --focus: #8ab4ff; }
 
 /* ---------- Buttons ---------- */
 .btn {
@@ -622,6 +622,19 @@ kbd {
 .site-footer a { color: var(--night-ink); }
 .site-footer a:hover { color: var(--night-brand); }
 .footer-base { margin-top: 44px; padding-top: 22px; border-top: 1px solid var(--night-line); font-size: 0.9rem; }
+.site-footer b { color: var(--night-ink); }
+
+/* ---------- 404 page ---------- */
+.notfound { min-height: calc(100vh - var(--header-h) - 120px); display: grid; align-items: center; }
+.notfound-inner { max-width: 820px; display: flex; flex-direction: column; gap: 20px; padding-block: clamp(24px, 6vw, 72px); }
+.nf-tip {
+  display: flex; gap: 12px; align-items: flex-start; max-width: 42em;
+  padding: 16px 18px; border-radius: 14px; background: rgb(255 255 255 / 6%); border: 1px solid var(--night-line); color: var(--night-ink);
+}
+.nf-tip svg { width: 22px; height: 22px; flex: none; margin-top: 2px; color: #f2b455; }
+.nf-tip b { overflow-wrap: anywhere; }
+.nf-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 6px; }
+.nf-footer { margin-top: 0; padding-top: 0; border-top: 0; }
 
 /* ---------- Scroll reveal ----------
    Only elements that start below the fold are hidden, so the page is

@@ -1,0 +1,5 @@
+# OZONE Shield: everything here is public and may be indexed by search engines.
+User-agent: *
+Allow: /
+
+Sitemap: https://ozone-shield.bbaranda055.workers.dev/sitemap.xml

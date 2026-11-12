@@ -5,7 +5,9 @@
   "name": "ozone-shield",
   "compatibility_date": "2026-07-09",
   "assets": {
-    "directory": "./public"
+    "directory": "./public",
+    // Unknown paths get the branded 404 page (public/404.html) with a 404 status.
+    "not_found_handling": "404-page"
   },
   "observability": {
     "enabled": true
