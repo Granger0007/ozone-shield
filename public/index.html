@@ -61,6 +61,7 @@
 
   <link rel="preload" href="/fonts/atkinson-next-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/css/site.css">
+  <script src="/js/intro.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#checker">Skip to the message checker</a>
@@ -76,9 +77,10 @@
       </a>
       <nav class="site-nav" aria-label="Main">
         <a href="#checker">Check a message</a>
+        <a href="#live">Live</a>
         <a href="#help">Already paid?</a>
-        <a href="#briefing">Fraud in numbers</a>
-        <a href="#decoder">Spot the signs</a>
+        <a href="#scamMap">Scam map</a>
+        <a href="#decoder">How scams work</a>
       </nav>
       <a class="btn btn-sm btn-ghost-light header-cta" href="/spot-the-scam/">
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="2" y="6" width="20" height="12" rx="6"/><path d="M7 10v4M5 12h4"/><path d="M15.5 11h.01M18 13h.01"/></svg>
@@ -89,172 +91,164 @@
   </header>
 
   <main id="main">
-    <!-- HERO + CHECKER -->
-    <section class="hero" aria-labelledby="hero-title">
-      <div class="hero-art" aria-hidden="true">
-        <div class="hero-gridlines"></div>
-        <div class="hero-glow"></div>
-        <div class="radar">
-          <svg viewBox="0 0 400 400" focusable="false">
-            <circle class="r-ring" cx="200" cy="200" r="198"/>
-            <circle class="r-ring" cx="200" cy="200" r="150"/>
-            <circle class="r-ring" cx="200" cy="200" r="102"/>
-            <circle class="r-ring" cx="200" cy="200" r="54"/>
-            <circle class="r-ticks" cx="200" cy="200" r="186"/>
-            <path class="r-cross" d="M200 2v396M2 200h396"/>
-          </svg>
-          <div class="radar-sweep"></div>
-          <span class="blip b1"></span>
-          <span class="blip b2"></span>
-          <span class="blip b3"></span>
-          <span class="blip b4"></span>
+    <!-- STORY: a pinned scanner, with chapters scrolling past it -->
+    <section class="story" id="story" aria-labelledby="hero-title">
+      <div class="container story-grid">
+        <div class="story-chapters">
+          <div class="chapter ch-hero" data-mode="welcome">
+            <p class="eyebrow"><span class="live-dot" aria-hidden="true"></span>Welcome to OZONE Shield</p>
+            <h1 id="hero-title">Is this message a scam?</h1>
+            <p class="lead">Paste a text, email or WhatsApp message. Get a clear verdict, the reasons behind it, and what to do next.</p>
+            <div class="cta-row">
+              <a class="btn-mono btn-mono-solid" href="#checker">Check a message <span aria-hidden="true">↓</span></a>
+              <a class="btn-mono" href="/spot-the-scam/">Play Spot the Scam</a>
+            </div>
+            <ul class="trust" aria-label="About this service">
+              <li>Free, with no account</li>
+              <li>We don't keep your message</li>
+              <li>AI guidance. Always double-check</li>
+            </ul>
+          </div>
+
+          <div class="chapter ch-check" id="checker" data-mode="listen">
+            <h2 class="ch-title c-blue">Paste it. We'll read it.</h2>
+        <div class="card checker" id="checkerCard" data-state="idle">
+          <div class="checker-head">
+            <p id="checker-title" class="checker-title">Check a message</p>
+            <span class="checker-tag">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+              We don't keep it
+            </span>
+          </div>
+          <label class="field-label" for="messageInput">Your message</label>
+          <div class="message-box">
+            <textarea
+              id="messageInput"
+              maxlength="4000"
+              rows="7"
+              placeholder="Paste the message here: text, email, WhatsApp or letter…"
+              spellcheck="false"
+              aria-describedby="messageHint charCountWrap"></textarea>
+            <div class="scan-line" aria-hidden="true"></div>
+          </div>
+          <div class="meta-row">
+            <span class="hint" id="messageHint">Remove bank details and passwords before pasting.</span>
+            <span class="char-count" id="charCountWrap"><span id="charCount">0</span> / 4,000</span>
+          </div>
+
+          <button type="button" class="btn btn-primary btn-block" id="analyseBtn">
+            <span class="btn-spinner" aria-hidden="true"></span>
+            <span id="btnText">Check this message</span>
+            <svg class="btn-arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+          </button>
+          <p class="shortcut" aria-hidden="true"><kbd>Ctrl</kbd> / <kbd>⌘</kbd> + <kbd>Enter</kbd> to check</p>
+
+          <p class="status" id="statusText" role="status" aria-live="polite"></p>
+
+          <!-- Cloudflare Turnstile: only shows itself if a check needs the user -->
+          <div class="turnstile-wrap" id="turnstileBox"></div>
+
+          <div class="cooldown" id="cooldownTrack" aria-hidden="true"><div class="cooldown-fill" id="cooldownFill"></div></div>
         </div>
+
+      <div class="notice notice-error" id="errorBox" role="alert" hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 2 20h20L12 3Z"/><path d="M12 10v4"/><path d="M12 17h.01"/></svg>
+        <span id="errorText"></span>
       </div>
 
-      <div class="container hero-layout">
-        <div class="hero-copy">
-          <p class="eyebrow"><span class="live-dot" aria-hidden="true"></span>Free scam checker for the UK</p>
-          <h1 id="hero-title"><span class="w"><span>Is</span></span> <span class="w"><span>this</span></span> <span class="w"><span>message</span></span> <span class="w h1-accent"><span>a&nbsp;scam?</span></span></h1>
-          <p class="hero-sub">Scammers hide in plain sight. Paste a text, email or WhatsApp message and we'll read between the lines: a clear verdict, the reasons, and what to do next.</p>
-          <ul class="trust" aria-label="About this service">
-            <li>
-              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2 4 5v6c0 5 3.4 9.5 8 11 4.6-1.5 8-6 8-11V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg>
-              Free, with no account
-            </li>
-            <li>
-              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
-              We don't keep your message
-            </li>
-            <li>
-              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 8v5"/><path d="M12 16h.01"/></svg>
-              AI guidance. Always double-check
-            </li>
-          </ul>
+      <article class="card result" id="resultCard" hidden aria-labelledby="verdictTitle">
+        <div class="result-band">
+          <span class="verdict-icon" aria-hidden="true">
+            <svg class="icon-safe" viewBox="0 0 24 24" focusable="false"><path d="M12 2 4 5v6c0 5 3.4 9.5 8 11 4.6-1.5 8-6 8-11V5l-8-3Z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg>
+            <svg class="icon-caution" viewBox="0 0 24 24" focusable="false"><path d="M12 3 2 20h20L12 3Z"/><path d="M12 10v4"/><path d="M12 17h.01"/></svg>
+            <svg class="icon-scam" viewBox="0 0 24 24" focusable="false"><path d="M8 2h8l6 6v8l-6 6H8l-6-6V8l6-6Z"/><path d="m9 9 6 6"/><path d="m15 9-6 6"/></svg>
+          </span>
+          <div class="verdict-text">
+            <h2 class="verdict-title" id="verdictTitle" tabindex="-1"></h2>
+            <p class="verdict-sub" id="verdictSub"></p>
+          </div>
         </div>
-
-        <div class="hero-tool" id="checker">
-          <div class="tool-frame">
-            <div class="card checker" id="checkerCard" data-state="idle">
-              <div class="checker-head">
-                <h2 id="checker-title" class="checker-title">Check a message</h2>
-                <span class="checker-tag">
-                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
-                  We don't keep it
-                </span>
-              </div>
-              <label class="field-label" for="messageInput">Your message</label>
-              <div class="message-box">
-                <textarea
-                  id="messageInput"
-                  maxlength="4000"
-                  rows="7"
-                  placeholder="Paste the message here: text, email, WhatsApp or letter…"
-                  spellcheck="false"
-                  aria-describedby="messageHint charCountWrap"></textarea>
-                <div class="scan-line" aria-hidden="true"></div>
-              </div>
-              <div class="meta-row">
-                <span class="hint" id="messageHint">Remove bank details and passwords before pasting.</span>
-                <span class="char-count" id="charCountWrap"><span id="charCount">0</span> / 4,000</span>
-              </div>
-
-              <button type="button" class="btn btn-primary btn-block" id="analyseBtn">
-                <span class="btn-spinner" aria-hidden="true"></span>
-                <span id="btnText">Check this message</span>
-                <svg class="btn-arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
-              </button>
-              <p class="shortcut" aria-hidden="true"><kbd>Ctrl</kbd> / <kbd>⌘</kbd> + <kbd>Enter</kbd> to check</p>
-
-              <p class="status" id="statusText" role="status" aria-live="polite"></p>
-
-              <!-- Cloudflare Turnstile: only shows itself if a check needs the user -->
-              <div class="turnstile-wrap" id="turnstileBox"></div>
-
-              <div class="cooldown" id="cooldownTrack" aria-hidden="true"><div class="cooldown-fill" id="cooldownFill"></div></div>
-            </div>
-          </div>
-
-          <div class="notice notice-error" id="errorBox" role="alert" hidden>
-            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 2 20h20L12 3Z"/><path d="M12 10v4"/><path d="M12 17h.01"/></svg>
-            <span id="errorText"></span>
-          </div>
-
-          <article class="card result" id="resultCard" hidden aria-labelledby="verdictTitle">
-            <div class="result-band">
-              <span class="verdict-icon" aria-hidden="true">
-                <svg class="icon-safe" viewBox="0 0 24 24" focusable="false"><path d="M12 2 4 5v6c0 5 3.4 9.5 8 11 4.6-1.5 8-6 8-11V5l-8-3Z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg>
-                <svg class="icon-caution" viewBox="0 0 24 24" focusable="false"><path d="M12 3 2 20h20L12 3Z"/><path d="M12 10v4"/><path d="M12 17h.01"/></svg>
-                <svg class="icon-scam" viewBox="0 0 24 24" focusable="false"><path d="M8 2h8l6 6v8l-6 6H8l-6-6V8l6-6Z"/><path d="m9 9 6 6"/><path d="m15 9-6 6"/></svg>
+        <dl class="verdict-meta">
+          <div class="dial-cell">
+            <dt>Confidence</dt>
+            <dd>
+              <span class="dial" aria-hidden="true">
+                <svg viewBox="0 0 64 64" focusable="false">
+                  <circle class="dial-ticks" cx="32" cy="32" r="29"/>
+                  <circle class="dial-track" cx="32" cy="32" r="24"/>
+                  <circle class="dial-arc" id="dialArc" cx="32" cy="32" r="24"/>
+                </svg>
               </span>
-              <div class="verdict-text">
-                <h2 class="verdict-title" id="verdictTitle" tabindex="-1"></h2>
-                <p class="verdict-sub" id="verdictSub"></p>
-              </div>
-            </div>
-            <dl class="verdict-meta">
-              <div class="dial-cell">
-                <dt>Confidence</dt>
-                <dd>
-                  <span class="dial" aria-hidden="true">
-                    <svg viewBox="0 0 64 64" focusable="false">
-                      <circle class="dial-ticks" cx="32" cy="32" r="29"/>
-                      <circle class="dial-track" cx="32" cy="32" r="24"/>
-                      <circle class="dial-arc" id="dialArc" cx="32" cy="32" r="24"/>
-                    </svg>
-                  </span>
-                  <span id="confidencePct"></span>
-                </dd>
-              </div>
-              <div><dt>Risk level</dt><dd id="severityText"></dd></div>
-            </dl>
-            <div class="result-body">
-              <section>
-                <h3 class="result-heading">Why</h3>
-                <ul class="reasons" id="reasonsList"></ul>
-              </section>
-              <section>
-                <h3 class="result-heading">What to do</h3>
-                <p class="action-block" id="actionBox"></p>
-              </section>
-              <section class="report" id="reportBox" hidden>
-                <h3 class="result-heading">Report it (UK)</h3>
-                <ul class="report-list">
-                  <li><strong>A text message:</strong> forward it to <strong>7726</strong>. It's free.</li>
-                  <li><strong>An email:</strong> forward it to <strong>report@phishing.gov.uk</strong>.</li>
-                  <li><strong>Lost money or shared bank details:</strong> call your bank on <strong>159</strong>. Then report it to <a href="https://www.reportfraud.police.uk" target="_blank" rel="noopener">Report Fraud</a> on <strong>0300 123 2040</strong> (England, Wales and Northern Ireland) or to Police Scotland on <strong>101</strong>.</li>
-                </ul>
-              </section>
-              <p class="ai-note">This verdict was produced by AI. It can be wrong, so always check through official channels.</p>
-              <button type="button" class="btn btn-secondary" id="againBtn">Check another message</button>
-            </div>
-          </article>
+              <span id="confidencePct"></span>
+            </dd>
+          </div>
+          <div><dt>Risk level</dt><dd id="severityText"></dd></div>
+        </dl>
+        <div class="result-body">
+          <section>
+            <h3 class="result-heading">Why</h3>
+            <ul class="reasons" id="reasonsList"></ul>
+          </section>
+          <section>
+            <h3 class="result-heading">What to do</h3>
+            <p class="action-block" id="actionBox"></p>
+          </section>
+          <section class="report" id="reportBox" hidden>
+            <h3 class="result-heading">Report it (UK)</h3>
+            <ul class="report-list">
+              <li><strong>A text message:</strong> forward it to <strong>7726</strong>. It's free.</li>
+              <li><strong>An email:</strong> forward it to <strong>report@phishing.gov.uk</strong>.</li>
+              <li><strong>Lost money or shared bank details:</strong> call your bank on <strong>159</strong>. Then report it to <a href="https://www.reportfraud.police.uk" target="_blank" rel="noopener">Report Fraud</a> on <strong>0300 123 2040</strong> (England, Wales and Northern Ireland) or to Police Scotland on <strong>101</strong>.</li>
+            </ul>
+          </section>
+          <p class="ai-note">This verdict was produced by AI. It can be wrong, so always check through official channels.</p>
+          <button type="button" class="btn btn-secondary" id="againBtn">Check another message</button>
+        </div>
+      </article>
+          </div>
+
+          <div class="chapter" id="decoder" data-mode="rush" data-reveal>
+            <p class="ch-num">01</p>
+            <h2 class="ch-title c-amber">They rush you.</h2>
+            <p class="ch-text">“Pay within 24 hours.” “Only 5 places left today.” A deadline is there to stop you checking. Real organisations give you time.</p>
+          </div>
+
+          <div class="chapter" data-mode="mask" data-reveal>
+            <p class="ch-num">02</p>
+            <h2 class="ch-title c-violet">They pretend to be someone you trust.</h2>
+            <p class="ch-text">Royal Mail, HMRC, your bank, even your child on a new number. Contact them yourself, using a number or website you already know.</p>
+          </div>
+
+          <div class="chapter" data-mode="money" data-reveal>
+            <p class="ch-num">03</p>
+            <h2 class="ch-title c-red">Then they ask for money.</h2>
+            <p class="ch-text">A small fee, a “safe account”, gift cards, a courier for your card. That's the moment to stop. Banks never ask you to move money to keep it safe.</p>
+          </div>
+
+          <div class="chapter" data-mode="safe" data-reveal>
+            <h2 class="ch-title c-green">Check first. Every time.</h2>
+            <p class="ch-text">It takes a moment, and it's free.</p>
+            <div class="cta-row"><a class="btn-mono btn-mono-solid" href="#checker">Check a message <span aria-hidden="true">↑</span></a></div>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- DECODER: scroll story -->
-    <section class="decoder" id="decoder" aria-labelledby="decoder-title">
-      <div class="container dc-sticky">
-        <div class="dc-head">
-          <p class="eyebrow">How scams hide</p>
-          <h2 id="decoder-title">Every scam leaves fingerprints.</h2>
-          <p>Scroll, and watch a typical parcel scam come apart, one red flag at a time.</p>
+    <!-- LIVE GLOBE -->
+    <section class="section live" id="live" aria-labelledby="live-title">
+      <div class="container live-grid">
+        <div class="live-copy" data-reveal>
+          <p class="eyebrow"><span class="live-dot" aria-hidden="true"></span>Live</p>
+          <h2 id="live-title">Scams don't keep office hours.</h2>
+          <p class="section-sub">Messages arrive day and night, wherever you are. This is the Earth right now: the lit side is where the sun is up.</p>
+          <dl class="live-stats">
+            <div><dt>London</dt><dd><span id="londonTime">--:--</span> <span class="live-sun" id="londonSun"></span></dd></div>
+            <div><dt>Your time</dt><dd id="yourTime">--:--</dd></div>
+          </dl>
+          <p class="live-hint">Drag the globe, or use the arrow keys, to turn it.</p>
         </div>
-        <div class="dc-grid">
-          <div class="dc-phone" aria-label="Example scam text message">
-            <div class="dc-from"><span class="dc-chan">SMS</span>Unknown number</div>
-            <p class="dc-msg">Royal Mail: <span class="dc-flag">Your parcel is on hold</span> due to an <span class="dc-flag">unpaid fee of £1.99</span>. <span class="dc-flag">Pay within 24 hours</span> or it will be returned: <span class="dc-flag">royalmail-redelivery-fee.com</span></p>
-            <span class="dc-stamp">Scam</span>
-          </div>
-          <div>
-            <ol class="dc-notes">
-              <li class="dc-note"><i aria-hidden="true">01</i><p><b>Something you want, held back</b><span>A parcel on hold makes you want to act before you think.</span></p></li>
-              <li class="dc-note"><i aria-hidden="true">02</i><p><b>A tiny fee</b><span>£1.99 feels harmless. The real target is your card details.</span></p></li>
-              <li class="dc-note"><i aria-hidden="true">03</i><p><b>A deadline</b><span>24 hours is there to rush you past the moment you'd check.</span></p></li>
-              <li class="dc-note"><i aria-hidden="true">04</i><p><b>A look-alike address</b><span>It mentions Royal Mail, but it isn't royalmail.com.</span></p></li>
-            </ol>
-            <p class="dc-count" aria-hidden="true"><b id="dcCount">4</b> / 4 red flags</p>
-          </div>
+        <div class="globe-wrap">
+          <canvas id="globe" tabindex="0" role="img" aria-label="Globe showing where it is day and night right now, with London marked"></canvas>
         </div>
       </div>
     </section>
@@ -574,6 +568,8 @@
     </div>
   </footer>
 
+  <script src="/js/globe-data.js"></script>
+  <script src="/js/globe.js"></script>
   <script src="/js/scam-map.js"></script>
   <script src="/js/site.js"></script>
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onTurnstileLoad" async defer></script>
