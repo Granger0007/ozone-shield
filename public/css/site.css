@@ -448,31 +448,24 @@ kbd {
 .report-list { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: 8px; }
 .ai-note { font-size: 0.92rem; color: var(--muted); }
 
-/* ---------- Story: one pinned instrument, chapters scroll past ----------
-   Desktop: chapters on the left, the instrument pinned on the right.
-   Phone: the instrument sits above the chapters and scrolls normally. */
-.story { position: relative; border-bottom: 1px solid var(--line); }
-.story-grid { display: grid; gap: 8px; }
-.story-stage { display: flex; justify-content: center; padding-top: 24px; }
-.inst { position: relative; width: min(100%, 360px); aspect-ratio: 1; }
-.inst-svg { display: block; width: 100%; height: 100%; overflow: visible; }
-.inst-readout {
-  position: absolute; left: 50%; bottom: -6px; transform: translateX(-50%); white-space: nowrap;
-  display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px;
-  font-family: var(--mono); font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
-  background: var(--surface); border: 1px solid var(--line);
-}
-.inst-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--wave); transition: background-color .5s; }
-.chapters, .story-chapters { display: flex; flex-direction: column; }
-.chapter { padding-block: 56px; display: flex; flex-direction: column; justify-content: center; gap: 18px; }
-.ch-hero { padding-top: 24px; }
-.ch-hero h1 { font-size: clamp(2.8rem, 9vw, 5.4rem); letter-spacing: -0.045em; line-height: .95; }
-.lead { font-size: clamp(1.1rem, 1.6vw, 1.3rem); color: var(--muted); max-width: 30em; }
+/* ---------- Story: big words, one step at a time ---------- */
+.story { border-bottom: 1px solid var(--line); }
+.story-chapters { display: flex; flex-direction: column; }
+.chapter { padding-block: clamp(56px, 9vw, 120px); display: flex; flex-direction: column; gap: 18px; border-top: 1px solid var(--line); }
+.chapter:first-child { border-top: 0; }
+.ch-hero { padding-top: clamp(48px, 9vw, 120px); }
+.ch-hero h1 { font-size: clamp(3rem, 10vw, 8.5rem); letter-spacing: -0.05em; line-height: .92; max-width: 11ch; }
+.lead { font-size: clamp(1.15rem, 1.8vw, 1.45rem); color: var(--muted); max-width: 34em; }
 .ch-num { font-family: var(--mono); font-size: .8rem; letter-spacing: .14em; color: var(--muted); }
-.ch-title { font-size: clamp(2.1rem, 5vw, 3.6rem); font-weight: 800; letter-spacing: -0.035em; line-height: 1; }
-.ch-text { font-size: clamp(1.1rem, 1.5vw, 1.25rem); color: var(--muted); max-width: 30em; }
+.ch-title { font-size: clamp(2.4rem, 7vw, 6rem); font-weight: 800; letter-spacing: -0.045em; line-height: .95; max-width: 16ch; }
+.ch-text { font-size: clamp(1.15rem, 1.8vw, 1.45rem); color: var(--muted); max-width: 36em; }
 .c-blue { color: #7cc4ff; } .c-amber { color: #f7b84b; } .c-violet { color: #b49cff; } .c-red { color: #ff7a6e; } .c-green { color: #5fd68f; }
-.chapter > * { transition: opacity .6s var(--ease-out), transform .8s var(--ease-out); }
+@media (min-width: 960px) {
+  .chapter[data-mode="rush"], .chapter[data-mode="mask"], .chapter[data-mode="money"] {
+    display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); column-gap: 56px; align-items: end;
+  }
+  .chapter[data-mode="rush"] .ch-num, .chapter[data-mode="mask"] .ch-num, .chapter[data-mode="money"] .ch-num { grid-column: 1 / -1; }
+}
 .cta-row { display: flex; flex-wrap: wrap; gap: 10px; }
 .btn-mono {
   display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 18px; border-radius: 6px; text-decoration: none;
@@ -486,57 +479,8 @@ kbd {
 .ch-hero .trust { flex-direction: row; flex-wrap: wrap; gap: 6px 18px; margin-top: 6px; }
 .ch-hero .trust li { font-family: var(--mono); font-size: .74rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); gap: 8px; }
 .ch-hero .trust li::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--safe); }
+.ch-check .checker, .ch-check .result, .ch-check .notice { max-width: 760px; }
 .ch-check .checker { box-shadow: var(--shadow-lg); border: 1px solid var(--line); }
-
-@media (min-width: 960px) {
-  .story-grid { grid-template-columns: minmax(0, 520px) minmax(0, 1fr); gap: 40px; }
-  .story-stage { order: 2; position: sticky; top: var(--header-h); height: calc(100vh - var(--header-h)); align-items: center; padding-top: 0; }
-  .story-chapters { order: 1; }
-  .inst { width: min(100%, calc(100vh - var(--header-h) - 80px), 640px); }
-  .chapter { min-height: 82vh; padding-block: 64px; }
-  .ch-hero { min-height: calc(100vh - var(--header-h)); padding-top: 0; }
-  .ch-check { min-height: 0; padding-block: 64px 96px; }
-  .chapter:not(.is-active):not(.ch-check) > * { opacity: .25; }
-}
-
-/* The instrument's palette: the ring keeps its colours, the waveform follows the mode */
-.inst { --wave: #7cc4ff; }
-.inst[data-mode="listen"] { --wave: #7cc4ff; }
-.inst[data-mode="scan"] { --wave: #4fd6c5; }
-.inst[data-mode="rush"] { --wave: #f7b84b; }
-.inst[data-mode="mask"] { --wave: #b49cff; }
-.inst[data-mode="money"], .inst[data-mode="v-scam"] { --wave: #ff7a6e; }
-.inst[data-mode="v-caution"] { --wave: #f7b84b; }
-.inst[data-mode="safe"], .inst[data-mode="v-safe"] { --wave: #5fd68f; }
-.inst .seg { fill: none; stroke-width: 7; stroke-linecap: round; transition: stroke .6s, opacity .6s; }
-.inst .s0 { stroke: #ff7a6e; } .inst .s1 { stroke: #ff9f5a; } .inst .s2 { stroke: #f7b84b; } .inst .s3 { stroke: #c9df5a; }
-.inst .s4 { stroke: #5fd68f; } .inst .s5 { stroke: #4fd6c5; } .inst .s6 { stroke: #56b8ff; } .inst .s7 { stroke: #8f97ff; }
-.inst[data-mode^="v-"] .seg, .inst[data-mode="rush"] .seg, .inst[data-mode="mask"] .seg, .inst[data-mode="money"] .seg, .inst[data-mode="safe"] .seg { stroke: var(--wave); }
-.inst-glow { filter: blur(10px); opacity: .55; }
-.inst .tick { stroke: var(--line); stroke-width: 2; }
-.inst .tick.long { stroke: color-mix(in srgb, var(--wave) 55%, var(--line)); transition: stroke .6s; }
-.inst-inner { fill: none; stroke: var(--line); stroke-width: 1.5; }
-.inst .sweep.thin { stroke-width: 3; stroke: color-mix(in srgb, var(--wave) 60%, transparent); }
-.inst .spin { transform-origin: 0 0; animation: spin 14s linear infinite; }
-.inst .spin-b { animation-duration: 9s; animation-direction: reverse; }
-.inst[data-mode="scan"] .spin { animation-duration: 2.4s; }
-.inst .bar { stroke: var(--wave); stroke-width: 3.2; stroke-linecap: round; opacity: .9; transition: stroke .5s; }
-.inst .dot { fill: var(--wave); transition: fill .5s; }
-.inst[data-mode="welcome"] { --wave: #5fd68f; }
-.inst[data-mode="lock"] { --wave: #b8b1a8; }
-.inst-wave, .inst-dots { transition: opacity .9s var(--ease-out); }
-.inst[data-mode="lock"] .inst-wave, .inst[data-mode="lock"] .inst-dots { opacity: 0; }
-/* The ring lights up one segment at a time on arrival */
-.inst .inst-ring .seg, .inst .inst-glow .seg { transition: stroke .6s, opacity .5s; }
-.inst.is-booting .seg, .inst[data-mode="lock"] .seg { opacity: .14; }
-.inst.is-open .inst-ring .s1, .inst.is-open .inst-glow .s1 { transition-delay: .08s; }
-.inst.is-open .inst-ring .s2, .inst.is-open .inst-glow .s2 { transition-delay: .16s; }
-.inst.is-open .inst-ring .s3, .inst.is-open .inst-glow .s3 { transition-delay: .24s; }
-.inst.is-open .inst-ring .s4, .inst.is-open .inst-glow .s4 { transition-delay: .32s; }
-.inst.is-open .inst-ring .s5, .inst.is-open .inst-glow .s5 { transition-delay: .40s; }
-.inst.is-open .inst-ring .s6, .inst.is-open .inst-glow .s6 { transition-delay: .48s; }
-.inst.is-open .inst-ring .s7, .inst.is-open .inst-glow .s7 { transition-delay: .56s; }
-.inst[data-mode="welcome"] .seg { stroke-width: 8; }
 
 /* ---------- Live globe ---------- */
 .live-grid { display: grid; gap: 28px; align-items: center; }
@@ -822,7 +766,6 @@ kbd {
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .chapter:not(.is-active):not(.ch-check) > * { opacity: 1 !important; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .checker[data-state="checking"] .scan-line { opacity: .6; transform: translateY(60px); }
   .reveal-pending, .how-steps.reveal-pending li { opacity: 1; transform: none; }

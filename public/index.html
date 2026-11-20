@@ -94,13 +94,6 @@
     <!-- STORY: a pinned scanner, with chapters scrolling past it -->
     <section class="story" id="story" aria-labelledby="hero-title">
       <div class="container story-grid">
-        <div class="story-stage" aria-hidden="true">
-          <div class="inst" id="inst" data-mode="lock">
-            <svg class="inst-svg" viewBox="-300 -300 600 600" focusable="false"></svg>
-            <p class="inst-readout"><span class="inst-dot"></span><span id="instReadout">Locked</span></p>
-          </div>
-        </div>
-
         <div class="story-chapters">
           <div class="chapter ch-hero" data-mode="welcome">
             <p class="eyebrow"><span class="live-dot" aria-hidden="true"></span>Welcome to OZONE Shield</p>
@@ -214,25 +207,25 @@
       </article>
           </div>
 
-          <div class="chapter" id="decoder" data-mode="rush">
+          <div class="chapter" id="decoder" data-mode="rush" data-reveal>
             <p class="ch-num">01</p>
             <h2 class="ch-title c-amber">They rush you.</h2>
             <p class="ch-text">“Pay within 24 hours.” “Only 5 places left today.” A deadline is there to stop you checking. Real organisations give you time.</p>
           </div>
 
-          <div class="chapter" data-mode="mask">
+          <div class="chapter" data-mode="mask" data-reveal>
             <p class="ch-num">02</p>
             <h2 class="ch-title c-violet">They pretend to be someone you trust.</h2>
             <p class="ch-text">Royal Mail, HMRC, your bank, even your child on a new number. Contact them yourself, using a number or website you already know.</p>
           </div>
 
-          <div class="chapter" data-mode="money">
+          <div class="chapter" data-mode="money" data-reveal>
             <p class="ch-num">03</p>
             <h2 class="ch-title c-red">Then they ask for money.</h2>
             <p class="ch-text">A small fee, a “safe account”, gift cards, a courier for your card. That's the moment to stop. Banks never ask you to move money to keep it safe.</p>
           </div>
 
-          <div class="chapter" data-mode="safe">
+          <div class="chapter" data-mode="safe" data-reveal>
             <h2 class="ch-title c-green">Check first. Every time.</h2>
             <p class="ch-text">It takes a moment, and it's free.</p>
             <div class="cta-row"><a class="btn-mono btn-mono-solid" href="#checker">Check a message <span aria-hidden="true">↑</span></a></div>
@@ -575,7 +568,6 @@
     </div>
   </footer>
 
-  <script src="/js/instrument.js"></script>
   <script src="/js/globe-data.js"></script>
   <script src="/js/globe.js"></script>
   <script src="/js/scam-map.js"></script>
