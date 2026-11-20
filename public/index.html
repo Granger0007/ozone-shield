@@ -61,6 +61,7 @@
 
   <link rel="preload" href="/fonts/atkinson-next-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/css/site.css">
+  <script src="/js/intro.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#checker">Skip to the message checker</a>
@@ -76,6 +77,7 @@
       </a>
       <nav class="site-nav" aria-label="Main">
         <a href="#checker">Check a message</a>
+        <a href="#live">Live</a>
         <a href="#help">Already paid?</a>
         <a href="#scamMap">Scam map</a>
         <a href="#decoder">How scams work</a>
@@ -100,7 +102,7 @@
         </div>
 
         <div class="story-chapters">
-          <div class="chapter ch-hero" data-mode="lock">
+          <div class="chapter ch-hero" data-mode="welcome">
             <p class="eyebrow"><span class="live-dot" aria-hidden="true"></span>Welcome to OZONE Shield</p>
             <h1 id="hero-title">Is this message a scam?</h1>
             <p class="lead">Paste a text, email or WhatsApp message. Get a clear verdict, the reasons behind it, and what to do next.</p>
@@ -235,6 +237,25 @@
             <p class="ch-text">It takes a moment, and it's free.</p>
             <div class="cta-row"><a class="btn-mono btn-mono-solid" href="#checker">Check a message <span aria-hidden="true">↑</span></a></div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LIVE GLOBE -->
+    <section class="section live" id="live" aria-labelledby="live-title">
+      <div class="container live-grid">
+        <div class="live-copy" data-reveal>
+          <p class="eyebrow"><span class="live-dot" aria-hidden="true"></span>Live</p>
+          <h2 id="live-title">Scams don't keep office hours.</h2>
+          <p class="section-sub">Messages arrive day and night, wherever you are. This is the Earth right now: the lit side is where the sun is up.</p>
+          <dl class="live-stats">
+            <div><dt>London</dt><dd><span id="londonTime">--:--</span> <span class="live-sun" id="londonSun"></span></dd></div>
+            <div><dt>Your time</dt><dd id="yourTime">--:--</dd></div>
+          </dl>
+          <p class="live-hint">Drag the globe, or use the arrow keys, to turn it.</p>
+        </div>
+        <div class="globe-wrap">
+          <canvas id="globe" tabindex="0" role="img" aria-label="Globe showing where it is day and night right now, with London marked"></canvas>
         </div>
       </div>
     </section>
@@ -555,6 +576,8 @@
   </footer>
 
   <script src="/js/instrument.js"></script>
+  <script src="/js/globe-data.js"></script>
+  <script src="/js/globe.js"></script>
   <script src="/js/scam-map.js"></script>
   <script src="/js/site.js"></script>
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onTurnstileLoad" async defer></script>

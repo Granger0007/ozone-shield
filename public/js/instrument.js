@@ -41,7 +41,6 @@
     el('line', { x1: (Math.cos(a) * r0).toFixed(1), y1: (Math.sin(a) * r0).toFixed(1), x2: (Math.cos(a) * 250).toFixed(1), y2: (Math.sin(a) * 250).toFixed(1), 'class': long ? 'tick long' : 'tick' }, ticks);
   }
   el('circle', { cx: 0, cy: 0, r: 224, 'class': 'inst-inner' });
-  var spinA = el('g', { 'class': 'spin spin-a' }); el('path', { d: arc(212, -2.6, -1.2), 'class': 'sweep' }, spinA);
   var spinB = el('g', { 'class': 'spin spin-b' }); el('path', { d: arc(200, 0.5, 1.7), 'class': 'sweep thin' }, spinB);
 
   var LINES = 41, wave = el('g', { 'class': 'inst-wave' }), bars = [];
@@ -49,14 +48,6 @@
     var y = (l - (LINES - 1) / 2) * 7.2;
     bars.push(el('line', { x1: -170, y1: y.toFixed(1), x2: 170, y2: y.toFixed(1), 'class': 'bar' }, wave));
   }
-  /* The opening lock: closed on arrival, then it opens to welcome you. */
-  var lock = el('g', { 'class': 'inst-lock' });
-  var shackle = el('g', { 'class': 'lock-shackle' }, lock);
-  el('path', { d: 'M-38 -6 V-48 A38 38 0 0 1 38 -48 V-6', 'class': 'lock-arc' }, shackle);
-  el('rect', { x: -66, y: -10, width: 132, height: 112, rx: 18, 'class': 'lock-body' }, lock);
-  el('circle', { cx: 0, cy: 34, r: 11, 'class': 'lock-hole' }, lock);
-  el('rect', { x: -4.5, y: 38, width: 9, height: 30, rx: 4.5, 'class': 'lock-hole' }, lock);
-
   var DOTS = 26, trail = el('g', { 'class': 'inst-dots' }), dots = [];
   for (var d = 0; d < DOTS; d++) dots.push(el('circle', { cx: 0, cy: 0, r: 5.2, 'class': 'dot' }, trail));
 
@@ -79,7 +70,7 @@
   }
   function refresh() {
     var m = override || chapterMode;
-    if (m === 'lock' && unlocked) m = 'welcome';
+    if (m === 'lock' || m === 'welcome') m = unlocked ? 'welcome' : 'lock';
     setMode(m);
   }
 
@@ -147,8 +138,8 @@
   draw(performance.now());
   update();
 
-  /* Unlock once, shortly after arrival: the shackle lifts, the ring lights
-     up segment by segment, and the readout says welcome. */
+  /* Wake up once: when the door opens (or straight away if there is no door
+     this visit), the ring lights up segment by segment and says welcome. */
   function unlock() {
     if (unlocked) return;
     unlocked = true;
@@ -156,11 +147,9 @@
     refresh();
   }
   inst.classList.add('is-booting');
-  if (reduceMotion) { inst.classList.remove('is-booting'); unlock(); }
-  else {
-    setTimeout(function () { inst.classList.remove('is-booting'); }, 150);
-    setTimeout(unlock, 1300);
-  }
+  function wake() { inst.classList.remove('is-booting'); setTimeout(unlock, reduceMotion ? 0 : 250); }
+  if (window.ozoneIntroPlaying) window.addEventListener('ozone:welcome', wake, { once: true });
+  else setTimeout(wake, reduceMotion ? 0 : 200);
 
   /* ---------- chapters drive the mode ---------- */
   var chapters = Array.prototype.slice.call(document.querySelectorAll('.chapter[data-mode]'));

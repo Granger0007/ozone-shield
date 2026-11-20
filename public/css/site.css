@@ -138,6 +138,43 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round
   border: 2.5px solid color-mix(in srgb, var(--brand-ink) 35%, transparent); border-top-color: var(--brand-ink);
 }
 
+/* ---------- Opening door ----------
+   Two door halves (html::before/after), a dial (body::before) and a lock with
+   its caption (body::after). intro.js adds .intro in <head>, then
+   .intro-unlock (dial turns, lock opens, "Welcome") and .intro-open (doors
+   part). If the script stops, the fallback animation opens it anyway. */
+html.intro::before, html.intro::after {
+  content: ""; position: fixed; top: 0; bottom: 0; width: 50.5%; z-index: 200;
+  background: linear-gradient(90deg, #1b1a19, #262422);
+  transition: transform 1s cubic-bezier(.77, 0, .18, 1);
+  animation: intro-failsafe .01s 4.5s forwards;
+}
+html.intro::before { left: 0; box-shadow: inset -1px 0 0 rgb(255 255 255 / 9%); }
+html.intro::after { right: 0; background: linear-gradient(270deg, #1b1a19, #262422); box-shadow: inset 1px 0 0 rgb(255 255 255 / 9%); }
+html.intro body::before, html.intro body::after {
+  content: ""; position: fixed; left: 50%; top: 50%; pointer-events: none;
+  transition: transform .8s var(--ease-out), opacity .5s var(--ease-out);
+  animation: intro-failsafe .01s 4.5s forwards;
+}
+html.intro body::before {
+  z-index: 201; width: 220px; height: 220px; margin: -110px 0 0 -110px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Ccircle cx='100' cy='100' r='97' fill='%23262422' stroke='%233e3b38' stroke-width='2'/%3E%3Ccircle cx='100' cy='100' r='85' fill='none' stroke='%237a736b' stroke-width='7' stroke-dasharray='1.2 7.7'/%3E%3Ccircle cx='100' cy='100' r='72' fill='none' stroke='%233e3b38' stroke-width='1.5'/%3E%3Cpath d='M100 5v13' stroke='%235fd68f' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+html.intro body::after {
+  z-index: 202; width: 280px; height: 270px; margin: -112px 0 0 -140px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 120'%3E%3Cpath d='M28 54V36a22 22 0 0 1 44 0v18' fill='none' stroke='%23f6f3ef' stroke-width='9' stroke-linecap='round'/%3E%3Crect x='14' y='52' width='72' height='62' rx='12' fill='%23343230' stroke='%23b8b1a8' stroke-width='4'/%3E%3Ccircle cx='50' cy='78' r='7' fill='%23b8b1a8'/%3E%3Crect x='47' y='80' width='6' height='16' rx='3' fill='%23b8b1a8'/%3E%3C/svg%3E") center 34px / 84px auto no-repeat;
+  content: "OZONE SHIELD"; display: grid; align-content: end; justify-content: center;
+  font-family: var(--mono); font-size: .78rem; letter-spacing: .32em; color: #b8b1a8;
+}
+html.intro-unlock body::before { transform: rotate(120deg); }
+html.intro-unlock body::after { content: "WELCOME"; color: #5fd68f; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 120'%3E%3Cpath d='M28 54V22a22 22 0 0 1 44 0v4' fill='none' stroke='%23f6f3ef' stroke-width='9' stroke-linecap='round'/%3E%3Crect x='14' y='52' width='72' height='62' rx='12' fill='%23343230' stroke='%235fd68f' stroke-width='4'/%3E%3Ccircle cx='50' cy='78' r='7' fill='%235fd68f'/%3E%3Crect x='47' y='80' width='6' height='16' rx='3' fill='%235fd68f'/%3E%3C/svg%3E"); }
+html.intro-open::before { transform: translateX(-101%); }
+html.intro-open::after { transform: translateX(101%); }
+html.intro-open body::before { opacity: 0; transform: rotate(120deg) scale(1.25); transition-delay: .1s; }
+html.intro-open body::after { opacity: 0; transform: translateY(-8px); transition-delay: .25s; }
+html.intro-fast::before, html.intro-fast::after, html.intro-fast body::before, html.intro-fast body::after { transition-duration: .35s; transition-delay: 0s; }
+@keyframes intro-failsafe { to { opacity: 0; visibility: hidden; } }
+
 /* ---------- Header ---------- */
 .site-header {
   position: sticky; top: 0; z-index: 30;
@@ -479,27 +516,16 @@ kbd {
 .inst .tick { stroke: var(--line); stroke-width: 2; }
 .inst .tick.long { stroke: color-mix(in srgb, var(--wave) 55%, var(--line)); transition: stroke .6s; }
 .inst-inner { fill: none; stroke: var(--line); stroke-width: 1.5; }
-.inst .sweep { fill: none; stroke: color-mix(in srgb, var(--ink) 22%, transparent); stroke-width: 16; stroke-linecap: round; }
 .inst .sweep.thin { stroke-width: 3; stroke: color-mix(in srgb, var(--wave) 60%, transparent); }
 .inst .spin { transform-origin: 0 0; animation: spin 14s linear infinite; }
 .inst .spin-b { animation-duration: 9s; animation-direction: reverse; }
 .inst[data-mode="scan"] .spin { animation-duration: 2.4s; }
 .inst .bar { stroke: var(--wave); stroke-width: 3.2; stroke-linecap: round; opacity: .9; transition: stroke .5s; }
 .inst .dot { fill: var(--wave); transition: fill .5s; }
-/* Opening lock */
-.inst[data-mode="lock"], .inst[data-mode="welcome"] { --wave: #5fd68f; }
-.inst-lock { opacity: 0; transform: scale(.85); transform-box: fill-box; transform-origin: center;
-  transition: opacity .6s var(--ease-out), transform .8s var(--ease-out); }
-.inst[data-mode="lock"] .inst-lock, .inst[data-mode="welcome"] .inst-lock { opacity: 1; transform: none; }
-.lock-body { fill: var(--surface-2); stroke: var(--wave); stroke-width: 5; transition: stroke .6s; }
-.lock-arc { fill: none; stroke: var(--ink); stroke-width: 14; stroke-linecap: round; }
-.lock-hole { fill: var(--wave); transition: fill .6s; }
-.lock-shackle { transition: transform .9s cubic-bezier(.3, 1.6, .5, 1); }
-.inst.is-open .lock-shackle { transform: translate(0, -26px); }
+.inst[data-mode="welcome"] { --wave: #5fd68f; }
 .inst[data-mode="lock"] { --wave: #b8b1a8; }
-.inst-wave, .inst-dots { transition: opacity .7s var(--ease-out); }
-.inst[data-mode="lock"] .inst-wave, .inst[data-mode="lock"] .inst-dots,
-.inst[data-mode="welcome"] .inst-wave, .inst[data-mode="welcome"] .inst-dots { opacity: 0; }
+.inst-wave, .inst-dots { transition: opacity .9s var(--ease-out); }
+.inst[data-mode="lock"] .inst-wave, .inst[data-mode="lock"] .inst-dots { opacity: 0; }
 /* The ring lights up one segment at a time on arrival */
 .inst .inst-ring .seg, .inst .inst-glow .seg { transition: stroke .6s, opacity .5s; }
 .inst.is-booting .seg, .inst[data-mode="lock"] .seg { opacity: .14; }
@@ -511,6 +537,21 @@ kbd {
 .inst.is-open .inst-ring .s6, .inst.is-open .inst-glow .s6 { transition-delay: .48s; }
 .inst.is-open .inst-ring .s7, .inst.is-open .inst-glow .s7 { transition-delay: .56s; }
 .inst[data-mode="welcome"] .seg { stroke-width: 8; }
+
+/* ---------- Live globe ---------- */
+.live-grid { display: grid; gap: 28px; align-items: center; }
+@media (min-width: 960px) { .live-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 56px; } }
+.live-copy { display: flex; flex-direction: column; gap: 14px; }
+.live-copy h2 { font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 800; letter-spacing: -0.035em; line-height: 1; }
+.live-stats { margin: 6px 0 0; display: flex; flex-wrap: wrap; gap: 12px; }
+.live-stats div { padding: 12px 16px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); min-width: 150px; }
+.live-stats dt { font-family: var(--mono); font-size: var(--mono-size); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.live-stats dd { margin: 2px 0 0; font-size: 1.5rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+.live-sun { font-family: var(--mono); font-size: .75rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #f7b84b; margin-left: 6px; }
+.live-hint { font-size: .92rem; color: var(--muted); }
+.globe-wrap { display: flex; justify-content: center; }
+#globe { width: min(100%, 560px); aspect-ratio: 1; cursor: grab; touch-action: pan-y; border-radius: 50%; }
+#globe:active { cursor: grabbing; }
 
 /* ---------- Scam map ---------- */
 .sm-layout { display: grid; gap: 24px; align-items: center; }
