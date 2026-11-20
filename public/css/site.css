@@ -23,7 +23,16 @@
 }
 
 /* ---------- Tokens ---------- */
+@font-face {
+  font-family: "Bricolage Grotesque";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 200 800;
+  src: url("/fonts/bricolage-latin.woff2") format("woff2-variations");
+}
+
 :root {
+  --display: "Bricolage Grotesque", "Atkinson Hyperlegible Next", system-ui, sans-serif;
   --bg: #060b16;
   --surface: #0d1526;
   --surface-2: #121c31;
@@ -76,7 +85,8 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
-h1, h2, h3 { line-height: 1.15; margin: 0; text-wrap: balance; }
+h1, h2, h3 { line-height: 1.15; margin: 0; text-wrap: balance; font-family: var(--display); }
+.stat-figure, .c159-num, .verdict-title { font-family: var(--display); }
 p { margin: 0; }
 a { color: var(--brand); text-underline-offset: 3px; }
 a:hover { color: var(--brand-hover); }
@@ -125,6 +135,13 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round
 .btn-primary:hover:not(:disabled) { background: var(--brand-hover); color: var(--brand-ink); transform: translateY(-1px); box-shadow: 0 2px 4px rgb(11 19 36 / 20%), 0 14px 28px -10px color-mix(in srgb, var(--brand) 80%, transparent); }
 .btn-primary:active:not(:disabled) { transform: translateY(0); }
 .btn-arrow { transition: transform .3s var(--ease-out); }
+.btn-primary { position: relative; overflow: hidden; isolation: isolate; }
+.btn-primary::after {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: linear-gradient(105deg, transparent 30%, rgb(255 255 255 / 45%) 50%, transparent 70%);
+  transform: translateX(-120%);
+}
+.btn-primary:hover:not(:disabled)::after { transform: translateX(120%); transition: transform .8s var(--ease-out); }
 .btn:hover .btn-arrow { transform: translateX(3px); }
 .btn:disabled { cursor: progress; opacity: 0.9; }
 .btn-secondary { background: transparent; color: var(--ink); border: 1.5px solid var(--field); align-self: flex-start; }
@@ -137,6 +154,16 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round
   display: none; width: 18px; height: 18px; border-radius: 50%;
   border: 2.5px solid color-mix(in srgb, var(--brand-ink) 35%, transparent); border-top-color: var(--brand-ink);
 }
+
+/* ---------- Film grain: static, so it costs nothing per frame ---------- */
+body::after {
+  content: ""; position: fixed; inset: 0; z-index: 60; pointer-events: none; opacity: .05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ---------- Decrypting headlines ---------- */
+.decrypt-fx { font-variant-ligatures: none; }
+.decrypt-fx .x { color: var(--accent); opacity: .7; }
 
 /* ---------- Header ---------- */
 .site-header {
@@ -188,6 +215,26 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round
 .hero-art::after {
   content: ""; position: absolute; inset: 0; opacity: var(--glow, 0); transition: opacity .6s;
   background: radial-gradient(520px circle at var(--gx, 70%) var(--gy, 30%), rgb(56 199 240 / 10%), transparent 60%);
+}
+.stream {
+  position: absolute; inset: 0; display: none; justify-content: space-between; padding-inline: 2vw; overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent 46%, #000 62%), linear-gradient(transparent, #000 18%, #000 80%, transparent);
+  -webkit-mask-composite: source-in; mask-image: linear-gradient(90deg, transparent 46%, #000 62%), linear-gradient(transparent, #000 18%, #000 80%, transparent);
+  mask-composite: intersect; opacity: .28;
+}
+.stream ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 22px; width: 16rem;
+  font-family: var(--mono); font-size: .78rem; color: var(--night-muted); animation: drift-up 70s linear infinite; }
+.stream ul:nth-child(2) { animation-duration: 90s; animation-delay: -30s; margin-top: 4rem; }
+.stream ul:nth-child(3) { animation-duration: 80s; animation-delay: -55s; }
+.stream mark { background: none; color: #ff8a86; animation: flicker 6s steps(1) infinite; }
+.stream li:nth-child(3n) mark { animation-delay: -2s; } .stream li:nth-child(3n+1) mark { animation-delay: -4s; }
+@keyframes drift-up { to { transform: translateY(-50%); } }
+@keyframes flicker { 0%, 100% { opacity: 1; } 47% { opacity: .2; } 50% { opacity: 1; } 52% { opacity: .35; } 55% { opacity: 1; } }
+@media (min-width: 1024px) { .stream { display: flex; } }
+@supports (animation-timeline: scroll()) {
+  .radar, .stream { animation-timeline: auto; }
+  .hero-art .radar { animation: parallax linear both; animation-timeline: scroll(root); animation-range: 0 100vh; }
+  @keyframes parallax { to { transform: translateY(18vh) scale(1.08); } }
 }
 .hero-gridlines {
   position: absolute; inset: 0;
@@ -248,7 +295,7 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round
   box-shadow: 0 0 0 0 rgb(52 211 153 / 55%); animation: live 2.4s var(--ease-out) infinite;
 }
 @keyframes live { 0% { box-shadow: 0 0 0 0 rgb(52 211 153 / 55%); } 100% { box-shadow: 0 0 0 10px rgb(52 211 153 / 0%); } }
-h1 { font-size: clamp(2.6rem, 5.6vw, 4.6rem); font-weight: 800; letter-spacing: -0.035em; line-height: 1.02; }
+h1 { font-size: clamp(2.8rem, 6vw, 5.2rem); font-weight: 800; letter-spacing: -0.04em; line-height: .98; }
 .hero h1 { color: var(--night-ink); }
 .h1-accent > span {
   background: linear-gradient(100deg, var(--night-brand) 10%, var(--accent) 90%);
@@ -735,6 +782,7 @@ kbd {
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  .stream { display: none !important; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .checker[data-state="checking"] .scan-line { opacity: .6; transform: translateY(60px); }
   .reveal-pending, .how-steps.reveal-pending li { opacity: 1; transform: none; }

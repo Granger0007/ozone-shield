@@ -349,6 +349,47 @@
     });
   }
 
+  /* ---------- decrypting headlines: letters settle from noise ----------
+     Screen readers get the real heading via aria-label; only the visual
+     layer scrambles, once, when the heading first comes into view. */
+  var GLYPHS = '#%&@$*+=<>/\\|01ABCDEFGHJKLMNPRSTUVWXYZ';
+  function decrypt(h) {
+    var finalText = h.textContent;
+    h.setAttribute('aria-label', finalText);
+    var vis = document.createElement('span');
+    vis.setAttribute('aria-hidden', 'true');
+    vis.className = 'decrypt-fx';
+    h.textContent = '';
+    h.appendChild(vis);
+    var start = null, DURATION = 900;
+    function frame(ts) {
+      if (start === null) start = ts;
+      var t = Math.min(1, (ts - start) / DURATION);
+      var settled = Math.floor(finalText.length * t);
+      vis.textContent = '';
+      vis.appendChild(document.createTextNode(finalText.slice(0, settled)));
+      if (t < 1) {
+        var noise = document.createElement('span'); noise.className = 'x';
+        var rest = '';
+        for (var i = settled; i < finalText.length; i++) {
+          var ch = finalText[i];
+          rest += (ch === ' ' || i > settled + 10) ? ch : GLYPHS[(Math.random() * GLYPHS.length) | 0];
+        }
+        noise.textContent = rest;
+        vis.appendChild(noise);
+        requestAnimationFrame(frame);
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+  var decryptEls = Array.prototype.slice.call(document.querySelectorAll('[data-decrypt]'));
+  if (decryptEls.length && !reduceMotion && 'IntersectionObserver' in window) {
+    var dio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { if (en.isIntersecting) { dio.unobserve(en.target); decrypt(en.target); } });
+    }, { rootMargin: '0px 0px -15% 0px' });
+    decryptEls.forEach(function (h) { dio.observe(h); });
+  }
+
   /* ---------- scroll reveals with a stagger ---------- */
   var revealEls = Array.prototype.slice.call(document.querySelectorAll('[data-reveal]'));
   if ('IntersectionObserver' in window && !reduceMotion) {
