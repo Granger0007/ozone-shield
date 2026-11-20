@@ -1,6 +1,6 @@
 /* OZONE Shield. Full-width, two-column on desktop, phone-first.
-   Palette: deep navy ("night") for brand moments, a calm off-white page,
-   one ozone-blue accent, dark throughout. Verdict colours are the only
+   Palette: warm graphite throughout, off-white text, one sky-blue accent,
+   and a ring of bright verdict colours. Verdict colours are the only
    loud colours.
    Motion animates transform/opacity only and is switched off for
    prefers-reduced-motion. Every colour pair is checked for WCAG AA. */
@@ -24,31 +24,31 @@
 
 /* ---------- Tokens ---------- */
 :root {
-  --bg: #060b16;
-  --surface: #0d1526;
-  --surface-2: #121c31;
-  --ink: #e7edf7;
-  --muted: #a2afc5;
-  --line: #1f2a41;
-  --field: #56678a;            /* form borders: 3.4:1+ against the page */
-  --brand: #6c9bff;
-  --brand-hover: #8db2ff;
-  --brand-ink: #06102a;
-  --accent: #38c7f0;
-  --focus: #8ab4ff;
-  --safe: #5bd18f;      --safe-bg: #0d2618;
-  --caution: #f2b455;   --caution-bg: #2a1f0b;
-  --danger: #ff8a86;    --danger-bg: #331317;
-  --urgent-bg: #1e1808; --urgent-line: #4d3c15;
-  --input-bg: #0a1222;
+  --bg: #21201f;
+  --surface: #2b2a28;
+  --surface-2: #343230;
+  --ink: #f6f3ef;
+  --muted: #b8b1a8;
+  --line: #3e3b38;
+  --field: #7a736b;            /* form borders: 3.4:1+ against the page */
+  --brand: #7cc4ff;
+  --brand-hover: #a3d6ff;
+  --brand-ink: #10161d;
+  --accent: #4fd6c5;
+  --focus: #a3d6ff;
+  --safe: #5fd68f;      --safe-bg: #1d3226;
+  --caution: #f7b84b;   --caution-bg: #3a2e17;
+  --danger: #ff7a6e;    --danger-bg: #3a2220;
+  --urgent-bg: #2e2618; --urgent-line: #5a4720;
+  --input-bg: #1c1b1a;
 
   /* Brand "night" surfaces: the deepest layer */
-  --night: #070d1c;
-  --night-2: #0d1830;
-  --night-ink: #eaf0fa;
-  --night-muted: #a7b4cb;
-  --night-line: rgb(255 255 255 / 11%);
-  --night-brand: #7aa5ff;
+  --night: #1b1a19;
+  --night-2: #262422;
+  --night-ink: #f6f3ef;
+  --night-muted: #b8b1a8;
+  --night-line: rgb(255 255 255 / 9%);
+  --night-brand: #7cc4ff;
 
   --shadow-sm: 0 1px 2px rgb(0 0 0 / 40%);
   --shadow: 0 1px 2px rgb(0 0 0 / 40%), 0 12px 32px -14px rgb(0 0 0 / 60%);
@@ -141,7 +141,7 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round
 /* ---------- Header ---------- */
 .site-header {
   position: sticky; top: 0; z-index: 30;
-  background: rgb(7 13 28 / 94%);
+  background: rgb(33 32 31 / 88%);
   -webkit-backdrop-filter: saturate(140%) blur(14px);
   backdrop-filter: saturate(140%) blur(14px);
   border-bottom: 1px solid var(--night-line);
@@ -149,7 +149,7 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round
   color: var(--night-ink);
   transition: background-color .3s, box-shadow .3s;
 }
-.site-header.is-scrolled { background: rgb(7 13 28 / 97%); box-shadow: 0 10px 30px -18px rgb(0 0 0 / 70%); }
+.site-header.is-scrolled { background: rgb(33 32 31 / 96%); box-shadow: 0 10px 30px -18px rgb(0 0 0 / 70%); }
 .header-row { display: flex; align-items: center; gap: 20px; min-height: var(--header-h); }
 .brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: var(--night-ink); flex: none; }
 .brand:hover { color: #fff; }
@@ -160,7 +160,7 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round
 .brand-name span { font-weight: 500; letter-spacing: 0.02em; }
 .site-nav { display: none; gap: 4px; margin-left: 12px; }
 .site-nav a {
-  color: var(--night-muted); text-decoration: none; font-size: 0.97rem; font-weight: 600;
+  color: var(--night-muted); text-decoration: none; font-family: var(--mono); font-size: 0.78rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
   padding: 8px 12px; border-radius: 8px; transition: color .2s, background-color .2s;
 }
 .site-nav a:hover { color: #fff; background: rgb(255 255 255 / 7%); }
@@ -411,60 +411,106 @@ kbd {
 .report-list { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: 8px; }
 .ai-note { font-size: 0.92rem; color: var(--muted); }
 
-/* ---------- Decoder: scroll to dissect a scam ----------
-   Without JS (or with reduced motion) every flag is shown at once and the
-   section is a normal height. With JS it becomes a sticky scroll story. */
-.decoder { position: relative; border-bottom: 1px solid var(--line); }
-.dc-live .decoder { height: 340vh; }
-.dc-sticky { padding-block: clamp(48px, 6vw, 80px); }
-.dc-live .dc-sticky {
-  position: sticky; top: var(--header-h); min-height: calc(100vh - var(--header-h)); min-height: calc(100svh - var(--header-h));
-  display: flex; flex-direction: column; justify-content: center; padding-block: 24px;
-}
-.dc-head { max-width: 720px; display: flex; flex-direction: column; gap: 10px; margin-bottom: clamp(20px, 3vw, 36px); }
-.dc-head h2 { font-size: clamp(1.9rem, 3.6vw, 2.8rem); font-weight: 800; letter-spacing: -0.025em; }
-.dc-head p { color: var(--muted); }
-.dc-grid { display: grid; gap: 20px; align-items: center; }
-@media (min-width: 900px) { .dc-grid { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 48px; } }
-.dc-phone {
-  position: relative; padding: 20px; border-radius: 26px; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow-lg);
-}
-.dc-from { display: flex; align-items: center; gap: 10px; font-weight: 700; margin-bottom: 12px; }
-.dc-chan { font-family: var(--mono); font-size: .72rem; letter-spacing: .08em; padding: 3px 8px; border-radius: 6px; background: var(--surface-2); color: var(--muted); }
-.dc-msg { padding: 16px 18px; border-radius: 18px 18px 18px 6px; background: var(--bg); border: 1px solid var(--line); font-size: clamp(1.05rem, 1.6vw, 1.25rem); line-height: 1.65; }
-.dc-flag {
-  border-radius: 3px; -webkit-box-decoration-break: clone; box-decoration-break: clone;
-  background: var(--danger-bg); color: var(--danger); box-shadow: 0 0 0 3px var(--danger-bg), 0 0 0 4.5px var(--danger);
-  transition: background-color .5s var(--ease-out), color .5s var(--ease-out), box-shadow .5s var(--ease-out);
-}
-.dc-live .dc-flag:not(.on) { background: transparent; color: inherit; box-shadow: 0 0 0 3px transparent, 0 0 0 4.5px transparent; }
-.dc-stamp {
-  position: absolute; right: 18px; bottom: -18px; padding: 8px 14px; border-radius: 10px; transform: rotate(-6deg);
-  font-family: var(--mono); font-weight: 700; font-size: .85rem; letter-spacing: .12em; text-transform: uppercase;
-  background: var(--danger); color: var(--danger-bg); box-shadow: var(--shadow);
-  transition: opacity .4s var(--ease-out), transform .5s cubic-bezier(.3, 1.6, .5, 1);
-}
-.dc-live .dc-stamp:not(.on) { opacity: 0; transform: rotate(-6deg) scale(1.6); }
-.dc-notes { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
-.dc-note {
-  display: grid; grid-template-columns: 34px 1fr; gap: 12px; align-items: start; padding: 14px 16px; border-radius: 14px;
+/* ---------- Story: one pinned instrument, chapters scroll past ----------
+   Desktop: chapters on the left, the instrument pinned on the right.
+   Phone: the instrument sits above the chapters and scrolls normally. */
+.story { position: relative; border-bottom: 1px solid var(--line); }
+.story-grid { display: grid; gap: 8px; }
+.story-stage { display: flex; justify-content: center; padding-top: 24px; }
+.inst { position: relative; width: min(100%, 360px); aspect-ratio: 1; }
+.inst-svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.inst-readout {
+  position: absolute; left: 50%; bottom: -6px; transform: translateX(-50%); white-space: nowrap;
+  display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px;
+  font-family: var(--mono); font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
   background: var(--surface); border: 1px solid var(--line);
-  transition: opacity .5s var(--ease-out), transform .6s var(--ease-out), border-color .4s;
 }
-.dc-note b { display: block; color: var(--ink); }
-.dc-note span { color: var(--muted); font-size: .98rem; }
-.dc-note i {
-  font-style: normal; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center;
-  font-family: var(--mono); font-size: .8rem; font-weight: 700; color: var(--danger); border: 2px solid var(--danger);
+.inst-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--wave); transition: background-color .5s; }
+.chapters, .story-chapters { display: flex; flex-direction: column; }
+.chapter { padding-block: 56px; display: flex; flex-direction: column; justify-content: center; gap: 18px; }
+.ch-hero { padding-top: 24px; }
+.ch-hero h1 { font-size: clamp(2.8rem, 9vw, 5.4rem); letter-spacing: -0.045em; line-height: .95; }
+.lead { font-size: clamp(1.1rem, 1.6vw, 1.3rem); color: var(--muted); max-width: 30em; }
+.ch-num { font-family: var(--mono); font-size: .8rem; letter-spacing: .14em; color: var(--muted); }
+.ch-title { font-size: clamp(2.1rem, 5vw, 3.6rem); font-weight: 800; letter-spacing: -0.035em; line-height: 1; }
+.ch-text { font-size: clamp(1.1rem, 1.5vw, 1.25rem); color: var(--muted); max-width: 30em; }
+.c-blue { color: #7cc4ff; } .c-amber { color: #f7b84b; } .c-violet { color: #b49cff; } .c-red { color: #ff7a6e; } .c-green { color: #5fd68f; }
+.chapter > * { transition: opacity .6s var(--ease-out), transform .8s var(--ease-out); }
+.cta-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.btn-mono {
+  display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 18px; border-radius: 6px; text-decoration: none;
+  font-family: var(--mono); font-size: .8rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--ink); border: 1px solid var(--field); background: transparent;
+  transition: background-color .25s, border-color .25s, color .25s, transform .25s var(--ease-out);
 }
-.dc-live .dc-note:not(.on) { opacity: 0; transform: translateX(18px); }
-.dc-note.current { border-color: color-mix(in srgb, var(--danger) 60%, var(--line)); }
-.dc-count { margin-top: 14px; font-family: var(--mono); font-size: var(--mono-size); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
-.dc-count b { color: var(--danger); }
-@media (max-width: 899px) {
-  .dc-live .dc-note:not(.current) { display: none; }
-  .dc-live .dc-note.current { animation: rise .45s var(--ease-out) both; }
+.btn-mono:hover { color: var(--ink); border-color: var(--ink); transform: translateY(-1px); }
+.btn-mono-solid { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.btn-mono-solid:hover { color: var(--bg); background: #fff; }
+.ch-hero .trust { flex-direction: row; flex-wrap: wrap; gap: 6px 18px; margin-top: 6px; }
+.ch-hero .trust li { font-family: var(--mono); font-size: .74rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); gap: 8px; }
+.ch-hero .trust li::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--safe); }
+.ch-check .checker { box-shadow: var(--shadow-lg); border: 1px solid var(--line); }
+
+@media (min-width: 960px) {
+  .story-grid { grid-template-columns: minmax(0, 520px) minmax(0, 1fr); gap: 40px; }
+  .story-stage { order: 2; position: sticky; top: var(--header-h); height: calc(100vh - var(--header-h)); align-items: center; padding-top: 0; }
+  .story-chapters { order: 1; }
+  .inst { width: min(100%, calc(100vh - var(--header-h) - 80px), 640px); }
+  .chapter { min-height: 82vh; padding-block: 64px; }
+  .ch-hero { min-height: calc(100vh - var(--header-h)); padding-top: 0; }
+  .ch-check { min-height: 0; padding-block: 64px 96px; }
+  .chapter:not(.is-active):not(.ch-check) > * { opacity: .25; }
 }
+
+/* The instrument's palette: the ring keeps its colours, the waveform follows the mode */
+.inst { --wave: #7cc4ff; }
+.inst[data-mode="listen"] { --wave: #7cc4ff; }
+.inst[data-mode="scan"] { --wave: #4fd6c5; }
+.inst[data-mode="rush"] { --wave: #f7b84b; }
+.inst[data-mode="mask"] { --wave: #b49cff; }
+.inst[data-mode="money"], .inst[data-mode="v-scam"] { --wave: #ff7a6e; }
+.inst[data-mode="v-caution"] { --wave: #f7b84b; }
+.inst[data-mode="safe"], .inst[data-mode="v-safe"] { --wave: #5fd68f; }
+.inst .seg { fill: none; stroke-width: 7; stroke-linecap: round; transition: stroke .6s, opacity .6s; }
+.inst .s0 { stroke: #ff7a6e; } .inst .s1 { stroke: #ff9f5a; } .inst .s2 { stroke: #f7b84b; } .inst .s3 { stroke: #c9df5a; }
+.inst .s4 { stroke: #5fd68f; } .inst .s5 { stroke: #4fd6c5; } .inst .s6 { stroke: #56b8ff; } .inst .s7 { stroke: #8f97ff; }
+.inst[data-mode^="v-"] .seg, .inst[data-mode="rush"] .seg, .inst[data-mode="mask"] .seg, .inst[data-mode="money"] .seg, .inst[data-mode="safe"] .seg { stroke: var(--wave); }
+.inst-glow { filter: blur(10px); opacity: .55; }
+.inst .tick { stroke: var(--line); stroke-width: 2; }
+.inst .tick.long { stroke: color-mix(in srgb, var(--wave) 55%, var(--line)); transition: stroke .6s; }
+.inst-inner { fill: none; stroke: var(--line); stroke-width: 1.5; }
+.inst .sweep { fill: none; stroke: color-mix(in srgb, var(--ink) 22%, transparent); stroke-width: 16; stroke-linecap: round; }
+.inst .sweep.thin { stroke-width: 3; stroke: color-mix(in srgb, var(--wave) 60%, transparent); }
+.inst .spin { transform-origin: 0 0; animation: spin 14s linear infinite; }
+.inst .spin-b { animation-duration: 9s; animation-direction: reverse; }
+.inst[data-mode="scan"] .spin { animation-duration: 2.4s; }
+.inst .bar { stroke: var(--wave); stroke-width: 3.2; stroke-linecap: round; opacity: .9; transition: stroke .5s; }
+.inst .dot { fill: var(--wave); transition: fill .5s; }
+/* Opening lock */
+.inst[data-mode="lock"], .inst[data-mode="welcome"] { --wave: #5fd68f; }
+.inst-lock { opacity: 0; transform: scale(.85); transform-box: fill-box; transform-origin: center;
+  transition: opacity .6s var(--ease-out), transform .8s var(--ease-out); }
+.inst[data-mode="lock"] .inst-lock, .inst[data-mode="welcome"] .inst-lock { opacity: 1; transform: none; }
+.lock-body { fill: var(--surface-2); stroke: var(--wave); stroke-width: 5; transition: stroke .6s; }
+.lock-arc { fill: none; stroke: var(--ink); stroke-width: 14; stroke-linecap: round; }
+.lock-hole { fill: var(--wave); transition: fill .6s; }
+.lock-shackle { transition: transform .9s cubic-bezier(.3, 1.6, .5, 1); }
+.inst.is-open .lock-shackle { transform: translate(0, -26px); }
+.inst[data-mode="lock"] { --wave: #b8b1a8; }
+.inst-wave, .inst-dots { transition: opacity .7s var(--ease-out); }
+.inst[data-mode="lock"] .inst-wave, .inst[data-mode="lock"] .inst-dots,
+.inst[data-mode="welcome"] .inst-wave, .inst[data-mode="welcome"] .inst-dots { opacity: 0; }
+/* The ring lights up one segment at a time on arrival */
+.inst .inst-ring .seg, .inst .inst-glow .seg { transition: stroke .6s, opacity .5s; }
+.inst.is-booting .seg, .inst[data-mode="lock"] .seg { opacity: .14; }
+.inst.is-open .inst-ring .s1, .inst.is-open .inst-glow .s1 { transition-delay: .08s; }
+.inst.is-open .inst-ring .s2, .inst.is-open .inst-glow .s2 { transition-delay: .16s; }
+.inst.is-open .inst-ring .s3, .inst.is-open .inst-glow .s3 { transition-delay: .24s; }
+.inst.is-open .inst-ring .s4, .inst.is-open .inst-glow .s4 { transition-delay: .32s; }
+.inst.is-open .inst-ring .s5, .inst.is-open .inst-glow .s5 { transition-delay: .40s; }
+.inst.is-open .inst-ring .s6, .inst.is-open .inst-glow .s6 { transition-delay: .48s; }
+.inst.is-open .inst-ring .s7, .inst.is-open .inst-glow .s7 { transition-delay: .56s; }
+.inst[data-mode="welcome"] .seg { stroke-width: 8; }
 
 /* ---------- Scam map ---------- */
 .sm-layout { display: grid; gap: 24px; align-items: center; }
@@ -735,6 +781,7 @@ kbd {
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  .chapter:not(.is-active):not(.ch-check) > * { opacity: 1 !important; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .checker[data-state="checking"] .scan-line { opacity: .6; transform: translateY(60px); }
   .reveal-pending, .how-steps.reveal-pending li { opacity: 1; transform: none; }
