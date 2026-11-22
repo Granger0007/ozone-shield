@@ -13,8 +13,8 @@
  * Sources
  *   CISA Known Exploited Vulnerabilities, from CISA's own GitHub mirror
  *   (github.com/cisagov/kev-data). Newest entries come first in the file, so
- *   only the first 48 KB is fetched and read: parsing the full 1.8 MB file
- *   would use most of the free plan's 10 ms of CPU.
+ *   only the first 48 KB is read before the download is cut off: parsing the
+ *   full 1.8 MB file would use most of the free plan's 10 ms of CPU.
  *   Cloudflare Radar layer 7 attack data, CC BY-NC 4.0, attributed on the
  *   page. Needs the RADAR_TOKEN secret (a read-only Radar API token); without
  *   it the snapshot simply has no attack data.
@@ -116,22 +116,25 @@ async function fetchKev() {
 }
 
 async function fetchKevFrom(url) {
-  const res = await fetch(url, { headers: { Range: `bytes=0-${KEV_BYTES - 1}`, 'User-Agent': 'ozone-shield-threat-watch' } });
+  // No Range header: servers send the file gzip-compressed, and a byte range
+  // of a compressed file can't be unpacked ("stream ended prematurely").
+  // Instead read the normal download as a stream, keep the first 48 KB of
+  // text, and hang up. The newest entries are at the start of the file.
+  const res = await fetch(url, { headers: { 'User-Agent': 'ozone-shield-threat-watch' } });
   if (!res.ok) throw new Error('HTTP ' + res.status);
-  let src;
-  if (res.status === 206) src = await res.text();
-  else {
-    // Server ignored the range: read only as much as we need, then stop.
-    const reader = res.body.getReader();
-    const dec = new TextDecoder();
-    src = '';
+  const reader = res.body.getReader();
+  const dec = new TextDecoder();
+  let src = '';
+  try {
     while (src.length < KEV_BYTES) {
       const { done, value } = await reader.read();
       if (done) break;
       src += dec.decode(value, { stream: true });
     }
-    reader.cancel().catch(() => {});
+  } catch (e) {
+    if (!src) throw e; // keep whatever arrived before a broken stream
   }
+  reader.cancel().catch(() => {});
   const kev = kevFromText(src);
   if (!kev.latest.length) throw new Error('no entries read');
   return kev;
