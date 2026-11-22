@@ -19,6 +19,9 @@
  *   page. Needs the RADAR_TOKEN secret (a read-only Radar API token); without
  *   it the snapshot simply has no attack data.
  *
+ *   Security news: headlines and links from trusted outlets' RSS feeds,
+ *   ranked by corroboration (see news.js).
+ *
  * Every value from outside is checked against a strict pattern before it is
  * stored, and the page only ever writes it with textContent.
  */
@@ -29,11 +32,14 @@ const KEV_URLS = [
   'https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json',
   'https://raw.githubusercontent.com/cisagov/kev-data/main/known_exploited_vulnerabilities.json',
 ];
+import { fetchNews } from './news.js';
+
 const KEV_BYTES = 48 * 1024;
 const KEV_LATEST = 12;
 const RADAR = 'https://api.cloudflare.com/client/v4/radar/attacks/layer7/top';
 const RADAR_RANGE = '7d';
 const KEY = 'threats';
+const NEWS_CRON = '15,45 * * * *'; // must match wrangler.jsonc
 const LOCK = 'threats:refreshing';
 
 const JSON_HEADERS = {
@@ -185,7 +191,7 @@ async function fetchRadar(token) {
 /* ---------- refresh: keep the last good data if a source fails ---------- */
 export async function refresh(env) {
   const old = (await env.THREATS.get(KEY, 'json')) || {};
-  const snap = { generated: new Date().toISOString(), kev: old.kev || null, kevAt: old.kevAt || null, radar: old.radar || null, radarAt: old.radarAt || null, problems: {} };
+  const snap = { generated: new Date().toISOString(), kev: old.kev || null, kevAt: old.kevAt || null, radar: old.radar || null, radarAt: old.radarAt || null, news: old.news || null, newsAt: old.newsAt || null, problems: {} };
   // A short reason for any source that failed, so the snapshot explains itself
   // (no secrets: just the host and HTTP status or error name).
   const note = (name) => (e) => {
@@ -197,6 +203,26 @@ export async function refresh(env) {
   if (env.RADAR_TOKEN) jobs.push(fetchRadar(env.RADAR_TOKEN).then((r) => { snap.radar = r; snap.radarAt = snap.generated; }, note('radar')));
   else snap.problems.radar = 'not connected (no RADAR_TOKEN)';
   await Promise.all(jobs);
+  if (old.problems && old.problems.news) snap.problems.news = old.problems.news;
+  await env.THREATS.put(KEY, JSON.stringify(snap));
+  return snap;
+}
+
+// News has its own schedule (see wrangler.jsonc), so it gets its own CPU budget.
+export async function refreshNews(env) {
+  const snap = (await env.THREATS.get(KEY, 'json')) || { generated: new Date().toISOString(), problems: {} };
+  snap.problems = snap.problems || {};
+  delete snap.problems.news;
+  const kevCves = snap.kev ? snap.kev.latest.map((v) => v.cve) : [];
+  try {
+    const n = await fetchNews(kevCves);
+    snap.news = { top: n.top, sources: n.sources };
+    snap.newsAt = new Date().toISOString();
+    if (n.failed.length) snap.problems.news = n.failed.join('; ').slice(0, 200);
+  } catch (e) {
+    snap.problems.news = String(e && e.message || e).slice(0, 200);
+    console.log('threats refresh news:', snap.problems.news);
+  }
   await env.THREATS.put(KEY, JSON.stringify(snap));
   return snap;
 }
@@ -224,6 +250,6 @@ export default {
     return env.ASSETS.fetch(request);
   },
   async scheduled(event, env, ctx) {
-    ctx.waitUntil(refresh(env));
+    ctx.waitUntil(event.cron === NEWS_CRON ? refreshNews(env) : refresh(env));
   },
 };

@@ -22,10 +22,12 @@
     { "binding": "THREATS" }
   ],
 
-  // Refresh the snapshot every 30 minutes: 48 KV writes a day, well inside
-  // the free plan's 1,000.
+  // Two schedules, so each job gets its own CPU budget:
+  //   on the hour and half hour: vulnerabilities and attack data
+  //   at :15 and :45: security news (must match NEWS_CRON in worker/index.js)
+  // 96 KV writes a day, well inside the free plan's 1,000.
   "triggers": {
-    "crons": ["*/30 * * * *"]
+    "crons": ["*/30 * * * *", "15,45 * * * *"]
   },
 
   // Secret (set in the dashboard or with `wrangler secret put`, never here):
