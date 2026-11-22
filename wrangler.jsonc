@@ -4,11 +4,34 @@
   // repository (README, config, tests, source) stays private to the repo.
   "name": "ozone-shield",
   "compatibility_date": "2026-07-09",
+
+  // The site is static files. This small Worker only answers /api/*
+  // (the Threat Watch data); every other request goes straight to ./public.
+  "main": "worker/index.js",
   "assets": {
     "directory": "./public",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"],
     // Unknown paths get the branded 404 page (public/404.html) with a 404 status.
     "not_found_handling": "404-page"
   },
+
+  // The Threat Watch snapshot. Wrangler creates this namespace on the first
+  // deploy (automatic provisioning), so no ID is needed here.
+  "kv_namespaces": [
+    { "binding": "THREATS" }
+  ],
+
+  // Refresh the snapshot every 30 minutes: 48 KV writes a day, well inside
+  // the free plan's 1,000.
+  "triggers": {
+    "crons": ["*/30 * * * *"]
+  },
+
+  // Secret (set in the dashboard or with `wrangler secret put`, never here):
+  //   RADAR_TOKEN  Cloudflare API token with read-only Radar access.
+  //                Optional: without it, the page shows no attack data.
+
   "observability": {
     "enabled": true
   }

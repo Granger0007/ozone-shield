@@ -28,7 +28,7 @@
 <body class="game-page">
   <a class="skip-link" href="#game">Skip to the game</a>
 
-  <header class="site-header">
+  <header class="site-header" id="siteHeader">
     <div class="container header-row">
       <a class="brand" href="/" aria-label="OZONE Shield home">
         <svg class="brand-mark" viewBox="0 0 28 32" aria-hidden="true" focusable="false">
@@ -37,11 +37,31 @@
         </svg>
         <span class="brand-name">OZONE <span>Shield</span></span>
       </a>
+      <nav class="site-nav" aria-label="Main">
+        <a href="/">Check a message</a>
+        <a href="/scams/">Scams</a>
+        <a href="/live/">Threat Watch</a>
+        <a href="/network/">Network</a>
+        <a href="/help/">Get help</a>
+      </nav>
       <a class="btn btn-sm btn-ghost-light header-cta" href="/#checker">
-        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2 4 5v6c0 5 3.4 9.5 8 11 4.6-1.5 8-6 8-11V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg>
-        <span>Check <span class="cta-long">a real message</span></span>
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2 4 5v6c0 5 3.4 9.5 8 11 4.6-1.5 8-6 8-11V5l-8-3Z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg>
+        <span>Check <span class="cta-long">a message</span></span>
       </a>
+      <details class="menu">
+        <summary aria-label="Menu"><span class="menu-bars" aria-hidden="true"></span></summary>
+        <nav class="menu-panel" aria-label="Main (mobile)">
+          <a href="/">Check a message</a>
+          <a href="/scams/">Scams</a>
+          <a href="/live/">Threat Watch</a>
+          <a href="/network/">Network</a>
+          <a href="/help/">Get help</a>
+          <a href="/spot-the-scam/">Spot the Scam game</a>
+          <a href="/about/">About &amp; privacy</a>
+        </nav>
+      </details>
     </div>
+    <div class="progress" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div>
   </header>
 
   <main id="game" class="container game">
@@ -171,5 +191,6 @@
 
   <script src="/js/game-data.js"></script>
   <script src="/js/game.js"></script>
+  <script src="/js/menu.js"></script>
 </body>
 </html>

@@ -43,13 +43,38 @@
   var LV = [Math.cos(LONDON.lat) * Math.cos(LONDON.lon), Math.cos(LONDON.lat) * Math.sin(LONDON.lon), Math.sin(LONDON.lat)];
   var sun = subsolar(new Date());
 
+  /* Optional attack arcs (Threat Watch): great circles lifted off the surface,
+     with a light travelling from origin to target. Set by live.js. */
+  var arcs = [];
+  function unit(lat, lon) { lat *= RAD; lon *= RAD; return [Math.cos(lat) * Math.cos(lon), Math.cos(lat) * Math.sin(lon), Math.sin(lat)]; }
+  function arcPath(a, b) {
+    var dot = Math.max(-1, Math.min(1, a[0] * b[0] + a[1] * b[1] + a[2] * b[2]));
+    var ang = Math.acos(dot), s = Math.sin(ang) || 1e-6, out = [], N = 56;
+    for (var k = 0; k <= N; k++) {
+      var t = k / N, wa = Math.sin((1 - t) * ang) / s, wb = Math.sin(t * ang) / s;
+      var lift = 1 + Math.sin(Math.PI * t) * (0.06 + ang * 0.12);
+      out.push([(a[0] * wa + b[0] * wb) * lift, (a[1] * wa + b[1] * wb) * lift, (a[2] * wa + b[2] * wb) * lift]);
+    }
+    return out;
+  }
+  window.OzoneGlobe = {
+    setArcs: function (list) {
+      arcs = (list || []).map(function (x, i) {
+        var a = unit(x.from[0], x.from[1]), b = unit(x.to[0], x.to[1]);
+        return { path: arcPath(a, b), a: a, b: b, w: Math.max(0.25, Math.min(1, x.weight || 0.5)), phase: i * 0.137 };
+      });
+      draw(performance.now());
+    },
+    focus: function (lat, lon) { lat0 = lat * RAD; lon0 = lon * RAD; draw(performance.now()); }
+  };
+
   /* View: centre longitude turns; the tilt keeps the UK in view. */
   var lon0 = -20 * RAD, lat0 = 28 * RAD, dragging = false, lastX = 0, lastY = 0, idleAt = 0;
   var css = getComputedStyle(document.documentElement);
   var C = {
     day: css.getPropertyValue('--ink').trim() || '#f6f3ef',
     night: '#7f93ad',
-    accent: '#7cc4ff', sun: '#f7b84b', line: css.getPropertyValue('--line').trim() || '#3e3b38'
+    accent: '#7cc4ff', sun: '#f7b84b', attack: '#ff7a6e', line: css.getPropertyValue('--line').trim() || '#3e3b38'
   };
 
   var W = 0, H = 0, R = 0, dpr = 1;
@@ -90,6 +115,36 @@
       else if (lit > -0.08) { ctx.globalAlpha = limb * 0.75; ctx.fillStyle = C.sun; }   // dawn and dusk
       else { ctx.globalAlpha = limb * 0.7; ctx.fillStyle = C.night; }
       ctx.fillRect(p[0] - dot / 2, p[1] - dot / 2, dot, dot);
+    }
+    ctx.globalAlpha = 1;
+
+    // Attack arcs: the line, then a light running from origin to target
+    for (var j = 0; j < arcs.length; j++) {
+      var A = arcs[j], P = A.path, prev = null;
+      ctx.lineWidth = 0.8 + A.w * 1.6;
+      for (var m = 0; m < P.length; m++) {
+        var q = project(P[m]);
+        var dx = q[0] - W / 2, dy = q[1] - H / 2;
+        var seen = q[2] > 0 || dx * dx + dy * dy > R * R;   // in front, or lifted past the edge
+        if (prev && seen && prev.seen) {
+          ctx.strokeStyle = C.attack; ctx.globalAlpha = 0.18 + A.w * 0.35;
+          ctx.beginPath(); ctx.moveTo(prev.x, prev.y); ctx.lineTo(q[0], q[1]); ctx.stroke();
+        }
+        prev = { x: q[0], y: q[1], seen: seen };
+      }
+      var tt = reduceMotion ? 0.7 : ((now / 2600 + A.phase) % 1);
+      var hi = Math.round(tt * (P.length - 1));
+      for (var tail = 0; tail < 9; tail++) {
+        var idx = hi - tail; if (idx < 0) break;
+        var h = project(P[idx]), hx = h[0] - W / 2, hy = h[1] - H / 2;
+        if (!(h[2] > 0 || hx * hx + hy * hy > R * R)) continue;
+        ctx.globalAlpha = (1 - tail / 9) * 0.95; ctx.fillStyle = C.attack;
+        ctx.beginPath(); ctx.arc(h[0], h[1], (2.6 - tail * 0.22) * (0.7 + A.w * 0.5), 0, Math.PI * 2); ctx.fill();
+      }
+      var o = project(A.a);
+      if (o[2] > 0) { ctx.globalAlpha = 0.9; ctx.fillStyle = C.attack; ctx.beginPath(); ctx.arc(o[0], o[1], 2.5 + A.w * 2, 0, Math.PI * 2); ctx.fill(); }
+      var tg = project(A.b);
+      if (tg[2] > 0) { ctx.globalAlpha = 0.9; ctx.strokeStyle = C.attack; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(tg[0], tg[1], 4 + A.w * 2.5, 0, Math.PI * 2); ctx.stroke(); }
     }
     ctx.globalAlpha = 1;
 
