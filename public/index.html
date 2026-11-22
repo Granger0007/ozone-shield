@@ -80,7 +80,7 @@
         <a href="#live">Live</a>
         <a href="#help">Already paid?</a>
         <a href="#scamMap">Scam map</a>
-        <a href="#decoder">How scams work</a>
+        <a href="#anatomy">How scams work</a>
       </nav>
       <a class="btn btn-sm btn-ghost-light header-cta" href="/spot-the-scam/">
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="2" y="6" width="20" height="12" rx="6"/><path d="M7 10v4M5 12h4"/><path d="M15.5 11h.01M18 13h.01"/></svg>
@@ -91,7 +91,7 @@
   </header>
 
   <main id="main">
-    <!-- STORY: a pinned scanner, with chapters scrolling past it -->
+    <!-- WELCOME -->
     <section class="story" id="story" aria-labelledby="hero-title">
       <div class="container story-grid">
         <div class="story-chapters">
@@ -100,8 +100,8 @@
             <h1 id="hero-title">Is this message a scam?</h1>
             <p class="lead">Paste a text, email or WhatsApp message. Get a clear verdict, the reasons behind it, and what to do next.</p>
             <div class="cta-row">
-              <a class="btn-mono btn-mono-solid" href="#checker">Check a message <span aria-hidden="true">↓</span></a>
-              <a class="btn-mono" href="/spot-the-scam/">Play Spot the Scam</a>
+              <a class="btn-mono btn-mono-solid" href="#checker">Check a message now <span aria-hidden="true">↓</span></a>
+              <a class="btn-mono" href="#anatomy">See how a scam works</a>
             </div>
             <ul class="trust" aria-label="About this service">
               <li>Free, with no account</li>
@@ -110,6 +110,84 @@
             </ul>
           </div>
 
+        </div>
+      </div>
+    </section>
+
+    <!-- ANATOMY OF A SCAM: one invented scam text, taken apart step by step -->
+    <section class="anatomy" id="anatomy" data-beat="0" aria-labelledby="anatomy-title">
+      <div class="container anatomy-grid">
+        <div class="anatomy-stage">
+          <figure class="phone" aria-label="An example scam text message, taken apart step by step">
+            <div class="phone-screen">
+              <div class="ph-status" aria-hidden="true"><span>09:41</span><span class="ph-icons"><i></i><i></i><i></i></span></div>
+              <div class="ph-head">
+                <span class="ph-avatar" aria-hidden="true"></span>
+                <span class="ph-from">07700 900417<small>Text message · Today</small></span>
+              </div>
+              <div class="ph-thread">
+                <p class="ph-typing" aria-hidden="true"><i></i><i></i><i></i></p>
+                <p class="ph-bubble">
+                  <span class="tk tk-brand">DELIVERY NOTICE:</span> we tried to deliver your parcel today.
+                  <span class="tk tk-fee">Pay a £1.45 redelivery fee</span>
+                  <span class="tk tk-time">within 24 hours</span> or it will be returned to sender:
+                  <span class="tk tk-link"><span class="lk-fake">https://parcel-redelivery.uk.</span><span class="lk-real">pay-fees.example</span><span class="lk-fake">/track</span></span>
+                </p>
+                <p class="ph-tags" aria-hidden="true">
+                  <span class="ph-tag tag-fee">Tiny fee</span>
+                  <span class="ph-tag tag-time">Deadline</span>
+                  <span class="ph-tag tag-link">Real owner: pay-fees.example</span>
+                </p>
+              </div>
+              <div class="ph-trap" aria-hidden="true">
+                <p class="trap-url"><i class="trap-lock"></i>pay-fees.example</p>
+                <p class="trap-title">Redelivery fee: £1.45</p>
+                <span class="trap-field trap-name">Name on card</span>
+                <span class="trap-field">Card number</span>
+                <span class="trap-row"><span class="trap-field">Expiry</span><span class="trap-field">CVV</span></span>
+                <span class="trap-pay">Pay £1.45</span>
+                <span class="trap-leak">Card details → scammer</span>
+              </div>
+              <div class="ph-stamp" aria-hidden="true">Scam</div>
+            </div>
+            <figcaption class="phone-note">An invented example. The number is reserved by Ofcom for fiction and the web address can't exist.</figcaption>
+          </figure>
+        </div>
+
+        <ol class="anatomy-beats">
+          <li class="beat" data-step="0">
+            <p class="ch-num">How a scam works · 01</p>
+            <h2 class="beat-title" id="anatomy-title">It lands like any other text.</h2>
+            <p class="ch-text">No warning sign, no strange sender. Just a delivery update, the kind most of us get every week.</p>
+          </li>
+          <li class="beat" data-step="1">
+            <p class="ch-num">02 · The hook</p>
+            <h3 class="beat-title c-amber">A deadline, and a tiny fee.</h3>
+            <p class="ch-text">“Within 24 hours” is there to stop you checking. £1.45 feels too small to question. Real organisations give you time.</p>
+          </li>
+          <li class="beat" data-step="2">
+            <p class="ch-num">03 · The disguise</p>
+            <h3 class="beat-title c-violet">The link isn't who it says.</h3>
+            <p class="ch-text">Find the first single slash in a web address and read the name just before it. That's who really owns the page. Everything to its left can say anything.</p>
+          </li>
+          <li class="beat" data-step="3">
+            <p class="ch-num">04 · The trap</p>
+            <h3 class="beat-title c-red">The fee is bait. Your card is the prize.</h3>
+            <p class="ch-text">The page asks for your full card details. Once typed in, they go straight to the scammer, and the follow-up call “from your bank” often comes next.</p>
+          </li>
+          <li class="beat" data-step="4">
+            <p class="ch-num">05 · Your turn</p>
+            <h3 class="beat-title c-green">This one was a scam. What about yours?</h3>
+            <p class="ch-text">Paste the message you're unsure about. You'll get a verdict, the reasons, and what to do next.</p>
+            <div class="cta-row"><a class="btn-mono btn-mono-solid" href="#checker">Check my message <span aria-hidden="true">↓</span></a></div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- THE QUESTION: the checker -->
+    <section class="check-section" id="checkSection" aria-labelledby="checker-title">
+      <div class="container">
           <div class="chapter ch-check" id="checker" data-mode="listen">
             <h2 class="ch-title c-blue">Paste it. We'll read it.</h2>
         <div class="card checker" id="checkerCard" data-state="idle">
@@ -206,31 +284,6 @@
         </div>
       </article>
           </div>
-
-          <div class="chapter" id="decoder" data-mode="rush" data-reveal>
-            <p class="ch-num">01</p>
-            <h2 class="ch-title c-amber">They rush you.</h2>
-            <p class="ch-text">“Pay within 24 hours.” “Only 5 places left today.” A deadline is there to stop you checking. Real organisations give you time.</p>
-          </div>
-
-          <div class="chapter" data-mode="mask" data-reveal>
-            <p class="ch-num">02</p>
-            <h2 class="ch-title c-violet">They pretend to be someone you trust.</h2>
-            <p class="ch-text">Royal Mail, HMRC, your bank, even your child on a new number. Contact them yourself, using a number or website you already know.</p>
-          </div>
-
-          <div class="chapter" data-mode="money" data-reveal>
-            <p class="ch-num">03</p>
-            <h2 class="ch-title c-red">Then they ask for money.</h2>
-            <p class="ch-text">A small fee, a “safe account”, gift cards, a courier for your card. That's the moment to stop. Banks never ask you to move money to keep it safe.</p>
-          </div>
-
-          <div class="chapter" data-mode="safe" data-reveal>
-            <h2 class="ch-title c-green">Check first. Every time.</h2>
-            <p class="ch-text">It takes a moment, and it's free.</p>
-            <div class="cta-row"><a class="btn-mono btn-mono-solid" href="#checker">Check a message <span aria-hidden="true">↑</span></a></div>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -571,6 +624,7 @@
   <script src="/js/globe-data.js"></script>
   <script src="/js/globe.js"></script>
   <script src="/js/scam-map.js"></script>
+  <script src="/js/anatomy.js"></script>
   <script src="/js/site.js"></script>
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onTurnstileLoad" async defer></script>
 </body>
