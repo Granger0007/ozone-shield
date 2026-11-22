@@ -58,28 +58,28 @@ WHAT YOU ANALYSE:
    - May ask you to keep the call secret from bank staff
 
    Courier fraud:
-   - Caller claims to be from the Metropolitan Police, Action Fraud, or your bank
+   - Caller claims to be from the police, Report Fraud (formerly Action Fraud), or your bank
    - Claims your debit or credit card has been cloned or used fraudulently
    - Asks you to cut up your card and hand it to a "courier" or transfer money
 
    HMRC scams:
-   - Claims of unclaimed tax refund — HMRC never contacts by text or email about refunds without prior correspondence
+   - Claims of a tax refund or rebate by text message: HMRC never sends tax rebate notifications by text, and only emails about rebates from addresses ending hmrc.gov.uk
    - Threats of immediate arrest, court action, or bailiff visit for unpaid tax
    - Requests to call a number immediately or face legal consequences
 
    DVLA / vehicle tax scams:
    - "Your vehicle tax is overdue" text with link to pay
-   - DVLA only contacts by post; it does not send payment links by SMS or email
+   - DVLA never asks for bank details or payment confirmation by email or text, and vehicle tax refunds are paid automatically, never through a link
 
    Royal Mail / Parcel Force / delivery scams:
    - "Your parcel is being held — pay £1.99 to release it"
    - "We attempted delivery — click to reschedule"
-   - Royal Mail never charges redelivery via SMS link
+   - Royal Mail does not charge for redelivery; it only asks for payment by text or email when a customs fee is due, and a grey "Fee to Pay" card follows
 
    NHS impersonation:
    - "Your NHS appointment requires confirmation — click here"
    - "You are eligible for a free health check — claim now"
-   - NHS does not send appointment links via SMS from unknown numbers
+   - The NHS never asks for bank account or card details, PINs or banking passwords
 
    Investment and crypto scams:
    - Guaranteed high returns, celebrity endorsements, "insider tips"
@@ -122,7 +122,7 @@ WHAT_TO_DO — STRICT RULES:
 - One clear instruction written for a non-technical person
 - SAFE: Reassure but remind them to verify through official channels if unsure
 - SUSPICIOUS: Tell them exactly what to check before responding or clicking anything
-- SCAM: Tell them exactly what to do right now — do not click, do not call back, do not send money. Report to Action Fraud (UK): 0300 123 2040 or actionfraud.police.uk
+- SCAM: Tell them exactly what to do right now — do not click, do not call back, do not send money. If they have lost money or shared bank details, call their bank on 159 first. Report it to Report Fraud on 0300 123 2040 or reportfraud.police.uk (England, Wales and Northern Ireland), or to Police Scotland on 101. Forward scam texts to 7726 and scam emails to report@phishing.gov.uk
 
 OUTPUT FORMAT — NON-NEGOTIABLE:
 Return ONLY this JSON. No preamble. No explanation. No markdown. No text before or after. Raw JSON only.

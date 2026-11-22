@@ -12,10 +12,10 @@ window.OzoneGameData = [
   },
   {
     id: 'tax-refund', scam: true, cat: 'tax', channel: 'SMS', sender: 'HMRC-UK',
-    parts: ['HMRC: ', { t: 'You are due a tax refund of £412.50.', why: 'HMRC never tells you about a tax refund by text, email or WhatsApp.' },
+    parts: ['HMRC: ', { t: 'You are due a tax refund of £412.50.', why: 'HMRC never sends tax rebate notifications by text message.' },
       ' ', { t: 'Claim within 48 hours', why: 'Deadline pressure again.' }, ' at ',
       { t: 'hmrc-refund-claim.uk', why: "HMRC's website is on gov.uk. This address isn't." }],
-    lesson: "HMRC never contacts you about a tax refund by text or email, and its website is on gov.uk."
+    lesson: "HMRC never tells you about a tax rebate by text, and its website is on gov.uk. Check your tax in your HMRC online account instead."
   },
   {
     id: 'safe-account', scam: true, cat: 'bank', channel: 'WhatsApp', sender: 'Bank Fraud Team',
