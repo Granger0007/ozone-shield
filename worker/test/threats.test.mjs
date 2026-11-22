@@ -115,3 +115,21 @@ test('falls back to the GitHub mirror when cisa.gov refuses', async () => {
     assert.equal(snap.problems.kev, undefined);
   } finally { globalThis.fetch = real; }
 });
+
+test('reads a compressed download as a stream, and keeps what arrived before a broken stream', async () => {
+  const env = { THREATS: memKV() };
+  const real = globalThis.fetch; const sent = [];
+  // Real-world failure: the body breaks part-way, as a cut gzip stream does.
+  globalThis.fetch = async (url, init) => {
+    sent.push(init.headers);
+    const bytes = new TextEncoder().encode(head); let i = 0;
+    const body = new ReadableStream({ pull(c) { if (i < bytes.length) { c.enqueue(bytes.slice(i, i + 4096)); i += 4096; } else c.error(new Error('Gzip compressed stream ended prematurely.')); } });
+    return new Response(body, { status: 200 });
+  };
+  try {
+    const snap = await refresh(env);
+    assert.equal(snap.kev.latest.length, 12);
+    assert.equal(snap.problems.kev, undefined);
+    assert.equal(sent[0].Range, undefined); // no byte range: it breaks compressed replies
+  } finally { globalThis.fetch = real; }
+});
