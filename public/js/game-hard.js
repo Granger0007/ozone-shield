@@ -7,12 +7,13 @@
      context  what you'd really know (your bank, what you're expecting)
      thread   earlier messages in the same conversation (not tappable)
      from     the full sender details, revealed when the player taps the sender
+     stake    for scams, an example of what was at risk (shown as a game score)
      parts    plain text, red flags {t, why}, and links {link, url, why?}:
               tapping a link shows where it really goes, like a long-press. */
 window.OzoneGameHard = [
   /* ---------------- scams ---------------- */
   {
-    id: 'h-thread-spoof', scam: true, cat: 'bank', channel: 'SMS', sender: 'Northgate',
+    id: 'h-thread-spoof', scam: true, stake: 2400, cat: 'bank', channel: 'SMS', sender: 'Northgate',
     from: "Sender name: Northgate. It's a name, not a phone number.",
     context: 'You bank with Northgate Bank. The number on the back of your card is 03069 990100.',
     thread: [
@@ -26,7 +27,7 @@ window.OzoneGameHard = [
     lesson: "Sitting in your bank's real thread proves nothing: sender names can be faked. Call the number on your card, or 159."
   },
   {
-    id: 'h-spoof-call', scam: true, cat: 'bank', channel: 'Call', sender: 'Northgate Bank',
+    id: 'h-spoof-call', scam: true, stake: 1280, cat: 'bank', channel: 'Call', sender: 'Northgate Bank',
     from: "Caller ID: Northgate Bank, 03069 990100.",
     context: 'You bank with Northgate Bank. The number on the back of your card is 03069 990100.',
     time: 'Incoming call · 2 min 40 s',
@@ -36,7 +37,7 @@ window.OzoneGameHard = [
     lesson: "The number on screen matched the card, and it was still fake. If a caller asks for a code, it's fraud. Hang up and call 159."
   },
   {
-    id: 'h-whatsapp-code', scam: true, cat: 'account', channel: 'WhatsApp', sender: 'Aunty Meera', known: true,
+    id: 'h-whatsapp-code', scam: true, stake: 500, cat: 'account', channel: 'WhatsApp', sender: 'Aunty Meera', known: true,
     from: "Saved contact: Aunty Meera, +44 7700 900612.",
     context: 'A text arrived a moment ago: "WhatsApp code 381-204. Don\'t share this code with others."',
     thread: [
@@ -50,7 +51,7 @@ window.OzoneGameHard = [
     lesson: 'Her account had been taken over, and this is how it spreads. Never share a WhatsApp code with anyone, even family. Call them on a number you know, and turn on two-step verification.'
   },
   {
-    id: 'h-invoice', scam: true, cat: 'bank', channel: 'Email', sender: 'City Lettings Accounts',
+    id: 'h-invoice', scam: true, stake: 1150, cat: 'bank', channel: 'Email', sender: 'City Lettings Accounts',
     from: 'From: City Lettings Accounts <accounts@city-lettings-uk.example>. Reply-To: payments.citylettings@freemail.example',
     context: 'Your letting agent is City Lettings, at citylettings.example. Your rent of £1,150 is due on the 1st.',
     subject: 'Important: change of bank details for rent payments',
@@ -62,7 +63,7 @@ window.OzoneGameHard = [
     lesson: "Look at the sender: city-lettings-uk.example isn't citylettings.example. Before paying new bank details, call the agent on a number you already have."
   },
   {
-    id: 'h-road-charge', scam: true, cat: 'gov', channel: 'SMS', sender: '+44 7700 900318',
+    id: 'h-road-charge', scam: true, stake: 600, cat: 'gov', channel: 'SMS', sender: '+44 7700 900318',
     from: "From the mobile number +44 7700 900318.",
     context: 'You drove through a toll road last month. You think you paid, but you are not certain.',
     time: 'Today 13:22',
@@ -72,7 +73,7 @@ window.OzoneGameHard = [
     lesson: "Read the address up to the first single slash. Here that's road-charge-pay.example; everything to its left, including gov.uk, is decoration."
   },
   {
-    id: 'h-redelivery', scam: true, cat: 'parcel', channel: 'SMS', sender: 'Parcelwise',
+    id: 'h-redelivery', scam: true, stake: 600, cat: 'parcel', channel: 'SMS', sender: 'Parcelwise',
     from: "Sender name: Parcelwise. It's a name, not a phone number.",
     context: "You're expecting a parcel from Parcelwise this week. Parcelwise's website is parcelwise.example.",
     time: 'Today 16:05',
@@ -82,7 +83,7 @@ window.OzoneGameHard = [
     lesson: "You really were expecting a parcel, and that's what makes it work. Rebook through the courier's app or website, typed in yourself."
   },
   {
-    id: 'h-tickets', scam: true, cat: 'prize', channel: 'WhatsApp', sender: '+44 7700 900764',
+    id: 'h-tickets', scam: true, stake: 140, cat: 'prize', channel: 'WhatsApp', sender: '+44 7700 900764',
     from: 'Not in your contacts. Number +44 7700 900764.',
     context: "You asked on a fans' page if anyone had two tickets for Saturday's sold-out gig. This person replied.",
     time: 'Today 20:17',
@@ -92,7 +93,7 @@ window.OzoneGameHard = [
     lesson: 'Buy resale tickets through official resale sites, and pay by card. Never bank-transfer a stranger for tickets.'
   },
   {
-    id: 'h-recovery', scam: true, cat: 'invest', channel: 'Email', sender: 'Funds Recovery Unit',
+    id: 'h-recovery', scam: true, stake: 250, cat: 'invest', channel: 'Email', sender: 'Funds Recovery Unit',
     from: 'From: Funds Recovery Unit <cases@funds-recovery-unit.example>',
     context: 'Two months ago you lost £3,000 to a fake investment app, and you reported it.',
     subject: 'Case 22841: your lost funds have been traced',
@@ -103,7 +104,7 @@ window.OzoneGameHard = [
     lesson: 'Nobody genuine charges you up front to recover scam losses. Talk to your bank, and keep your Report Fraud reference.'
   },
   {
-    id: 'h-voice-note', scam: true, cat: 'family', channel: 'WhatsApp', sender: '+44 7700 900255',
+    id: 'h-voice-note', scam: true, stake: 900, cat: 'family', channel: 'WhatsApp', sender: '+44 7700 900255',
     from: 'Not in your contacts. Number +44 7700 900255.',
     context: "Your son Arjun is at university. His usual number is saved in your phone. The voice note sounds just like him.",
     time: 'Today 23:48 · Voice note 0:21 (transcript)',
@@ -113,7 +114,7 @@ window.OzoneGameHard = [
     lesson: 'Voices can now be copied with AI from a short clip of audio, such as a video online. Call him on his usual number, and agree a family password for emergencies.'
   },
   {
-    id: 'h-button-link', scam: true, cat: 'account', channel: 'Email', sender: 'Northgate Bank',
+    id: 'h-button-link', scam: true, stake: 1500, cat: 'account', channel: 'Email', sender: 'Northgate Bank',
     from: 'From: Northgate Bank <alerts@northgate-bank.example>',
     context: 'You bank with Northgate Bank. Its website is northgate.example.',
     subject: 'Action needed: confirm a recent payment',

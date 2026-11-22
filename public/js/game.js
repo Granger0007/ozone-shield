@@ -127,6 +127,58 @@
     setTimeout(function () { box.textContent = ''; }, 2000);
   }
 
+  /* ---------- game-feel: sparks, money, combo, stamp ---------- */
+  var gbp = function (n) { return '£' + Math.round(n).toLocaleString('en-GB'); };
+  function sparks(anchor, colour, n) {
+    if (reduceMotion || !anchor) return;
+    var r = anchor.getBoundingClientRect();
+    var cx = r.left + r.width / 2, cy = r.top + r.height / 2 + window.scrollY;
+    for (var i = 0; i < n; i++) {
+      var sp = document.createElement('i');
+      sp.className = 'spark ' + colour;
+      var a = Math.random() * Math.PI * 2, d = 40 + Math.random() * 70;
+      sp.style.left = cx + 'px'; sp.style.top = cy + 'px';
+      sp.style.setProperty('--dx', (Math.cos(a) * d).toFixed(0) + 'px');
+      sp.style.setProperty('--dy', (Math.sin(a) * d).toFixed(0) + 'px');
+      document.body.appendChild(sp);
+      setTimeout(function (el) { el.remove(); }.bind(null, sp), 750);
+    }
+  }
+  function tween(el, from, to, ms, fmt) {
+    if (reduceMotion) { el.textContent = fmt(to); return; }
+    var t0 = null;
+    function f(ts) {
+      if (t0 === null) t0 = ts;
+      var k = Math.min(1, (ts - t0) / ms), e = 1 - Math.pow(1 - k, 3);
+      el.textContent = fmt(from + (to - from) * e);
+      if (k < 1) requestAnimationFrame(f);
+    }
+    requestAnimationFrame(f);
+  }
+  function floatText(text, anchor, cls) {
+    if (reduceMotion || !anchor) return;
+    var r = anchor.getBoundingClientRect();
+    var f = document.createElement('span');
+    f.className = 'xp-float ' + (cls || ''); f.textContent = text;
+    f.style.left = (r.left + r.width / 2) + 'px';
+    f.style.top = (r.top + window.scrollY) + 'px';
+    document.body.appendChild(f);
+    setTimeout(function () { f.remove(); }, 1300);
+  }
+  function renderCombo() {
+    var n = game.streak, c = $('combo');
+    $('comboNum').textContent = String(n);
+    c.setAttribute('data-level', String(n >= 7 ? 3 : n >= 5 ? 2 : n >= 3 ? 1 : 0));
+    $('comboBonus').textContent = n >= 3 ? '+50 streak bonus' : 'Streak bonus at 3';
+    if (!reduceMotion) { c.classList.remove('bump'); void c.offsetWidth; c.classList.add('bump'); }
+  }
+  function stamp(text, ok) {
+    var st = $('stamp');
+    st.textContent = text;
+    st.className = 'stamp show ' + (ok ? 'ok' : 'bad');
+  }
+  function buzz(ms) { if (!reduceMotion && navigator.vibrate) { try { navigator.vibrate(ms); } catch (e) { /* not allowed */ } } }
+
   var newBadges = [];
   function award(key) {
     if (!BADGES[key] || store.badges.indexOf(key) !== -1) return;
@@ -190,7 +242,9 @@
       var hg = shuffle(HARD.filter(function (m) { return !m.scam; })).slice(0, 10 - nScam);
       rounds = shuffle(hs.concat(hg));
     }
-    game = { mode: mode, rounds: rounds, i: 0, score: 0, correct: 0, streak: 0, bestStreak: 0, flags: 0, results: [], answered: false };
+    game = { mode: mode, rounds: rounds, i: 0, score: 0, correct: 0, streak: 0, bestStreak: 0, flags: 0, results: [], answered: false, saved: 0, lost: 0 };
+    $('stakes').hidden = mode === 'classic';
+    $('moneySaved').textContent = gbp(0); $('moneyLost').textContent = gbp(0);
     newBadges = [];
     touchDay();
     if (store.dayStreak >= 3) award('regular');
@@ -201,6 +255,7 @@
     game.rounds.forEach(function () { ticks.appendChild(document.createElement('li')); });
     $('timer').hidden = mode !== 'expert';
     show('roundScreen');
+    renderCombo();
     showRound();
   }
 
@@ -274,9 +329,29 @@
     $('flagsBox').hidden = true;
     $('flagNotes').textContent = '';
     var phone = $('phone');
-    if (!reduceMotion) { phone.classList.remove('enter'); void phone.offsetWidth; phone.classList.add('enter'); }
+    $('stamp').className = 'stamp';
+    phone.classList.remove('got-right', 'got-wrong', 'scanning');
+    // A message arrives the way it does on a real phone: a notification drops in,
+    // the phone buzzes, someone is typing, then the message lands.
+    var preview = m.parts.map(partText).join('');
+    $('notifApp').textContent = { SMS: 'SMS', WhatsApp: 'WA', Email: '@', Call: 'Call' }[m.channel] || m.channel;
+    $('notifApp').className = 'notif-app ch-' + m.channel.toLowerCase();
+    $('notifFrom').textContent = m.sender;
+    $('notifText').textContent = m.subject || (preview.length > 70 ? preview.slice(0, 68) + '…' : preview);
+    clearTimeout(game.arriveT);
+    var wait = 0;
+    if (!reduceMotion) {
+      wait = 900;
+      var notif = $('notif');
+      notif.classList.remove('show'); void notif.offsetWidth; notif.classList.add('show');
+      phone.classList.remove('enter', 'arriving', 'landed'); void phone.offsetWidth;
+      phone.classList.add('enter', 'arriving');
+      buzz(60);
+      game.arriveT = setTimeout(function () { phone.classList.remove('arriving'); phone.classList.add('landed'); }, wait);
+    }
     phone.focus({ preventScroll: true });
-    startTimer();
+    var round = game.i;
+    setTimeout(function () { if (game.i === round && !game.answered) startTimer(); }, wait);
   }
 
   /* ---------- inspecting, like a long-press on a real phone ---------- */
@@ -325,6 +400,16 @@
     var hard = game.mode !== 'classic';
     var right = !timedOut && saidScam === m.scam;
     var btn = saidScam ? $('ansScam') : $('ansSafe');
+    if (timedOut) btn = $('phone');
+    $('phone').classList.remove('arriving'); $('phone').classList.add('landed');
+    stamp(m.scam ? 'Scam' : 'Genuine', right);
+    $('phone').classList.add(right ? 'got-right' : 'got-wrong');
+    if (right) sparks(btn, m.scam ? 'red' : 'green', 18); else buzz([90, 60, 90]);
+    // Money at stake (Hard and Expert): what this scam would have cost you
+    if (hard && m.scam && m.stake) {
+      if (right) { tween($('moneySaved'), game.saved, game.saved + m.stake, 900, gbp); game.saved += m.stake; floatText('+' + gbp(m.stake) + ' protected', $('moneySaved'), 'saved'); }
+      else { tween($('moneyLost'), game.lost, game.lost + m.stake, 900, gbp); game.lost += m.stake; floatText('−' + gbp(m.stake), $('moneyLost'), 'lost'); }
+    }
     game.results.push(right);
     $('roundTicks').children[game.i].classList.add(right ? 'right' : 'wrong');
 
@@ -348,6 +433,7 @@
       }
     }
 
+    renderCombo();
     var fb = $('feedback');
     fb.className = 'feedback ' + (right ? 'is-right' : 'is-wrong');
     $('fbTitle').textContent = timedOut
@@ -371,6 +457,7 @@
         s.removeAttribute('aria-label');
       });
       $('phone').classList.add('hunting');
+      if (!reduceMotion) { $('phone').classList.add('scanning'); setTimeout(function () { $('phone').classList.remove('scanning'); }, 1300); }
     }
     $('nextBtn').textContent = game.i + 1 < game.rounds.length ? 'Next message' : 'See my results';
     $('fbTitle').focus({ preventScroll: true });
@@ -403,6 +490,7 @@
     game.found++; game.flags++;
     $('flagsFound').textContent = String(game.found);
     addNote(part, true);
+    sparks(seg, 'red', 10);
     addXp(25, seg);
     var total = m.parts.filter(isFlag).length;
     if (game.found === total) { award('eagle-eye'); $('revealBtn').hidden = true; }
@@ -418,7 +506,8 @@
   }
 
   function next() {
-    $('phone').classList.remove('hunting');
+    $('phone').classList.remove('hunting', 'got-right', 'got-wrong');
+    $('stamp').className = 'stamp';
     stopTimer();
     var go = function () {
       game.i++;
@@ -434,11 +523,18 @@
     if (game.mode !== 'classic' && game.correct === game.rounds.length) award('investigator');
     if (game.mode === 'expert' && game.correct >= 8) award('cool-head');
     $('endMode').textContent = MODES[game.mode] + ' mode';
+    var grade = game.correct === 10 ? 'S' : game.correct >= 8 ? 'A' : game.correct >= 6 ? 'B' : 'C';
+    $('medalGrade').textContent = grade;
+    $('medal').className = 'medal g-' + grade.toLowerCase();
+    if (!reduceMotion) { void $('medal').offsetWidth; $('medal').classList.add('in'); }
+    $('endMoney').hidden = game.mode === 'classic';
+    tween($('endSaved'), 0, game.saved, 1200, gbp);
+    $('endLostLine').textContent = game.lost ? gbp(game.lost) + ' lost to scams you missed' : 'Nothing lost';
     if (store.best === null || game.score > store.best) store.best = game.score;
     save(); renderHud();
     show('endScreen');
     $('endCorrect').textContent = String(game.correct);
-    $('endScore').textContent = game.score.toLocaleString('en-GB');
+    tween($('endScore'), 0, game.score, 1200, function (v) { return Math.round(v).toLocaleString('en-GB'); });
     $('endFlags').textContent = String(game.flags);
     $('endStreak').textContent = String(game.bestStreak);
     var c = game.correct;

@@ -122,6 +122,17 @@
         <ol class="round-ticks" id="roundTicks" aria-hidden="true"></ol>
         <p class="round-score">Score <b id="scoreNow">0</b></p>
       </div>
+      <div class="meters">
+        <div class="combo" id="combo" data-level="0">
+          <span class="combo-flame" aria-hidden="true"></span>
+          <span class="combo-text"><b id="comboNum">0</b> in a row</span>
+          <span class="combo-bonus" id="comboBonus">Streak bonus at 3</span>
+        </div>
+        <div class="stakes" id="stakes" hidden>
+          <span class="stake-saved">Protected <b id="moneySaved">£0</b></span>
+          <span class="stake-lost">Lost <b id="moneyLost">£0</b></span>
+        </div>
+      </div>
       <div class="timer" id="timer" hidden><span class="timer-fill" id="timerFill"></span><span class="timer-num" id="timerNum" aria-live="off">30</span></div>
 
       <div class="context" id="msgContext" role="note" hidden aria-label="What you know">
@@ -129,7 +140,14 @@
         <p id="msgContextText"></p>
       </div>
 
+      <div class="notif" id="notif" aria-hidden="true">
+        <span class="notif-app" id="notifApp">SMS</span>
+        <span class="notif-body"><b id="notifFrom"></b><span id="notifText"></span></span>
+        <span class="notif-now">now</span>
+      </div>
       <article class="phone" id="phone" tabindex="-1" aria-labelledby="msgSender">
+        <div class="stamp" id="stamp" aria-hidden="true"></div>
+        <div class="scanline" aria-hidden="true"></div>
         <div class="phone-head">
           <span class="channel" id="msgChannel">SMS</span>
           <button type="button" class="sender" id="msgSender" aria-expanded="false" aria-controls="msgFrom">Unknown</button>
@@ -139,6 +157,7 @@
         <p class="stranger" id="msgStranger" hidden>Not in your contacts</p>
         <p class="subject" id="msgSubject" hidden></p>
         <ol class="thread" id="msgThread" aria-label="Earlier messages"></ol>
+        <p class="typing" id="typing" aria-hidden="true"><i></i><i></i><i></i></p>
         <p class="bubble" id="msgBody"></p>
         <p class="peek" id="msgPeek" hidden role="status"></p>
         <p class="inspect-hint" id="inspectHint" hidden>Tap the sender, or press a link, to inspect it.</p>
@@ -170,12 +189,14 @@
     <!-- End screen -->
     <section class="screen end" id="endScreen" hidden aria-labelledby="end-title">
       <p class="eyebrow">Round complete</p>
+      <div class="medal" id="medal" aria-hidden="true"><span class="medal-ring"></span><span class="medal-grade" id="medalGrade">A</span></div>
       <p class="end-mode" id="endMode">Classic</p>
       <h1 id="end-title" tabindex="-1"><span id="endCorrect">0</span> / 10 right</h1>
       <div class="end-stats">
         <div><span class="hud-label">Score</span><b id="endScore">0</b></div>
         <div><span class="hud-label">Red flags found</span><b id="endFlags">0</b></div>
         <div><span class="hud-label">Best streak</span><b id="endStreak">0</b></div>
+        <div class="end-money" id="endMoney" hidden><span class="hud-label">Money protected</span><b id="endSaved">£0</b><small id="endLostLine"></small></div>
       </div>
       <p class="end-msg" id="endMsg"></p>
       <div class="new-badges" id="newBadges" hidden>

@@ -249,3 +249,115 @@
 .peek { margin-top: 10px; padding: 10px 12px; border-radius: 10px; background: #141312; border: 1px solid var(--line); font-family: var(--mono); font-size: .82rem; overflow-wrap: anywhere; animation: rise .25s var(--ease-out) both; }
 .inspect-hint { margin-top: 10px; font-size: .85rem; color: var(--muted); }
 @media (prefers-reduced-motion: reduce) { .from, .peek { animation: none; } .timer-fill { transition: none; } }
+
+/* ---------- Game feel ---------- */
+#roundScreen { position: relative; }
+.meters { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 14px; }
+
+/* combo: a flame that grows with the streak */
+.combo { display: flex; align-items: center; gap: 10px; padding: 6px 14px 6px 8px; border-radius: 99px; background: var(--surface); border: 1px solid var(--line); }
+.combo.bump { animation: comboBump .45s var(--ease-out); }
+@keyframes comboBump { 40% { transform: scale(1.12); } }
+.combo-flame { position: relative; width: 22px; height: 26px; }
+.combo-flame::before, .combo-flame::after {
+  content: ""; position: absolute; inset: 0; border-radius: 50% 50% 45% 45% / 60% 60% 40% 40%;
+  background: radial-gradient(60% 55% at 50% 70%, #ffe7a3, #f7b84b 45%, #ff7a6e 80%); transform-origin: 50% 100%;
+  opacity: .25; transform: scale(.6); transition: opacity .3s, transform .3s var(--ease-out);
+}
+.combo-flame::after { inset: 6px 5px 0; background: radial-gradient(60% 60% at 50% 70%, #fff, #ffe7a3 70%); }
+.combo[data-level="1"] .combo-flame::before, .combo[data-level="1"] .combo-flame::after { opacity: 1; transform: scale(.75); animation: flicker .5s ease-in-out infinite alternate; }
+.combo[data-level="2"] .combo-flame::before, .combo[data-level="2"] .combo-flame::after { opacity: 1; transform: scale(.95); animation: flicker .38s ease-in-out infinite alternate; }
+.combo[data-level="3"] .combo-flame::before, .combo[data-level="3"] .combo-flame::after { opacity: 1; transform: scale(1.15); animation: flicker .28s ease-in-out infinite alternate; }
+.combo[data-level="3"] { border-color: #ff7a6e; box-shadow: 0 0 18px -4px #ff7a6e; }
+@keyframes flicker { from { transform: scale(var(--s, .9)) rotate(-4deg); } to { transform: scale(calc(var(--s, .9) * 1.08)) rotate(4deg); } }
+.combo[data-level="1"] { --s: .75; } .combo[data-level="2"] { --s: .95; } .combo[data-level="3"] { --s: 1.15; }
+.combo-text { font-weight: 700; font-size: .95rem; }
+.combo-text b { font-variant-numeric: tabular-nums; }
+.combo-bonus { font-family: var(--mono); font-size: .7rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.combo:not([data-level="0"]) .combo-bonus { color: var(--caution); }
+
+/* money at stake */
+.stakes { display: flex; gap: 8px; margin-left: auto; }
+.stakes[hidden] { display: none; }
+.stakes > span { padding: 6px 12px; border-radius: 99px; font-size: .85rem; background: var(--surface); border: 1px solid var(--line); }
+.stakes b { font-variant-numeric: tabular-nums; margin-left: 4px; }
+.stake-saved b { color: var(--safe); }
+.stake-lost b { color: var(--danger); }
+
+/* the notification that drops in before each message */
+.notif {
+  position: absolute; left: 50%; top: 0; z-index: 30; width: min(92%, 420px); translate: -50% -130%; opacity: 0; pointer-events: none;
+  display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 18px;
+  background: color-mix(in srgb, var(--surface) 88%, #fff 4%); border: 1px solid var(--line); box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(10px);
+}
+.notif.show { animation: notifDrop 2.2s var(--ease-out) both; }
+@keyframes notifDrop { 0% { translate: -50% -130%; opacity: 0; } 14%, 70% { translate: -50% 8px; opacity: 1; } 100% { translate: -50% -130%; opacity: 0; } }
+.notif-app { flex: none; display: grid; place-items: center; width: 38px; height: 38px; border-radius: 10px; background: var(--brand); color: var(--brand-ink); font-family: var(--mono); font-size: .8rem; font-weight: 800; }
+.notif-app.ch-whatsapp { background: var(--safe); } .notif-app.ch-email { background: #b49cff; } .notif-app.ch-call { background: var(--caution); }
+.notif-body { display: flex; flex-direction: column; min-width: 0; font-size: .85rem; }
+.notif-body span { color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.notif-now { margin-left: auto; flex: none; font-size: .72rem; color: var(--muted); }
+
+/* arrival: buzz, typing dots, then the bubble pops in */
+.phone { position: relative; overflow: hidden; }
+.phone.arriving { animation: buzzIn .5s ease-in-out; }
+@keyframes buzzIn { 0%, 100% { transform: none; } 20% { transform: translateX(-3px) rotate(-.4deg); } 40% { transform: translateX(3px) rotate(.4deg); } 60% { transform: translateX(-2px); } 80% { transform: translateX(2px); } }
+.typing { display: none; gap: 5px; width: max-content; padding: 14px 16px; border-radius: 18px 18px 18px 6px; background: var(--bg); border: 1px solid var(--line); }
+.typing i { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); animation: typeDot 1s infinite; }
+.typing i:nth-child(2) { animation-delay: .15s; } .typing i:nth-child(3) { animation-delay: .3s; }
+@keyframes typeDot { 0%, 60%, 100% { opacity: .3; transform: none; } 30% { opacity: 1; transform: translateY(-3px); } }
+.phone.arriving .typing { display: flex; }
+.phone.arriving .bubble { display: none; }
+.phone.landed .bubble { animation: bubblePop .45s var(--ease-out) both; transform-origin: 0 100%; }
+@keyframes bubblePop { from { opacity: 0; transform: scale(.9) translateY(8px); } }
+
+/* verdict: stamp, glow or shake */
+.stamp {
+  position: absolute; left: 50%; top: 46%; z-index: 5; translate: -50% -50%; rotate: -14deg; pointer-events: none;
+  padding: 6px 22px; border: 5px solid; border-radius: 12px; font-family: var(--mono); font-size: clamp(1.8rem, 6vw, 2.8rem); font-weight: 800;
+  letter-spacing: .14em; text-transform: uppercase; background: color-mix(in srgb, var(--surface) 78%, transparent);
+  opacity: 0;
+}
+.stamp.show { opacity: 1; animation: stampIn .35s cubic-bezier(.3, 1.7, .5, 1) both; }
+/* during the red-flag hunt the stamp steps back so the message can be read */
+.phone.hunting .stamp.show { animation: stampIn .35s cubic-bezier(.3, 1.7, .5, 1) both, stampBack .6s 1.6s forwards; }
+@keyframes stampIn { from { opacity: 0; scale: 2.2; } to { opacity: 1; scale: 1; } }
+@keyframes stampBack { to { opacity: .12; } }
+.stamp.ok { color: var(--safe); border-color: var(--safe); }
+.stamp.bad { color: var(--danger); border-color: var(--danger); }
+.phone.got-right { animation: glowRight 1s var(--ease-out); }
+@keyframes glowRight { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--safe) 60%, transparent); } 100% { box-shadow: 0 0 0 18px transparent; } }
+.phone.got-wrong { animation: shakeWrong .5s; }
+@keyframes shakeWrong { 0%, 100% { transform: none; } 15% { transform: translateX(-10px); } 35% { transform: translateX(9px); } 55% { transform: translateX(-6px); } 75% { transform: translateX(4px); } }
+
+/* red-flag hunt: a scanner sweeps the message */
+.scanline { position: absolute; inset: 0; z-index: 4; pointer-events: none; opacity: 0; background: linear-gradient(180deg, transparent 0, color-mix(in srgb, var(--danger) 30%, transparent) 48%, var(--danger) 50%, transparent 52%); background-size: 100% 220%; }
+.phone.scanning .scanline { animation: scan 1.2s ease-in-out; }
+@keyframes scan { 0% { opacity: 1; background-position: 0 100%; } 100% { opacity: 0; background-position: 0 -20%; } }
+
+/* sparks and floating money */
+.spark { position: absolute; z-index: 90; width: 7px; height: 7px; margin: -3px 0 0 -3px; border-radius: 50%; pointer-events: none; animation: spark .7s var(--ease-out) forwards; }
+.spark.red { background: var(--danger); } .spark.green { background: var(--safe); }
+@keyframes spark { to { transform: translate(var(--dx), var(--dy)) scale(.2); opacity: 0; } }
+.xp-float.saved { color: var(--safe); } .xp-float.lost { color: var(--danger); }
+
+/* end: a grade medal */
+.medal { position: relative; width: 120px; height: 120px; margin-bottom: 8px; display: grid; place-items: center; }
+.medal-ring { position: absolute; inset: 0; border-radius: 50%; background: conic-gradient(from 0deg, var(--mc1), var(--mc2), var(--mc1)); box-shadow: 0 0 40px -8px var(--mc1); }
+.medal-ring::after { content: ""; position: absolute; inset: 10px; border-radius: 50%; background: var(--surface); }
+.medal-grade { position: relative; font-size: 3.4rem; font-weight: 800; color: var(--mc1); }
+.medal.g-s { --mc1: #f7d774; --mc2: #fff4c2; } .medal.g-a { --mc1: #c9d3df; --mc2: #f1f5fa; }
+.medal.g-b { --mc1: #d9955b; --mc2: #f5c9a0; } .medal.g-c { --mc1: #8a847c; --mc2: #b8b1a8; }
+.medal.in { animation: medalIn .9s cubic-bezier(.3, 1.5, .5, 1) both; }
+.medal.in .medal-ring { animation: medalSpin 3s linear infinite; }
+@keyframes medalIn { from { transform: scale(.2) rotate(-200deg); opacity: 0; } }
+@keyframes medalSpin { to { transform: rotate(360deg); } }
+.end-money small { display: block; color: var(--muted); font-size: .8rem; }
+.end-money b { color: var(--safe); }
+
+@media (prefers-reduced-motion: reduce) {
+  .notif, .typing, .scanline { display: none !important; }
+  .phone.arriving .bubble { display: block; }
+  .stamp.show, .phone.hunting .stamp.show, .phone.got-right, .phone.got-wrong, .combo.bump, .medal.in, .medal.in .medal-ring, .phone.landed .bubble, .phone.arriving, .combo-flame::before, .combo-flame::after { animation: none !important; transition: none !important; }
+}
