@@ -23,7 +23,12 @@
  * stored, and the page only ever writes it with textContent.
  */
 
-const KEV_URL = 'https://raw.githubusercontent.com/cisagov/kev-data/main/known_exploited_vulnerabilities.json';
+// CISA's own feed first; its official GitHub mirror if that fails (GitHub's
+// raw host rate-limits busy shared addresses, which Workers use).
+const KEV_URLS = [
+  'https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json',
+  'https://raw.githubusercontent.com/cisagov/kev-data/main/known_exploited_vulnerabilities.json',
+];
 const KEV_BYTES = 48 * 1024;
 const KEV_LATEST = 12;
 const RADAR = 'https://api.cloudflare.com/client/v4/radar/attacks/layer7/top';
@@ -102,8 +107,17 @@ export function kevFromText(src) {
 }
 
 async function fetchKev() {
-  const res = await fetch(KEV_URL, { headers: { Range: `bytes=0-${KEV_BYTES - 1}`, 'User-Agent': 'ozone-shield-threat-watch' } });
-  if (!res.ok) throw new Error('KEV HTTP ' + res.status);
+  const failures = [];
+  for (const url of KEV_URLS) {
+    try { return await fetchKevFrom(url); }
+    catch (e) { failures.push(new URL(url).hostname + ': ' + String(e && e.message || e).slice(0, 80)); }
+  }
+  throw new Error(failures.join('; '));
+}
+
+async function fetchKevFrom(url) {
+  const res = await fetch(url, { headers: { Range: `bytes=0-${KEV_BYTES - 1}`, 'User-Agent': 'ozone-shield-threat-watch' } });
+  if (!res.ok) throw new Error('HTTP ' + res.status);
   let src;
   if (res.status === 206) src = await res.text();
   else {
@@ -119,7 +133,7 @@ async function fetchKev() {
     reader.cancel().catch(() => {});
   }
   const kev = kevFromText(src);
-  if (!kev.latest.length) throw new Error('KEV: no entries read');
+  if (!kev.latest.length) throw new Error('no entries read');
   return kev;
 }
 
@@ -168,11 +182,18 @@ async function fetchRadar(token) {
 /* ---------- refresh: keep the last good data if a source fails ---------- */
 export async function refresh(env) {
   const old = (await env.THREATS.get(KEY, 'json')) || {};
-  const snap = { generated: new Date().toISOString(), kev: old.kev || null, kevAt: old.kevAt || null, radar: old.radar || null, radarAt: old.radarAt || null };
-  const jobs = [fetchKev().then((k) => { snap.kev = k; snap.kevAt = snap.generated; })];
-  if (env.RADAR_TOKEN) jobs.push(fetchRadar(env.RADAR_TOKEN).then((r) => { snap.radar = r; snap.radarAt = snap.generated; }));
-  const results = await Promise.allSettled(jobs);
-  results.forEach((r) => { if (r.status === 'rejected') console.log('threats refresh:', String(r.reason && r.reason.message || r.reason)); });
+  const snap = { generated: new Date().toISOString(), kev: old.kev || null, kevAt: old.kevAt || null, radar: old.radar || null, radarAt: old.radarAt || null, problems: {} };
+  // A short reason for any source that failed, so the snapshot explains itself
+  // (no secrets: just the host and HTTP status or error name).
+  const note = (name) => (e) => {
+    const why = String(e && e.message || e).replace(/Bearer\s+\S+/gi, 'Bearer ***').slice(0, 200);
+    snap.problems[name] = why;
+    console.log('threats refresh ' + name + ':', why);
+  };
+  const jobs = [fetchKev().then((k) => { snap.kev = k; snap.kevAt = snap.generated; }, note('kev'))];
+  if (env.RADAR_TOKEN) jobs.push(fetchRadar(env.RADAR_TOKEN).then((r) => { snap.radar = r; snap.radarAt = snap.generated; }, note('radar')));
+  else snap.problems.radar = 'not connected (no RADAR_TOKEN)';
+  await Promise.all(jobs);
   await env.THREATS.put(KEY, JSON.stringify(snap));
   return snap;
 }

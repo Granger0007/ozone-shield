@@ -70,6 +70,8 @@ test('refresh keeps the last good data when a source fails', async () => {
     const second = await refresh(env);
     assert.equal(second.kev.latest[0].cve, 'CVE-2026-129448');
     assert.equal(second.kevAt, first.kevAt);
+    assert.match(second.problems.kev, /www\.cisa\.gov: HTTP 503; raw\.githubusercontent\.com: HTTP 503/);
+    assert.equal(second.problems.radar, 'not connected (no RADAR_TOKEN)');
   } finally { globalThis.fetch = real; }
 });
 
@@ -99,5 +101,17 @@ test('API: before the first refresh it says "warming" and starts only one refres
     assert.equal(a.status, 503);
     assert.equal(b.status, 503);
     assert.equal(started, 1);
+  } finally { globalThis.fetch = real; }
+});
+
+test('falls back to the GitHub mirror when cisa.gov refuses', async () => {
+  const env = { THREATS: memKV() };
+  const real = globalThis.fetch; const asked = [];
+  globalThis.fetch = async (url) => { asked.push(new URL(url).hostname); return new URL(url).hostname === 'www.cisa.gov' ? new Response('no', { status: 403 }) : new Response(head, { status: 206 }); };
+  try {
+    const snap = await refresh(env);
+    assert.deepEqual(asked, ['www.cisa.gov', 'raw.githubusercontent.com']);
+    assert.equal(snap.kev.latest.length, 12);
+    assert.equal(snap.problems.kev, undefined);
   } finally { globalThis.fetch = real; }
 });
