@@ -120,9 +120,11 @@
 @media (min-width: 960px) {
   #roundScreen:not([hidden]) {
     display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); column-gap: 32px; align-items: start;
-    grid-template-areas: "top top" "phone choices" "phone feedback";
+    grid-template-areas: "top top" "timer timer" "context context" "phone choices" "phone feedback";
   }
   .round-top { grid-area: top; }
+  .timer { grid-area: timer; }
+  .context { grid-area: context; }
   .phone { grid-area: phone; padding: 26px; }
   .bubble { font-size: 1.22rem; padding: 20px 22px; }
   .choices { grid-area: choices; margin-top: 0; grid-template-columns: 1fr; }
@@ -191,3 +193,59 @@
   .phone.enter, .seg.found, .seg.nope, .feedback, .note, .new-badges .badge, .levelup-card { animation: none !important; }
   .xp-fill, .round-ticks li { transition: none; }
 }
+
+/* ---------- Modes ---------- */
+.modes { display: grid; gap: 12px; margin-top: 22px; }
+.mode {
+  display: flex; flex-direction: column; gap: 6px; padding: 18px 20px; border-radius: 16px; text-align: left; cursor: pointer;
+  font: inherit; color: var(--ink); background: var(--surface-2); border: 1px solid var(--line);
+  transition: transform .25s var(--ease-out), border-color .25s, background-color .25s;
+}
+.mode:hover { transform: translateY(-2px); border-color: var(--field); }
+.mode:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.mode-name { display: flex; align-items: center; gap: 10px; font-size: 1.25rem; font-weight: 800; letter-spacing: -0.01em; }
+.mode-name i { font-style: normal; font-family: var(--mono); font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; padding: 2px 8px; border-radius: 99px; }
+.mode-text { color: var(--muted); }
+.mode-hard { border-color: color-mix(in srgb, var(--caution) 45%, var(--line)); }
+.mode-hard .mode-name i { background: var(--caution-bg); color: var(--caution); }
+.mode-expert { border-color: color-mix(in srgb, var(--danger) 45%, var(--line)); }
+.mode-expert .mode-name i { background: var(--danger-bg); color: var(--danger); }
+.end-mode { font-family: var(--mono); font-size: var(--mono-size); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+
+/* ---------- Expert timer ---------- */
+.timer { position: relative; height: 26px; margin-bottom: 14px; border-radius: 99px; background: var(--surface-2); border: 1px solid var(--line); overflow: hidden; }
+.timer-fill { position: absolute; inset: 0; background: var(--brand); transform-origin: 0 50%; transform: scaleX(var(--t, 1)); transition: transform .2s linear, background-color .3s; }
+.timer.low .timer-fill { background: var(--danger); }
+.timer-num { position: absolute; right: 12px; top: 50%; translate: 0 -50%; font-family: var(--mono); font-weight: 700; font-size: .85rem; color: var(--bg); mix-blend-mode: normal; }
+.timer.low .timer-num { color: var(--ink); }
+
+/* ---------- What you know ---------- */
+.context {
+  margin-bottom: 14px; padding: 14px 16px; border-radius: 14px; border: 1px dashed var(--field);
+  background: color-mix(in srgb, var(--brand) 6%, transparent); display: flex; flex-direction: column; gap: 4px;
+}
+.context-head { font-family: var(--mono); font-size: var(--mono-size); letter-spacing: .1em; text-transform: uppercase; color: var(--brand); }
+
+/* ---------- Realistic message view ---------- */
+.sender { font: inherit; font-weight: 700; color: var(--ink); background: none; border: 0; padding: 4px 6px; margin: -4px 0; border-radius: 8px; text-align: left; cursor: pointer; text-decoration: underline dotted 1px; text-underline-offset: 4px; }
+.sender:disabled { cursor: default; text-decoration: none; padding-inline: 0; }
+.sender:not(:disabled):hover { background: var(--surface-2); }
+.msg-time { margin-left: auto; flex: none; font-family: var(--mono); font-size: .72rem; color: var(--muted); }
+.from { margin: -4px 0 12px; padding: 10px 12px; border-radius: 10px; background: var(--surface-2); font-family: var(--mono); font-size: .8rem; color: var(--ink); overflow-wrap: anywhere; animation: rise .25s var(--ease-out) both; }
+.stranger { margin: -4px 0 12px; padding: 8px 12px; border-radius: 10px; background: var(--caution-bg); color: var(--caution); font-size: .88rem; font-weight: 700; text-align: center; }
+.subject { margin: 0 0 12px; font-weight: 800; font-size: 1.1rem; }
+.thread { list-style: none; margin: 0 0 10px; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.thread[hidden] { display: none; }
+.tmsg { max-width: 85%; display: flex; flex-direction: column; gap: 2px; padding: 9px 13px; border-radius: 16px; font-size: .95rem; color: var(--muted); background: var(--surface-2); }
+.tmsg small { font-family: var(--mono); font-size: .68rem; }
+.tmsg.them { align-self: flex-start; border-bottom-left-radius: 5px; }
+.tmsg.me { align-self: flex-end; border-bottom-right-radius: 5px; background: color-mix(in srgb, var(--brand) 18%, var(--surface-2)); }
+.phone[data-channel="whatsapp"] .bubble { border-color: color-mix(in srgb, var(--safe) 35%, var(--line)); }
+.phone[data-channel="email"] .bubble { border-radius: 12px; }
+.phone[data-channel="call"] .bubble { border-radius: 12px; font-style: italic; border-style: dashed; }
+.seg.link { color: var(--brand); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.seg.link:hover { background: color-mix(in srgb, var(--brand) 12%, transparent); }
+.seg.link:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.peek { margin-top: 10px; padding: 10px 12px; border-radius: 10px; background: #141312; border: 1px solid var(--line); font-family: var(--mono); font-size: .82rem; overflow-wrap: anywhere; animation: rise .25s var(--ease-out) both; }
+.inspect-hint { margin-top: 10px; font-size: .85rem; color: var(--muted); }
+@media (prefers-reduced-motion: reduce) { .from, .peek { animation: none; } .timer-fill { transition: none; } }

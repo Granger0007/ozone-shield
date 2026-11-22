@@ -3,6 +3,9 @@
   'use strict';
 
   var DATA = window.OzoneGameData || [];
+  var HARD = window.OzoneGameHard || [];
+  var TIME_LIMIT = 30; // seconds per message in Expert
+  var MODES = { classic: 'Classic', hard: 'Hard', expert: 'Expert' };
   var STORE_KEY = 'ozone.spotTheScam.v1';
   var ROUND_SCAMS = 7, ROUND_GENUINE = 3;
   var SHARE_URL = 'https://ozone-shield.bbaranda055.workers.dev/spot-the-scam/';
@@ -21,7 +24,10 @@
     'tax-wise': { name: 'Tax wise', desc: 'Caught a fake tax refund', icon: '£' },
     'family-first': { name: 'Family first', desc: 'Caught a "Hi Mum" scam', icon: 'M' },
     'bank-guard': { name: 'Bank guard', desc: 'Caught a fake bank or police message', icon: 'B' },
-    'regular': { name: 'Regular', desc: 'Played 3 days in a row', icon: 'D' }
+    'regular': { name: 'Regular', desc: 'Played 3 days in a row', icon: 'D' },
+    'inspector': { name: 'Inspector', desc: 'Exposed a disguised link before answering', icon: '?' },
+    'investigator': { name: 'Investigator', desc: '10 out of 10 in Hard or Expert', icon: 'H' },
+    'cool-head': { name: 'Cool head', desc: '8 or more right in Expert', icon: 'E' }
   };
   var CATEGORY_BADGE = { parcel: 'parcel-pro', tax: 'tax-wise', family: 'family-first', bank: 'bank-guard' };
 
@@ -164,10 +170,27 @@
   }
   var game = null;
 
-  function newGame() {
-    var scams = shuffle(DATA.filter(function (m) { return m.scam; })).slice(0, ROUND_SCAMS);
-    var genuine = shuffle(DATA.filter(function (m) { return !m.scam; })).slice(0, ROUND_GENUINE);
-    game = { rounds: shuffle(scams.concat(genuine)), i: 0, score: 0, correct: 0, streak: 0, bestStreak: 0, flags: 0, results: [], answered: false };
+  // A red flag is any part with a reason; links without one are just links.
+  function isFlag(p) { return typeof p !== 'string' && !!p.why; }
+  // Note: strings have a legacy .link() method, so always check the type first.
+  function isLink(p) { return !!p && typeof p === 'object' && typeof p.link === 'string'; }
+  function partText(p) { return typeof p === 'string' ? p : (isLink(p) ? p.link : p.t); }
+
+  function newGame(mode) {
+    mode = MODES[mode] ? mode : 'classic';
+    var rounds;
+    if (mode === 'classic') {
+      var scams = shuffle(DATA.filter(function (m) { return m.scam; })).slice(0, ROUND_SCAMS);
+      var genuine = shuffle(DATA.filter(function (m) { return !m.scam; })).slice(0, ROUND_GENUINE);
+      rounds = shuffle(scams.concat(genuine));
+    } else {
+      // Between 5 and 7 scams, so counting can't give the answer away.
+      var nScam = 5 + Math.floor(Math.random() * 3);
+      var hs = shuffle(HARD.filter(function (m) { return m.scam; })).slice(0, nScam);
+      var hg = shuffle(HARD.filter(function (m) { return !m.scam; })).slice(0, 10 - nScam);
+      rounds = shuffle(hs.concat(hg));
+    }
+    game = { mode: mode, rounds: rounds, i: 0, score: 0, correct: 0, streak: 0, bestStreak: 0, flags: 0, results: [], answered: false };
     newBadges = [];
     touchDay();
     if (store.dayStreak >= 3) award('regular');
@@ -176,6 +199,7 @@
     $('scoreNow').textContent = '0';
     var ticks = $('roundTicks'); ticks.textContent = '';
     game.rounds.forEach(function () { ticks.appendChild(document.createElement('li')); });
+    $('timer').hidden = mode !== 'expert';
     show('roundScreen');
     showRound();
   }
@@ -195,18 +219,48 @@
     $('msgChannel').textContent = m.channel;
     $('msgChannel').className = 'channel ch-' + m.channel.toLowerCase();
     $('msgSender').textContent = m.sender;
+    $('phone').setAttribute('data-channel', m.channel.toLowerCase());
+    $('phone').classList.toggle('is-hard', game.mode !== 'classic');
+    // Hard mode: what you'd really know, the earlier messages, the full sender
+    $('msgContext').hidden = !m.context;
+    $('msgContextText').textContent = m.context || '';
+    $('msgTime').textContent = m.time || '';
+    $('msgFrom').hidden = true;
+    $('msgFrom').textContent = m.from || '';
+    $('msgSender').setAttribute('aria-expanded', 'false');
+    $('msgSender').disabled = !m.from;
+    $('msgStranger').hidden = !(m.channel === 'WhatsApp' && !m.known && /^\+/.test(m.sender));
+    $('msgSubject').hidden = !m.subject;
+    $('msgSubject').textContent = m.subject || '';
+    var thread = $('msgThread'); thread.textContent = '';
+    (m.thread || []).forEach(function (t) {
+      var li = document.createElement('li');
+      li.className = 'tmsg ' + (t.who === 'me' ? 'me' : 'them');
+      var tx = document.createElement('span'); tx.textContent = t.text;
+      var tm = document.createElement('small'); tm.textContent = t.time || '';
+      li.appendChild(tx); li.appendChild(tm);
+      thread.appendChild(li);
+    });
+    thread.hidden = !(m.thread && m.thread.length);
+    $('msgPeek').hidden = true;
+    $('inspectHint').hidden = game.mode === 'classic' || !(m.from || m.parts.some(isLink));
 
     var body = $('msgBody'); body.textContent = '';
     m.parts.forEach(function (part, k) {
-      var text = typeof part === 'string' ? part : part.t;
+      var text = partText(part);
       // Punctuation and tiny joining words (like " at ") stay plain text: as tap
       // targets they would be smaller than the 24px minimum in WCAG 2.2.
       if (typeof part === 'string' && (isPunct(text) || text.trim().length < 4)) { body.appendChild(document.createTextNode(text)); return; }
       // Inline spans (not <button>) so highlights flow inside the sentence;
       // they become keyboard-operable buttons during the red-flag hunt.
       var seg = document.createElement('span');
-      seg.className = 'seg';
+      seg.className = 'seg' + (isLink(part) ? ' link' : '');
       seg.textContent = text;
+      if (isLink(part)) { // links can be inspected at any time, like a long-press
+        seg.setAttribute('role', 'button');
+        seg.setAttribute('tabindex', '0');
+        seg.setAttribute('aria-label', 'Link: ' + text + '. Press to see where it really goes.');
+      }
       seg.dataset.k = String(k);
       seg.addEventListener('click', onSegment);
       seg.addEventListener('keydown', function (e) {
@@ -222,13 +276,54 @@
     var phone = $('phone');
     if (!reduceMotion) { phone.classList.remove('enter'); void phone.offsetWidth; phone.classList.add('enter'); }
     phone.focus({ preventScroll: true });
+    startTimer();
+  }
+
+  /* ---------- inspecting, like a long-press on a real phone ---------- */
+  function peek(text, warn) {
+    var p = $('msgPeek');
+    p.textContent = text;
+    p.className = 'peek' + (warn ? ' warn' : '');
+    p.hidden = false;
+  }
+  function inspectLink(part) {
+    peek('This link opens: ' + part.url, false);
+    if (part.why && !game.answered) { game.inspected = true; award('inspector'); }
+  }
+  function toggleFrom() {
+    var f = $('msgFrom'), open = f.hidden;
+    f.hidden = !open;
+    $('msgSender').setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+
+  /* ---------- Expert: a clock, because scammers rush you ---------- */
+  var timer = null;
+  function stopTimer() { if (timer) { clearInterval(timer); timer = null; } }
+  function startTimer() {
+    stopTimer();
+    if (game.mode !== 'expert') return;
+    game.deadline = Date.now() + TIME_LIMIT * 1000;
+    var fill = $('timerFill'), num = $('timerNum');
+    function tick() {
+      var left = Math.max(0, game.deadline - Date.now());
+      fill.style.setProperty('--t', (left / (TIME_LIMIT * 1000)).toFixed(4));
+      num.textContent = String(Math.ceil(left / 1000));
+      $('timer').classList.toggle('low', left < 8000);
+      if (left <= 0) { stopTimer(); answer(null); }
+    }
+    tick();
+    timer = setInterval(tick, 200);
   }
 
   function answer(saidScam) {
     if (game.answered) return;
     game.answered = true;
+    var timedOut = saidScam === null;
+    var left = game.deadline ? Math.max(0, game.deadline - Date.now()) : 0;
+    stopTimer();
     var m = game.rounds[game.i];
-    var right = saidScam === m.scam;
+    var hard = game.mode !== 'classic';
+    var right = !timedOut && saidScam === m.scam;
     var btn = saidScam ? $('ansScam') : $('ansSafe');
     game.results.push(right);
     $('roundTicks').children[game.i].classList.add(right ? 'right' : 'wrong');
@@ -237,26 +332,34 @@
       game.correct++;
       game.streak++;
       game.bestStreak = Math.max(game.bestStreak, game.streak);
-      addXp(100, btn);
+      addXp(hard ? 150 : 100, btn);
       if (game.streak >= 3) addXp(50, btn);
+      if (game.mode === 'expert') { var bonus = Math.round(50 * left / (TIME_LIMIT * 1000)); if (bonus > 0) addXp(bonus, btn); }
       if (m.scam) { award('first-catch'); if (CATEGORY_BADGE[m.cat]) award(CATEGORY_BADGE[m.cat]); }
       else award('not-fooled');
       if (game.streak === 3) award('hat-trick');
       if (game.streak === 7) award('on-fire');
     } else {
       game.streak = 0;
+      // Too much suspicion costs something too: a missed GP appointment, a real fraud alert ignored.
+      if (hard && saidScam === true && !m.scam) {
+        game.score -= 50;
+        $('scoreNow').textContent = game.score.toLocaleString('en-GB');
+      }
     }
 
     var fb = $('feedback');
     fb.className = 'feedback ' + (right ? 'is-right' : 'is-wrong');
-    $('fbTitle').textContent = right
+    $('fbTitle').textContent = timedOut
+      ? (m.scam ? "Time's up: it was a scam" : "Time's up: it was genuine")
+      : right
       ? (m.scam ? "Right, it's a scam" : "Right, it's genuine")
-      : (m.scam ? 'Not quite: this one is a scam' : 'Not quite: this one is genuine');
+      : (m.scam ? 'Not quite: this one is a scam' : (hard ? 'Not quite: this one is genuine (−50)' : 'Not quite: this one is genuine'));
     $('fbLesson').textContent = m.lesson;
     $('choices').hidden = true;
     fb.hidden = false;
 
-    var total = m.parts.filter(function (p) { return typeof p !== 'string'; }).length;
+    var total = m.parts.filter(isFlag).length;
     if (m.scam && total) {
       $('flagsTotal').textContent = String(total);
       $('flagsFound').textContent = '0';
@@ -265,6 +368,7 @@
       Array.prototype.forEach.call($('msgBody').querySelectorAll('.seg'), function (s) {
         s.setAttribute('role', 'button');
         s.setAttribute('tabindex', '0');
+        s.removeAttribute('aria-label');
       });
       $('phone').classList.add('hunting');
     }
@@ -276,7 +380,7 @@
   function addNote(part, earned) {
     var li = document.createElement('li');
     li.className = earned ? 'note found' : 'note revealed';
-    var q = document.createElement('b'); q.textContent = '“' + part.t + '”';
+    var q = document.createElement('b'); q.textContent = '“' + partText(part) + '”';
     var w = document.createElement('span'); w.textContent = part.why;
     li.appendChild(q); li.appendChild(w);
     $('flagNotes').appendChild(li);
@@ -286,19 +390,21 @@
     var seg = e.currentTarget;
     var m = game.rounds[game.i];
     var part = m.parts[Number(seg.dataset.k)];
+    if (isLink(part) && (!game.answered || !$('phone').classList.contains('hunting'))) { inspectLink(part); return; }
     if (seg.getAttribute('tabindex') !== '0') return; // only during the red-flag hunt
     if (seg.classList.contains('found') || seg.classList.contains('revealed')) return;
-    if (typeof part === 'string') {
+    if (isLink(part)) inspectLink(part);
+    if (!isFlag(part)) {
       seg.classList.remove('nope'); void seg.offsetWidth; seg.classList.add('nope');
       return;
     }
     seg.classList.add('found');
-    seg.setAttribute('aria-label', 'Red flag found: ' + part.t);
+    seg.setAttribute('aria-label', 'Red flag found: ' + partText(part));
     game.found++; game.flags++;
     $('flagsFound').textContent = String(game.found);
     addNote(part, true);
     addXp(25, seg);
-    var total = m.parts.filter(function (p) { return typeof p !== 'string'; }).length;
+    var total = m.parts.filter(isFlag).length;
     if (game.found === total) { award('eagle-eye'); $('revealBtn').hidden = true; }
   }
 
@@ -306,13 +412,14 @@
     var m = game.rounds[game.i];
     Array.prototype.forEach.call($('msgBody').querySelectorAll('.seg'), function (seg) {
       var part = m.parts[Number(seg.dataset.k)];
-      if (typeof part !== 'string' && !seg.classList.contains('found')) { seg.classList.add('revealed'); addNote(part, false); }
+      if (isFlag(part) && !seg.classList.contains('found')) { seg.classList.add('revealed'); addNote(part, false); }
     });
     $('revealBtn').hidden = true;
   }
 
   function next() {
     $('phone').classList.remove('hunting');
+    stopTimer();
     var go = function () {
       game.i++;
       if (game.i < game.rounds.length) showRound(); else finish();
@@ -322,7 +429,11 @@
   }
 
   function finish() {
+    stopTimer();
     if (game.correct === game.rounds.length) award('perfect');
+    if (game.mode !== 'classic' && game.correct === game.rounds.length) award('investigator');
+    if (game.mode === 'expert' && game.correct >= 8) award('cool-head');
+    $('endMode').textContent = MODES[game.mode] + ' mode';
     if (store.best === null || game.score > store.best) store.best = game.score;
     save(); renderHud();
     show('endScreen');
@@ -331,7 +442,12 @@
     $('endFlags').textContent = String(game.flags);
     $('endStreak').textContent = String(game.bestStreak);
     var c = game.correct;
-    $('endMsg').textContent = c === 10 ? 'Perfect. Nothing gets past you.'
+    $('endMsg').textContent = game.mode !== 'classic'
+      ? (c === 10 ? 'Perfect. You would catch scams that fool most people.'
+        : c >= 8 ? 'Excellent. These are the scams that catch careful people out.'
+        : c >= 5 ? 'Solid. Hard mode is meant to be hard: check the lessons and try again.'
+        : 'These scams fool experts too. Read the lessons, then play again.')
+      : c === 10 ? 'Perfect. Nothing gets past you.'
       : c >= 8 ? "Excellent. You'd spot most scams."
       : c >= 5 ? 'Good start. Play again to sharpen your eye.'
       : "Scams are designed to fool people. Play again and you'll improve fast.";
@@ -348,7 +464,7 @@
     setTimeout(function () { t.classList.remove('show'); }, 3000);
   }
   function share() {
-    var text = 'I got ' + game.correct + '/10 on Spot the Scam by OZONE Shield. Can you beat me?';
+    var text = 'I got ' + game.correct + '/10 on Spot the Scam (' + MODES[game.mode] + ' mode) by OZONE Shield. Can you beat me?';
     if (navigator.share) {
       navigator.share({ title: 'Spot the Scam', text: text, url: SHARE_URL }).catch(function () { /* cancelled */ });
       return;
@@ -375,8 +491,12 @@
     renderHud();
   }
 
-  $('startBtn').addEventListener('click', newGame);
-  $('againBtn').addEventListener('click', newGame);
+  $('startBtn').addEventListener('click', function () { newGame('classic'); });
+  $('startHard').addEventListener('click', function () { newGame('hard'); });
+  $('startExpert').addEventListener('click', function () { newGame('expert'); });
+  $('againBtn').addEventListener('click', function () { newGame(game ? game.mode : 'classic'); });
+  $('modesBtn').addEventListener('click', function () { show('startScreen'); $('startBtn').focus(); });
+  $('msgSender').addEventListener('click', toggleFrom);
   $('ansScam').addEventListener('click', function () { answer(true); });
   $('ansSafe').addEventListener('click', function () { answer(false); });
   $('revealBtn').addEventListener('click', revealRest);
@@ -387,5 +507,5 @@
   renderHud();
 
   // Read-only hook for automated tests.
-  window.OzoneGame = { current: function () { return game && game.rounds[game.i]; }, store: function () { return store; } };
+  window.OzoneGame = { current: function () { return game && game.rounds[game.i]; }, store: function () { return store; }, mode: function () { return game && game.mode; } };
 })();
