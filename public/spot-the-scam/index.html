@@ -89,17 +89,28 @@
       <div class="start-copy">
         <p class="eyebrow">Free training game</p>
         <h1 id="start-title">Spot the Scam</h1>
-        <p class="lead">Ten realistic messages. For each one, decide: <strong>scam</strong> or <strong>genuine</strong>? Then tap the red flags to earn extra points.</p>
-        <button type="button" class="btn btn-primary" id="startBtn">
-          Start the game
-          <svg class="btn-arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
-        </button>
-        <p class="fine">All messages are made up for training. Links in them are not clickable. Your progress is saved only on this device.</p>
+        <p class="lead">Read each message the way you would on your phone. Decide: <strong>scam</strong> or <strong>genuine</strong>? Then find the red flags for extra points.</p>
+        <div class="modes" role="group" aria-label="Choose a mode">
+          <button type="button" class="mode" id="startBtn">
+            <span class="mode-name">Classic</span>
+            <span class="mode-text">Ten everyday messages. Learn the signs most scams share.</span>
+          </button>
+          <button type="button" class="mode mode-hard" id="startHard">
+            <span class="mode-name">Hard <i>Realistic</i></span>
+            <span class="mode-text">Fake texts in your bank's real thread, spoofed calls, cloned voices, and genuine messages that look scary. Inspect senders and links like you would for real.</span>
+          </button>
+          <button type="button" class="mode mode-expert" id="startExpert">
+            <span class="mode-name">Expert <i>30 seconds</i></span>
+            <span class="mode-text">Hard mode against the clock. Scammers rush you; see if you still get it right.</span>
+          </button>
+        </div>
+        <p class="fine">Everything is made up for training. Links can't be opened, web addresses end in .example (a name that can never be a real site) and phone numbers come from ranges Ofcom keeps for fiction. Your progress is saved only on this device.</p>
       </div>
       <ul class="rules" aria-label="How points work">
-        <li><b>+100</b><span>for each right answer</span></li>
+        <li><b>+100</b><span>for each right answer (+150 in Hard)</span></li>
         <li><b>+25</b><span>for each red flag you find</span></li>
         <li><b>+50</b><span>streak bonus from 3 right in a row</span></li>
+        <li><b>−50</b><span>in Hard, for calling a genuine message a scam: too much suspicion has a cost too</span></li>
       </ul>
     </section>
 
@@ -111,13 +122,45 @@
         <ol class="round-ticks" id="roundTicks" aria-hidden="true"></ol>
         <p class="round-score">Score <b id="scoreNow">0</b></p>
       </div>
+      <div class="meters">
+        <div class="combo" id="combo" data-level="0">
+          <span class="combo-flame" aria-hidden="true"></span>
+          <span class="combo-text"><b id="comboNum">0</b> in a row</span>
+          <span class="combo-bonus" id="comboBonus">Streak bonus at 3</span>
+        </div>
+        <div class="stakes" id="stakes" hidden>
+          <span class="stake-saved">Protected <b id="moneySaved">£0</b></span>
+          <span class="stake-lost">Lost <b id="moneyLost">£0</b></span>
+        </div>
+      </div>
+      <div class="timer" id="timer" hidden><span class="timer-fill" id="timerFill"></span><span class="timer-num" id="timerNum" aria-live="off">30</span></div>
 
+      <div class="context" id="msgContext" role="note" hidden aria-label="What you know">
+        <p class="context-head">What you know</p>
+        <p id="msgContextText"></p>
+      </div>
+
+      <div class="notif" id="notif" aria-hidden="true">
+        <span class="notif-app" id="notifApp">SMS</span>
+        <span class="notif-body"><b id="notifFrom"></b><span id="notifText"></span></span>
+        <span class="notif-now">now</span>
+      </div>
       <article class="phone" id="phone" tabindex="-1" aria-labelledby="msgSender">
+        <div class="stamp" id="stamp" aria-hidden="true"></div>
+        <div class="scanline" aria-hidden="true"></div>
         <div class="phone-head">
           <span class="channel" id="msgChannel">SMS</span>
-          <span class="sender" id="msgSender">Unknown</span>
+          <button type="button" class="sender" id="msgSender" aria-expanded="false" aria-controls="msgFrom">Unknown</button>
+          <span class="msg-time" id="msgTime"></span>
         </div>
+        <p class="from" id="msgFrom" hidden></p>
+        <p class="stranger" id="msgStranger" hidden>Not in your contacts</p>
+        <p class="subject" id="msgSubject" hidden></p>
+        <ol class="thread" id="msgThread" aria-label="Earlier messages"></ol>
+        <p class="typing" id="typing" aria-hidden="true"><i></i><i></i><i></i></p>
         <p class="bubble" id="msgBody"></p>
+        <p class="peek" id="msgPeek" hidden role="status"></p>
+        <p class="inspect-hint" id="inspectHint" hidden>Tap the sender, or press a link, to inspect it.</p>
       </article>
 
       <div class="choices" id="choices">
@@ -146,11 +189,14 @@
     <!-- End screen -->
     <section class="screen end" id="endScreen" hidden aria-labelledby="end-title">
       <p class="eyebrow">Round complete</p>
+      <div class="medal" id="medal" aria-hidden="true"><span class="medal-ring"></span><span class="medal-grade" id="medalGrade">A</span></div>
+      <p class="end-mode" id="endMode">Classic</p>
       <h1 id="end-title" tabindex="-1"><span id="endCorrect">0</span> / 10 right</h1>
       <div class="end-stats">
         <div><span class="hud-label">Score</span><b id="endScore">0</b></div>
         <div><span class="hud-label">Red flags found</span><b id="endFlags">0</b></div>
         <div><span class="hud-label">Best streak</span><b id="endStreak">0</b></div>
+        <div class="end-money" id="endMoney" hidden><span class="hud-label">Money protected</span><b id="endSaved">£0</b><small id="endLostLine"></small></div>
       </div>
       <p class="end-msg" id="endMsg"></p>
       <div class="new-badges" id="newBadges" hidden>
@@ -159,6 +205,7 @@
       </div>
       <div class="end-actions">
         <button type="button" class="btn btn-primary" id="againBtn">Play again</button>
+        <button type="button" class="btn btn-secondary" id="modesBtn">Change mode</button>
         <button type="button" class="btn btn-secondary" id="shareBtn">Share my score</button>
       </div>
       <p class="toast" id="toast" role="status" aria-live="polite"></p>
@@ -190,6 +237,7 @@
   </footer>
 
   <script src="/js/game-data.js"></script>
+  <script src="/js/game-hard.js"></script>
   <script src="/js/game.js"></script>
   <script src="/js/menu.js"></script>
 </body>

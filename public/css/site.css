@@ -520,7 +520,7 @@ kbd {
 }
 
 /* the phone */
-.phone {
+.anatomy .phone {
   --ph-h: min(580px, 62svh);
   position: relative; margin: 0; height: var(--ph-h); aspect-ratio: 300 / 620;
   padding: 10px; border-radius: 44px; background: #0e0e0f;
@@ -528,7 +528,7 @@ kbd {
   transform: perspective(1400px) rotateX(4deg) rotateY(calc((var(--p, .5) - .5) * -16deg));
   will-change: transform; container-type: inline-size; /* text inside scales with the phone */
 }
-@media (min-width: 960px) { .phone { --ph-h: min(640px, calc(100svh - var(--header-h) - 80px)); } }
+@media (min-width: 960px) { .anatomy .phone { --ph-h: min(640px, calc(100svh - var(--header-h) - 80px)); } }
 .phone-screen {
   position: relative; height: 100%; border-radius: 34px; overflow: hidden; background: #f4f1ec; color: #161514;
   container-type: size; font-size: 14px; font-size: max(13px, 5.6cqw); line-height: 1.32;
@@ -636,7 +636,7 @@ kbd {
 .check-section.is-near .checker { border-color: #7cc4ff66; box-shadow: 0 0 0 6px #7cc4ff14, var(--shadow-lg); }
 
 @media (prefers-reduced-motion: reduce) {
-  .phone { transform: none; }
+  .anatomy .phone { transform: none; }
   .anatomy *, .anatomy *::before, .anatomy *::after, .check-section .checker { transition: none !important; animation: none !important; }
 }
 
