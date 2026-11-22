@@ -83,6 +83,23 @@ Browser renders the result
 - Hosting: Cloudflare Workers, auto-deployed from `main`
 - Version control: GitHub
 
+### Threat Watch data (`/live/`)
+
+```
+Every 30 minutes (Cron Trigger on the website Worker, worker/index.js)
+       │  CISA KEV: first 48 KB of cisagov/kev-data (newest entries), ~1 ms CPU
+       │  Cloudflare Radar: layer 7 attack origins, targets and flows, last 7 days
+       ▼
+Workers KV (binding THREATS): one checked, size-limited snapshot
+       ▲
+       │  GET /api/threats  (reads KV only; visitors never contact CISA or Radar)
+Browser: /live/ page
+```
+
+- Radar needs a read-only API token saved as the `RADAR_TOKEN` secret on the `ozone-shield` Worker. Without it the page shows vulnerability data only and says attack data isn't connected.
+- If one source fails, the last good data is kept and its own timestamp shows its age.
+- Radar data is CC BY-NC 4.0 and credited on the page. Tests: `node --test worker/test/threats.test.mjs`.
+
 
 
 ## Security
@@ -159,7 +176,12 @@ The system prompt analyses messages across six signal categories:
 ```
 ozone-shield/
 ├── public/                           ← The website: the only folder that is served
-│   ├── index.html                    ← Message checker, fraud figures, privacy policy
+│   ├── index.html                    ← Welcome, the scam story, the message checker
+│   ├── scams/index.html              ← Scam map and UK fraud figures
+│   ├── live/index.html               ← Threat Watch: attack flows and exploited flaws
+│   ├── network/index.html            ← How the internet works
+│   ├── help/index.html               ← Already paid? Steps and official checks
+│   ├── about/index.html              ← How it works, privacy policy and terms
 │   ├── spot-the-scam/index.html      ← Spot the Scam training game
 │   ├── 404.html                      ← Page shown for unknown addresses
 │   ├── css/, js/, fonts/             ← Styles, scripts and the self-hosted font
@@ -169,6 +191,8 @@ ozone-shield/
 │   ├── src/                          ← worker.js, rate-limit key, Turnstile check
 │   ├── test/                         ← Unit tests (node --test api/test/*.test.mjs)
 │   └── README.md                     ← How a request is handled
+├── worker/                           ← Website Worker: /api/threats and the 30-minute refresh
+│   └── test/                         ← Unit tests (node --test worker/test/threats.test.mjs)
 ├── wrangler.jsonc                    ← Website Worker configuration
 └── README.md                         ← This file
 ```
