@@ -2,10 +2,30 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://ozone-shield.bbaranda055.workers.dev/</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-22</lastmod>
+  </url>
+  <url>
+    <loc>https://ozone-shield.bbaranda055.workers.dev/scams/</loc>
+    <lastmod>2026-11-22</lastmod>
+  </url>
+  <url>
+    <loc>https://ozone-shield.bbaranda055.workers.dev/live/</loc>
+    <lastmod>2026-11-22</lastmod>
+  </url>
+  <url>
+    <loc>https://ozone-shield.bbaranda055.workers.dev/network/</loc>
+    <lastmod>2026-11-22</lastmod>
+  </url>
+  <url>
+    <loc>https://ozone-shield.bbaranda055.workers.dev/help/</loc>
+    <lastmod>2026-11-22</lastmod>
   </url>
   <url>
     <loc>https://ozone-shield.bbaranda055.workers.dev/spot-the-scam/</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-22</lastmod>
+  </url>
+  <url>
+    <loc>https://ozone-shield.bbaranda055.workers.dev/about/</loc>
+    <lastmod>2026-11-22</lastmod>
   </url>
 </urlset>
