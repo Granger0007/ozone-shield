@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Threat Watch: live cyber attacks and exploited flaws — OZONE Shield</title>
+  <meta name="description" content="Live, real data: where attacks on websites are coming from this week, and the software flaws criminals are exploiting right now. Refreshed every 30 minutes.">
+  <link rel="canonical" href="https://ozone-shield.bbaranda055.workers.dev/live/">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <meta name="theme-color" content="#070d1c">
+  <meta name="color-scheme" content="dark">
+  <meta name="robots" content="index, follow">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ozone-shield.bbaranda055.workers.dev/live/">
+  <meta property="og:site_name" content="OZONE Shield">
+  <meta property="og:title" content="Threat Watch: live cyber attacks and exploited flaws — OZONE Shield">
+  <meta property="og:description" content="Live, real data: where attacks on websites are coming from this week, and the software flaws criminals are exploiting right now. Refreshed every 30 minutes.">
+  <meta property="og:image" content="https://ozone-shield.bbaranda055.workers.dev/og-image.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="OZONE Shield: Is this message a scam? A free AI scam checker for the UK.">
+  <meta property="og:locale" content="en_GB">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preload" href="/fonts/atkinson-next-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/site.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header" id="siteHeader">
+    <div class="container header-row">
+      <a class="brand" href="/" aria-label="OZONE Shield home">
+        <svg class="brand-mark" viewBox="0 0 28 32" aria-hidden="true" focusable="false">
+          <path d="M14 1L2 6.5V15C2 21.6 7.4 27.5 14 31C20.6 27.5 26 21.6 26 15V6.5L14 1Z"/>
+          <path class="brand-tick" d="M9 16l3.5 3.5L19 12"/>
+        </svg>
+        <span class="brand-name">OZONE <span>Shield</span></span>
+      </a>
+      <nav class="site-nav" aria-label="Main">
+        <a href="/">Check a message</a>
+        <a href="/scams/">Scams</a>
+        <a href="/live/" aria-current="page">Threat Watch</a>
+        <a href="/network/">Network</a>
+        <a href="/help/">Get help</a>
+      </nav>
+      <a class="btn btn-sm btn-ghost-light header-cta" href="/spot-the-scam/">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="2" y="6" width="20" height="12" rx="6"/><path d="M7 10v4M5 12h4"/><path d="M15.5 11h.01M18 13h.01"/></svg>
+        <span>Play <span class="cta-long">Spot the Scam</span></span>
+      </a>
+      <details class="menu">
+        <summary aria-label="Menu"><span class="menu-bars" aria-hidden="true"></span></summary>
+        <nav class="menu-panel" aria-label="Main (mobile)">
+          <a href="/">Check a message</a>
+          <a href="/scams/">Scams</a>
+          <a href="/live/" aria-current="page">Threat Watch</a>
+          <a href="/network/">Network</a>
+          <a href="/help/">Get help</a>
+          <a href="/spot-the-scam/">Spot the Scam game</a>
+          <a href="/about/">About &amp; privacy</a>
+        </nav>
+      </details>
+    </div>
+    <div class="progress" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div>
+  </header>
+
+  <main id="main">
+    <section class="page-hero live-hero" aria-labelledby="page-title">
+      <div class="container">
+        <p class="eyebrow"><span class="live-dot" aria-hidden="true"></span>Threat Watch</p>
+        <h1 id="page-title">The internet,<br>under attack.</h1>
+        <p class="lead">Real data, not a screensaver. Where attacks on websites came from this week, and the software flaws criminals are exploiting right now.</p>
+        <p class="tw-status" id="twStatus" role="status">Loading the latest data…</p>
+      </div>
+    </section>
+
+    <!-- ATTACKS -->
+    <section class="section tw-attacks" aria-labelledby="attacks-title">
+      <div class="container tw-grid">
+        <div class="globe-wrap tw-globe">
+          <canvas id="globe" tabindex="0" role="img" aria-label="Globe showing day and night now, with lines from the countries attacks came from to the countries they targeted"></canvas>
+          <dl class="live-stats tw-clock">
+            <div><dt>London</dt><dd><span id="londonTime">--:--</span> <span class="live-sun" id="londonSun"></span></dd></div>
+            <div><dt>Your time</dt><dd id="yourTime">--:--</dd></div>
+          </dl>
+        </div>
+        <div class="tw-side">
+          <p class="eyebrow">Web attacks · last 7 days</p>
+          <h2 id="attacks-title">Where attacks come from, and where they land.</h2>
+          <p class="section-sub">Each line joins the country an attack came from to the country it hit, for the biggest flows Cloudflare blocked. Thicker means more.</p>
+          <div class="tw-lists">
+            <div>
+              <h3 class="tw-list-head">Top sources</h3>
+              <ol class="tw-bars" id="twOrigins"><li class="tw-empty">Not available yet</li></ol>
+            </div>
+            <div>
+              <h3 class="tw-list-head">Most targeted</h3>
+              <ol class="tw-bars tw-bars-target" id="twTargets"><li class="tw-empty">Not available yet</li></ol>
+            </div>
+          </div>
+          <details class="tw-note">
+            <summary>What does “source” mean?</summary>
+            <p>A source country is where the attacking device's internet address is registered, not where the criminal sits. Attackers often borrow hacked computers or rented servers in other countries. The figures are each country's share of all layer 7 attacks (malicious requests to websites) that Cloudflare blocked.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPLOITED NOW -->
+    <section class="section tw-kev" aria-labelledby="kev-title">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow">Exploited right now</p>
+          <h2 id="kev-title">Flaws criminals are using today.</h2>
+          <p class="section-sub">The newest entries in the US Cybersecurity and Infrastructure Security Agency (CISA) catalogue of vulnerabilities confirmed as exploited in real attacks. <span id="kevTotal"></span></p>
+        </div>
+        <ol class="kev-list" id="kevList" aria-live="polite">
+          <li class="tw-empty">Loading…</li>
+        </ol>
+        <div class="tw-advice">
+          <h3>What to do about it</h3>
+          <p>Turn on automatic updates for your phone, computer, browser and router. Most of these flaws already have a fix: the attacks work on devices that haven't installed it yet.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-tight">
+      <div class="container">
+        <p class="source tw-sources">Sources: attack data from <a href="https://radar.cloudflare.com/security" target="_blank" rel="noopener">Cloudflare Radar</a>, licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>. Vulnerabilities from the <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA Known Exploited Vulnerabilities catalogue</a>. Our server fetches both every 30 minutes, so your browser never contacts them. Map shapes from Natural Earth.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="/" aria-label="OZONE Shield home">
+          <svg class="brand-mark" viewBox="0 0 28 32" aria-hidden="true" focusable="false">
+            <path d="M14 1L2 6.5V15C2 21.6 7.4 27.5 14 31C20.6 27.5 26 21.6 26 15V6.5L14 1Z"/>
+            <path class="brand-tick" d="M9 16l3.5 3.5L19 12"/>
+          </svg>
+          <span class="brand-name">OZONE <span>Shield</span></span>
+        </a>
+        <p>A free scam checker for people in the UK. It uses Claude AI to analyse messages for scam patterns. Guidance only: always check through official channels.</p>
+      </div>
+      <div>
+        <h2 class="footer-head">Report a scam</h2>
+        <ul class="footer-list">
+          <li>Texts: forward to <b>7726</b> (free)</li>
+          <li>Emails: <b>report@phishing.gov.uk</b></li>
+          <li>Lost money: your bank on <b>159</b></li>
+          <li><a href="https://www.reportfraud.police.uk" target="_blank" rel="noopener">Report Fraud</a> <b>0300 123 2040</b></li>
+          <li>Scotland: Police Scotland <b>101</b></li>
+        </ul>
+      </div>
+      <div>
+        <h2 class="footer-head">Guidance</h2>
+        <ul class="footer-list">
+          <li><a href="https://www.ncsc.gov.uk/collection/phishing-scams" target="_blank" rel="noopener">NCSC phishing guidance</a></li>
+          <li><a href="https://www.citizensadvice.org.uk/consumer/scams/get-help-with-online-scams/" target="_blank" rel="noopener">Citizens Advice</a></li>
+          <li><a href="https://www.getsafeonline.org/checkawebsite/" target="_blank" rel="noopener">Get Safe Online</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2 class="footer-head">This site</h2>
+        <ul class="footer-list">
+          <li><a href="/spot-the-scam/">Spot the Scam game</a></li>
+          <li><a href="/live/">Threat Watch</a></li>
+          <li><a href="/network/">How the internet works</a></li>
+          <li><a href="/scams/">Scam map &amp; UK figures</a></li>
+          <li><a href="/help/">Already paid? Get help</a></li>
+          <li><a href="/about/#privacy-policy">Privacy Policy &amp; Terms</a></li>
+          <li><a href="/.well-known/security.txt">Report a security issue</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="container footer-base">
+      <p>OZONE Shield &nbsp;·&nbsp; England &amp; Wales</p>
+    </div>
+  </footer>
+
+  <script src="/js/globe-data.js"></script>
+  <script src="/js/countries.js"></script>
+  <script src="/js/globe.js"></script>
+  <script src="/js/live.js"></script>
+  <script src="/js/menu.js"></script>
+  <script src="/js/site.js"></script>
+</body>
+</html>
