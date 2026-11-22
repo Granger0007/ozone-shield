@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>How the internet works: follow one message — OZONE Shield</title>
+  <meta name="description" content="Follow one message from your laptop, through your router and across the world to a server, step by step. A free, simple guide to how networks work.">
+  <link rel="canonical" href="https://ozone-shield.bbaranda055.workers.dev/network/">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <meta name="theme-color" content="#070d1c">
+  <meta name="color-scheme" content="dark">
+  <meta name="robots" content="index, follow">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ozone-shield.bbaranda055.workers.dev/network/">
+  <meta property="og:site_name" content="OZONE Shield">
+  <meta property="og:title" content="How the internet works: follow one message — OZONE Shield">
+  <meta property="og:description" content="Follow one message from your laptop, through your router and across the world to a server, step by step. A free, simple guide to how networks work.">
+  <meta property="og:image" content="https://ozone-shield.bbaranda055.workers.dev/og-image.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="OZONE Shield: Is this message a scam? A free AI scam checker for the UK.">
+  <meta property="og:locale" content="en_GB">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preload" href="/fonts/atkinson-next-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/site.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header" id="siteHeader">
+    <div class="container header-row">
+      <a class="brand" href="/" aria-label="OZONE Shield home">
+        <svg class="brand-mark" viewBox="0 0 28 32" aria-hidden="true" focusable="false">
+          <path d="M14 1L2 6.5V15C2 21.6 7.4 27.5 14 31C20.6 27.5 26 21.6 26 15V6.5L14 1Z"/>
+          <path class="brand-tick" d="M9 16l3.5 3.5L19 12"/>
+        </svg>
+        <span class="brand-name">OZONE <span>Shield</span></span>
+      </a>
+      <nav class="site-nav" aria-label="Main">
+        <a href="/">Check a message</a>
+        <a href="/scams/">Scams</a>
+        <a href="/live/">Threat Watch</a>
+        <a href="/network/" aria-current="page">Network</a>
+        <a href="/help/">Get help</a>
+      </nav>
+      <a class="btn btn-sm btn-ghost-light header-cta" href="/spot-the-scam/">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="2" y="6" width="20" height="12" rx="6"/><path d="M7 10v4M5 12h4"/><path d="M15.5 11h.01M18 13h.01"/></svg>
+        <span>Play <span class="cta-long">Spot the Scam</span></span>
+      </a>
+      <details class="menu">
+        <summary aria-label="Menu"><span class="menu-bars" aria-hidden="true"></span></summary>
+        <nav class="menu-panel" aria-label="Main (mobile)">
+          <a href="/">Check a message</a>
+          <a href="/scams/">Scams</a>
+          <a href="/live/">Threat Watch</a>
+          <a href="/network/" aria-current="page">Network</a>
+          <a href="/help/">Get help</a>
+          <a href="/spot-the-scam/">Spot the Scam game</a>
+          <a href="/about/">About &amp; privacy</a>
+        </nav>
+      </details>
+    </div>
+    <div class="progress" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div>
+  </header>
+
+  <main id="main">
+    <section class="page-hero net-hero" aria-labelledby="page-title">
+      <div class="container">
+        <p class="eyebrow">How the internet works</p>
+        <h1 id="page-title">One message.<br>Across the world.</h1>
+        <p class="lead">Follow a single message from your laptop to a server in another country, and back, in less time than a blink. Scroll to travel with it.</p>
+        <p class="net-sim">A simulation. Every address and time on this page is an example, and nothing about you is collected.</p>
+      </div>
+    </section>
+
+    <!-- STOP 1: LAYERS -->
+    <section class="nj nj-layers" data-step="0" aria-labelledby="layers-title">
+      <div class="container nj-grid">
+        <div class="nj-stage">
+          <svg viewBox="0 0 720 400" role="img" aria-label="Encapsulation: the message is wrapped in application, transport, internet and link layers">
+            <g class="ly ly-4"><rect x="60" y="20" width="600" height="330" rx="10"/><text x="76" y="44">Link · Wi-Fi</text><text class="sub" x="76" y="62">a frame for the radio</text></g>
+            <g class="ly ly-3"><rect x="135" y="70" width="450" height="240" rx="10"/><text x="151" y="94">Internet · IP</text><text class="sub" x="151" y="112">from 192.168.1.23 to 198.51.100.24</text></g>
+            <g class="ly ly-2"><rect x="195" y="122" width="330" height="150" rx="10"/><text x="211" y="146">Transport · TCP</text><text class="sub" x="211" y="164">port 443 · numbered pieces</text></g>
+            <g class="ly ly-1"><rect x="250" y="176" width="220" height="80" rx="10"/><text x="266" y="200">Application</text><text class="sub" x="266" y="218">HTTPS, encrypted by TLS</text></g>
+            <g class="ly-msg"><rect x="320" y="226" width="80" height="24" rx="6"/><text x="360" y="243">Hello</text></g>
+          </svg>
+          <div class="term" aria-label="Simulated packet capture">
+            <p class="term-bar" aria-hidden="true"><i></i><i></i><i></i><span>tcpdump -n · en0 (simulated)</span></p>
+            <pre id="term"></pre>
+          </div>
+        </div>
+        <ol class="nj-steps">
+          <li class="nj-step">
+            <p class="ch-num">Stop 1 · Inside your laptop</p>
+            <h2 class="nj-title" id="layers-title">It starts inside your laptop.</h2>
+            <p class="ch-text">Before anything leaves, it's packed in layers. The <b>application</b>, your browser, writes the message as an HTTPS request, encrypted so only the server can read it.</p>
+          </li>
+          <li class="nj-step"><p class="ch-text">The <b>transport</b> layer, TCP, first shakes hands with the server (SYN, SYN-ACK, ACK), then numbers the pieces so they can be put back in order.</p></li>
+          <li class="nj-step"><p class="ch-text">The <b>internet</b> layer, IP, adds where it's from and where it's going, like an address on an envelope.</p></li>
+          <li class="nj-step"><p class="ch-text">The <b>link</b> layer wraps it for Wi-Fi, and it leaves as radio waves: ones and zeros.</p></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- STOP 2: HOME -->
+    <section class="nj nj-home" data-step="0" aria-labelledby="home-title">
+      <div class="container nj-grid">
+        <div class="nj-stage">
+          <svg viewBox="0 0 720 460" role="img" aria-label="A home network: a laptop, phone and TV connect over Wi-Fi to a router, which connects to the internet provider">
+            <path class="h-wall" d="M40 180 L280 40 L520 180 V430 H40 Z"/>
+            <g class="h-wifi"><path d="M256 156 A30 30 0 0 1 304 156"/><path d="M242 146 A44 44 0 0 1 318 146"/><path d="M228 136 A58 58 0 0 1 332 136"/></g>
+            <path class="h-fibre" d="M326 200 H600 V120 H690"/>
+            <g class="dev h-laptop"><rect x="86" y="300" width="88" height="56" rx="6"/><rect class="scr" x="92" y="306" width="76" height="44" rx="3"/><path class="base" d="M74 360 H186 L180 368 H80 Z"/><text x="130" y="392">Laptop</text><text class="ip" x="130" y="410">192.168.1.23</text></g>
+            <g class="dev"><rect x="234" y="310" width="32" height="60" rx="7"/><rect class="scr" x="238" y="316" width="24" height="46" rx="3"/><text x="250" y="392">Phone</text><text class="ip" x="250" y="410">192.168.1.31</text></g>
+            <g class="dev"><rect x="360" y="298" width="100" height="62" rx="5"/><rect class="scr" x="366" y="304" width="88" height="50" rx="2"/><text x="410" y="392">TV</text><text class="ip" x="410" y="410">192.168.1.40</text></g>
+            <g class="dev h-router"><rect x="234" y="184" width="92" height="32" rx="8"/><path class="ant" d="M250 184 V160 M310 184 V160"/><circle cx="258" cy="200" r="3"/><circle cx="272" cy="200" r="3"/><circle cx="286" cy="200" r="3"/><circle cx="300" cy="200" r="3"/><text x="280" y="236">Router</text><text class="ip" x="280" y="252">192.168.1.1</text></g>
+            <text class="h-isp" x="690" y="104" text-anchor="end">Internet provider →</text>
+            <g class="h-nat"><rect x="372" y="236" width="196" height="30" rx="15"/><text x="470" y="256">public 203.0.113.45</text></g>
+            <circle class="pk" cx="130" cy="290" r="8"/>
+          </svg>
+        </div>
+        <ol class="nj-steps">
+          <li class="nj-step">
+            <p class="ch-num">Stop 2 · Your home</p>
+            <h2 class="nj-title" id="home-title">Then it crosses your home.</h2>
+            <p class="ch-text">Your laptop has a <b>private address</b>, 192.168.1.23. Only your home network knows it.</p>
+          </li>
+          <li class="nj-step"><p class="ch-text">It sends the message over Wi-Fi to your <b>router</b>, the gateway between your home and the internet.</p></li>
+          <li class="nj-step"><p class="ch-text">The router swaps your private address for its <b>public one</b>, 203.0.113.45, and remembers the swap so replies find you. This is called <b>NAT</b>.</p></li>
+          <li class="nj-step"><p class="ch-text">Then it leaves along the line to your <b>internet provider</b>.</p></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- STOP 3: ROUTE -->
+    <section class="nj nj-route" data-step="0" aria-labelledby="route-title">
+      <div class="container nj-grid">
+        <div class="nj-stage">
+          <svg viewBox="0 0 720 420" role="img" aria-label="Route from the home router through the provider, an internet exchange, the backbone and a data centre to the server">
+            <text class="r-dns" x="200" y="40" text-anchor="middle">DNS: example.com → 198.51.100.24</text>
+            <path class="r-wire" d="M70 330 L200 220 L340 300 L470 170 L590 250 L660 110"/>
+            <path class="r-lit" pathLength="100" d="M70 330 L200 220 L340 300 L470 170 L590 250 L660 110"/>
+            <g class="hop h1"><circle cx="70" cy="330" r="15"/><text x="70" y="368">Home router</text></g>
+            <g class="hop h2"><circle cx="200" cy="220" r="15"/><text x="200" y="258">Provider</text></g>
+            <g class="hop h3"><circle cx="340" cy="300" r="15"/><text x="340" y="338">Internet exchange</text></g>
+            <g class="hop h4"><circle cx="470" cy="170" r="15"/><text x="470" y="208">Backbone</text></g>
+            <g class="hop h5"><circle cx="590" cy="250" r="15"/><text x="590" y="288">Data centre</text></g>
+            <g class="hop h6"><circle cx="660" cy="110" r="15"/><text x="660" y="80">Server</text></g>
+            <circle class="pk" cx="70" cy="330" r="8"/>
+            <circle class="pk pk-back" cx="660" cy="110" r="7"/>
+          </svg>
+          <dl class="readout" aria-label="Simulated route figures">
+          <div><dt>Hops</dt><dd id="rHops">1</dd></div>
+          <div><dt>Time</dt><dd id="rMs">1 ms</dd></div>
+          <div><dt>TTL</dt><dd id="rTtl">63</dd></div>
+        </dl>
+        </div>
+        <div class="nj-steps-wrap">
+          <ol class="nj-steps">
+            <li class="nj-step">
+              <p class="ch-num">Stop 3 · Across the internet</p>
+              <h2 class="nj-title" id="route-title">Hop by hop to the server.</h2>
+              <p class="ch-text">First, <b>DNS</b> turns the name example.com into a number the network understands: 198.51.100.24.</p>
+            </li>
+            <li class="nj-step"><p class="ch-text">Each <b>router</b> reads the address and passes the packet one hop closer. Each one also lowers its <b>TTL</b> by one, so a lost packet can't loop for ever.</p></li>
+            <li class="nj-step"><p class="ch-text">At an <b>internet exchange</b>, different networks hand traffic to each other. Long distances cross on fibre-optic cables, some laid under oceans.</p></li>
+            <li class="nj-step"><p class="ch-text">The <b>server</b> receives it after 5 routers, 6 hops in all. Its reply makes the same kind of trip back.</p></li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHY IT MATTERS -->
+    <section class="section net-why" aria-labelledby="why-title">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <p class="eyebrow">Why it matters</p>
+          <h2 id="why-title">What this means for scams.</h2>
+        </div>
+        <ul class="explore-grid net-why-grid">
+          <li data-reveal><div class="explore-card"><span class="ex-tag">The padlock</span><span class="ex-title">Encrypted isn't honest.</span><span class="ex-text">HTTPS means nobody can read the message on its way. It says nothing about who's on the other end: scam sites have padlocks too.</span></div></li>
+          <li data-reveal><div class="explore-card"><span class="ex-tag">The name</span><span class="ex-title">You only see the name.</span><span class="ex-text">DNS hides the numbers behind web addresses, so a lookalike name is all a scammer needs. Read the name just before the first single slash.</span></div></li>
+          <li data-reveal><div class="explore-card"><span class="ex-tag">The router</span><span class="ex-title">NAT isn't a shield.</span><span class="ex-text">Your router hides your devices' private addresses, but it can't stop you being tricked, and it needs updates like everything else.</span></div></li>
+          <li data-reveal><a class="explore-card spot" href="/live/"><span class="ex-tag">Live</span><span class="ex-title">See real attacks →</span><span class="ex-text">Threat Watch shows where attacks on websites came from this week.</span></a></li>
+        </ul>
+        <p class="source net-notes">Example addresses come from ranges reserved for examples: 192.168.x.x is private (RFC 1918), and 203.0.113.0/24 and 198.51.100.0/24 are for documentation (RFC 5737). Times and hop counts are typical, not measured.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="/" aria-label="OZONE Shield home">
+          <svg class="brand-mark" viewBox="0 0 28 32" aria-hidden="true" focusable="false">
+            <path d="M14 1L2 6.5V15C2 21.6 7.4 27.5 14 31C20.6 27.5 26 21.6 26 15V6.5L14 1Z"/>
+            <path class="brand-tick" d="M9 16l3.5 3.5L19 12"/>
+          </svg>
+          <span class="brand-name">OZONE <span>Shield</span></span>
+        </a>
+        <p>A free scam checker for people in the UK. It uses Claude AI to analyse messages for scam patterns. Guidance only: always check through official channels.</p>
+      </div>
+      <div>
+        <h2 class="footer-head">Report a scam</h2>
+        <ul class="footer-list">
+          <li>Texts: forward to <b>7726</b> (free)</li>
+          <li>Emails: <b>report@phishing.gov.uk</b></li>
+          <li>Lost money: your bank on <b>159</b></li>
+          <li><a href="https://www.reportfraud.police.uk" target="_blank" rel="noopener">Report Fraud</a> <b>0300 123 2040</b></li>
+          <li>Scotland: Police Scotland <b>101</b></li>
+        </ul>
+      </div>
+      <div>
+        <h2 class="footer-head">Guidance</h2>
+        <ul class="footer-list">
+          <li><a href="https://www.ncsc.gov.uk/collection/phishing-scams" target="_blank" rel="noopener">NCSC phishing guidance</a></li>
+          <li><a href="https://www.citizensadvice.org.uk/consumer/scams/get-help-with-online-scams/" target="_blank" rel="noopener">Citizens Advice</a></li>
+          <li><a href="https://www.getsafeonline.org/checkawebsite/" target="_blank" rel="noopener">Get Safe Online</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2 class="footer-head">This site</h2>
+        <ul class="footer-list">
+          <li><a href="/spot-the-scam/">Spot the Scam game</a></li>
+          <li><a href="/live/">Threat Watch</a></li>
+          <li><a href="/network/">How the internet works</a></li>
+          <li><a href="/scams/">Scam map &amp; UK figures</a></li>
+          <li><a href="/help/">Already paid? Get help</a></li>
+          <li><a href="/about/#privacy-policy">Privacy Policy &amp; Terms</a></li>
+          <li><a href="/.well-known/security.txt">Report a security issue</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="container footer-base">
+      <p>OZONE Shield &nbsp;·&nbsp; England &amp; Wales</p>
+    </div>
+  </footer>
+
+  <script src="/js/network.js"></script>
+  <script src="/js/menu.js"></script>
+  <script src="/js/site.js"></script>
+</body>
+</html>
