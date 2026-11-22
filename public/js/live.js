@@ -81,7 +81,68 @@
     return true;
   }
 
+  var OUTLETS = { ncsc: 'NCSC', bleeping: 'BleepingComputer', record: 'The Record', thn: 'The Hacker News', secweek: 'SecurityWeek', krebs: 'Krebs on Security' };
+  function ago(iso) {
+    var m = Math.round((Date.now() - Date.parse(iso)) / 60000);
+    if (!(m >= 0)) return '';
+    if (m < 60) return m <= 1 ? 'just now' : m + ' minutes ago';
+    var h = Math.round(m / 60);
+    if (h < 24) return h === 1 ? '1 hour ago' : h + ' hours ago';
+    var d = Math.round(h / 24);
+    return d === 1 ? 'yesterday' : d + ' days ago';
+  }
+  function safeLink(href) { // only https links to the outlets we read
+    try { var u = new URL(href); return u.protocol === 'https:' ? u.href : null; } catch (e) { return null; }
+  }
+  function news(n, at) {
+    var list = $('newsList');
+    list.textContent = '';
+    if (!n || !n.top || !n.top.length) {
+      list.appendChild(el('li', 'tw-empty', 'Stories will appear after the next refresh.'));
+      $('newsMeta').textContent = '';
+      return false;
+    }
+    var ok = (n.sources || []).filter(function (s) { return s.ok; }).map(function (s) { return s.name; });
+    $('newsMeta').textContent = 'Ranked from ' + ok.length + ' trusted sources' + (at ? ', last checked ' + when(at) : '') + '. Each headline links to the original.';
+    n.top.forEach(function (s, i) {
+      var li = el('li', 'news-item' + (i === 0 ? ' is-lead' : ''));
+      li.appendChild(el('span', 'news-rank', String(i + 1))).setAttribute('aria-hidden', 'true');
+      var body = el('div', 'news-body');
+      var h = el('h3', 'news-title');
+      var href = safeLink(s.link);
+      if (href) { var a = el('a', null, s.title); a.href = href; a.target = '_blank'; a.rel = 'noopener'; h.appendChild(a); }
+      else h.textContent = s.title;
+      body.appendChild(h);
+      var meta = el('p', 'news-meta');
+      meta.appendChild(el('span', null, (OUTLETS[s.source] || s.source) + ' · ' + ago(s.date)));
+      body.appendChild(meta);
+      var tags = el('p', 'news-tags');
+      if (s.outlets && s.outlets.length > 1) tags.appendChild(el('span', 'tag tag-corr', 'Reported by ' + s.outlets.length + ' outlets'));
+      if (s.official) tags.appendChild(el('span', 'tag tag-off', 'Official: NCSC'));
+      (s.inKev || []).forEach(function (c) { tags.appendChild(el('span', 'tag tag-kev', c + ' · actively exploited (CISA)')); });
+      if (s.exploited && !(s.inKev || []).length) tags.appendChild(el('span', 'tag tag-exp', 'Exploitation reported'));
+      (s.cves || []).filter(function (c) { return (s.inKev || []).indexOf(c) === -1; }).slice(0, 2).forEach(function (c) { tags.appendChild(el('span', 'tag', c)); });
+      if (tags.childNodes.length) body.appendChild(tags);
+      if (s.outlets && s.outlets.length > 1) {
+        var also = el('p', 'news-also');
+        also.appendChild(document.createTextNode('Read it at: '));
+        s.outlets.forEach(function (o, k) {
+          var u = safeLink(o.link);
+          if (!u) return;
+          if (k) also.appendChild(document.createTextNode(' · '));
+          var a2 = el('a', null, OUTLETS[o.source] || o.source); a2.href = u; a2.target = '_blank'; a2.rel = 'noopener';
+          also.appendChild(a2);
+        });
+        body.appendChild(also);
+      }
+      li.appendChild(body);
+      list.appendChild(li);
+    });
+    return true;
+  }
+
   function show(snap) {
+    news(snap.news, snap.newsAt);
     var hasA = attacks(snap.radar), hasK = kev(snap.kev);
     var parts = [];
     if (snap.generated) parts.push('Updated ' + when(snap.generated));
@@ -109,7 +170,7 @@
       .catch(function () {
         clearTimeout(timer);
         status.textContent = "Couldn't load the latest data. Try again in a few minutes.";
-        bars($('twOrigins'), null); bars($('twTargets'), null); kev(null);
+        bars($('twOrigins'), null); bars($('twTargets'), null); kev(null); news(null);
       });
   }
   load(0);
